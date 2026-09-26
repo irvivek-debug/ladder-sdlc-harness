@@ -57,7 +57,7 @@ class Tools:
         cell = self.ws.cell()
         p = self._program(st, candidate_path)
         comments = cell.legacy_comments(st)
-        found = lint(p, cell.iolist, comments)
+        found = lint(p, cell.iolist.for_station(st), comments)
         return {"station": st, "findings": [{"rule": f.rule, "severity": f.severity, "rung": f.rung,
                                              "devices": list(f.devices), "message": f.message} for f in found],
                 "model_cost_usd": 0.0}

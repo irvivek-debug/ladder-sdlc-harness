@@ -35,6 +35,10 @@ class IoList:
     def station_points(self, station: str) -> list[IoPoint]:
         return [p for p in self.points if p.station in (station, "CELL")]
 
+    def for_station(self, station: str) -> "IoList":
+        """The station's own points plus the cell-wide ones — what a station program is linted against."""
+        return IoList(self.station_points(station))
+
     @classmethod
     def load_csv(cls, path: str | Path) -> "IoList":
         with open(path, newline="", encoding="utf-8") as f:

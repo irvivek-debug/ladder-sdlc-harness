@@ -57,7 +57,7 @@ def build_packet(cell: Cell, station: str, parts: tuple[str, ...], program: Prog
             body = "\n".join(f"{d},{c}" for d, c in shown.items()) or "(none)"
         elif part == "lint":
             body = "\n".join(f"{f.rule} {f.severity} rung {f.rung or '-'}: {f.message}"
-                             for f in lint(program, cell.iolist) if f.rule != "L008") or "(no findings)"
+                             for f in lint(program, cell.iolist) if f.rule != "L008")  # frozen for sweep S1 comparability or "(no findings)"
         elif part == "program":
             body = numbered_listing(program)
         else:
