@@ -64,8 +64,9 @@ D5:
   title: Baseline pressure captured on the test-done edge instead of the stabilise-done edge
   category: semantic_timing
   consequence: >-
-    Baseline and final pressure are sampled in the same scan, so the measured decay is ~0 and every pack
-    passes — a leaking pack ships.
+    The baseline is sampled on the test-done edge, a scan after the pass/fail decision, so the decision compares the
+    final pressure with a stale baseline (zero on the first pack). The computed decay is meaningless (negative, which
+    is physically impossible) and leaking packs pass.
   expected_catcher: T4 semantic review (code vs narrative); proven by "leaking pack must fail"
   intended: {lint: [], scenarios: [FAT-ST20-02, CE-ST20-06]}
   patches:

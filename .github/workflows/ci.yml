@@ -1,0 +1,15 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      LADDER_MODE: replay          # no credentials in CI; model tasks use recorded answers only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install -e ".[ai,mcp,dev,data]"
+      - run: bash scripts/secret_scan.sh
+      - run: pytest
+      - run: python scripts/build_data.py --out /tmp/rebuild && diff -r --brief plant_data /tmp/rebuild/plant_data

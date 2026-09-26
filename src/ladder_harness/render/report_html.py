@@ -37,7 +37,7 @@ def _page(title: str, subtitle: str, body: str) -> str:
 
 def program_html(program: Program, comments: dict | None = None, title: str = "", highlight: set[int] | None = None) -> str:
     svg = program_svg(program, comments, highlight)
-    return _page(title or program.name, f"{len(program.rungs)} rungs — rendered from the instruction list",
+    return _page(title or program.name, f"{len(program.rungs)} rungs, drawn from the instruction list",
                  f'<div class="card">{svg}</div>')
 
 
