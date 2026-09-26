@@ -10,6 +10,7 @@ import asyncio
 import json
 import threading
 import time
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -38,9 +39,19 @@ class EvalContext:
     sink: Path
     lock: threading.Lock = field(default_factory=threading.Lock)
     stopped: str | None = None
+    done: dict = field(default_factory=dict)       # finished records already in the sink (resume)
+
+    def __post_init__(self):
+        if self.sink.exists():
+            for line in self.sink.read_text(encoding="utf-8").splitlines():
+                if line.strip():
+                    r = json.loads(line)
+                    if not r.get("error"):
+                        self.done[(r["task_id"], r["config"], r["epoch"])] = r
 
 
 CTX: EvalContext | None = None
+POOL = ThreadPoolExecutor(max_workers=48, thread_name_prefix="harness-eval")
 
 
 def load_bank(path: str | Path) -> dict:
@@ -68,6 +79,8 @@ def run_one(ctx: EvalContext, spec: dict, config: str, epoch: int) -> dict:
             "config": config, "model": cfg["model"], "effort": cfg["effort"], "epoch": epoch}
     if ctx.stopped:
         return {**base, "passed": False, "error": f"skipped: {ctx.stopped}", "score": {}}
+    if (spec["id"], config, epoch) in ctx.done:
+        return {**ctx.done[(spec["id"], config, epoch)], "resumed": True}
     router = ctx.make_router(config).with_tag(f"e{epoch}")
     meta = {"task_id": spec["id"], "config": config, "epoch": epoch}
     st, kind = spec["station"], spec["kind"]
@@ -137,7 +150,8 @@ def run_one(ctx: EvalContext, spec: dict, config: str, epoch: int) -> dict:
 @solver
 def harness_solver(config: str):
     async def solve(state, generate):
-        rec = await asyncio.to_thread(run_one, CTX, state.metadata["spec"], config, state.epoch)
+        loop = asyncio.get_running_loop()
+        rec = await loop.run_in_executor(POOL, run_one, CTX, state.metadata["spec"], config, state.epoch)
         state.metadata["record"] = rec
         state.output = ModelOutput.from_content(model=f"harness/{config}",
                                                 content=json.dumps({"passed": rec["passed"], "error": rec.get("error")}))
