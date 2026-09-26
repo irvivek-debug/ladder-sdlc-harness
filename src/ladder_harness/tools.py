@@ -95,10 +95,18 @@ class Tools:
 
     # -- T1–T4: routed to a model ------------------------------------------
     def ladder_task(self, task: str, station: str, goal: str = "", targets: list[str] | None = None,
-                    profile: str = "routed") -> dict:
+                    profile: str = "routed", bank_task: str = "") -> dict:
         """Run a model task — explain (T1), extract (T2), review (T4) or repair (T3) — on the lane the routing
-        table picks. Repair writes a candidate file; it never changes the station program."""
+        table picks. Repair writes a candidate file; it never changes the station program. `bank_task` (e.g.
+        RP-D5) takes the goal and targets verbatim from evals/task_bank.yaml, as the recorded demo runs used."""
         st = _station(station)
+        if bank_task:
+            import yaml
+            bank = yaml.safe_load((self.ws.root / "evals" / "task_bank.yaml").read_text(encoding="utf-8"))
+            spec = next((t for t in bank["tasks"] if t["id"] == bank_task), None)
+            if spec is None or spec["kind"] != task or spec["station"] != st:
+                raise ValueError(f"{bank_task} is not a {task} task for {st}")
+            goal, targets = spec.get("goal", goal), spec.get("targets", targets)
         cell, router = self.ws.cell(), self.ws.router()
         if task == "explain":
             run = tasks.explain(router, cell, st, profile)

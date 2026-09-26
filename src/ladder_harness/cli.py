@@ -63,6 +63,7 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("--goal", default="")
     p.add_argument("--targets", nargs="*")
     p.add_argument("--profile", default="routed")
+    p.add_argument("--bank-task", default="", help="take goal/targets from evals/task_bank.yaml (e.g. RP-D5)")
     p = sub.add_parser("apply")
     p.add_argument("station")
     p.add_argument("candidate")
@@ -73,7 +74,15 @@ def main(argv: list[str] | None = None) -> int:
     p = sub.add_parser("ledger")
     p.add_argument("--by", default="profile,task_class")
     p.add_argument("--run")
+    p = sub.add_parser("preflight", help="run before going on stage: decides live or replay")
+    p.add_argument("--no-model-calls", action="store_true")
     args = ap.parse_args(argv)
+
+    if args.cmd == "preflight":
+        from .preflight import format_preflight, run_preflight
+        checks, mode = run_preflight(Workspace.discover(), call_models=not args.no_model_calls)
+        print(format_preflight(checks, mode))
+        return 0 if mode != "offline-only" else 1
 
     t = Tools(Workspace.discover())
     if args.cmd == "parse":
@@ -87,7 +96,7 @@ def main(argv: list[str] | None = None) -> int:
     elif args.cmd == "diff":
         data = t.ladder_diff(args.station, args.candidate)
     elif args.cmd == "task":
-        data = t.ladder_task(args.task, args.station, args.goal, args.targets, args.profile)
+        data = t.ladder_task(args.task, args.station, args.goal, args.targets, args.profile, args.bank_task)
     elif args.cmd == "apply":
         data = t.ladder_apply(args.station, args.candidate, args.targets)
     elif args.cmd == "export":
