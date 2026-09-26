@@ -7,6 +7,11 @@ defaults:
   plant: {leak_kpa_per_s: 0.005}
   stimuli:
     - {at_ms: 0, set: {X0: true, X2: true}}          # E-stop chain healthy, auto mode
+  expect:                                           # sequence integrity, checked in every scenario
+    - {never: "M201 + M202 + M203 + M204 + M205 + M206 + M207 > 1"}
+    - {never: "Y21 and not M202"}
+    - {never: "Y21 and M299"}
+    - {never: "Y21 and Y22"}
 scenarios:
   - id: FAT-ST20-01
     title: Tight pack passes and is released as PASS
@@ -18,7 +23,12 @@ scenarios:
     expect:
       - {eventually: "M207 and Y23 and not Y24", by_ms: 28000}
       - {never: "M211"}
-      - {at_end: "not M200"}
+      - {never: "M202 and not X20"}
+      - {never: "M207 and not X21"}
+      - {duration: "M203", min_ms: 4990, max_ms: 5020}    # stabilise 5.0 s (parameter sheet)
+      - {duration: "M204", min_ms: 9990, max_ms: 10020}   # test window 10.0 s
+      - {duration: "M205", min_ms: 490, max_ms: 520}      # vent 0.5 s
+      - {at_end: "not M200 and not M207"}
 
   - id: FAT-ST20-02
     title: Leaking pack (0.8 kPa over the window) must fail
@@ -99,6 +109,7 @@ scenarios:
       - {when: "M204", delay_ms: 1200, set: {X23: true}}
     expect:
       - {never: "M201", after_ms: 2000}
+      - {never: "M202 or Y21", after_ms: 6000}
       - {eventually: "M210 and M207", by_ms: 28000}
 
   - id: FAT-ST20-09
@@ -111,3 +122,48 @@ scenarios:
     expect:
       - {never: "(Y23 or Y24) and not M207"}
       - {eventually: "Y24", by_ms: 28000}
+
+  - id: FAT-ST20-10
+    title: Switching to auto with a pallet already present does not start a cycle
+    trace: [narrative §4.1]
+    duration_ms: 3000
+    stimuli:
+      - {at_ms: 0, set: {X2: false}}
+      - {at_ms: 100, set: {X23: true}}
+      - {at_ms: 1000, set: {X2: true}}
+    expect:
+      - {never: "M200 or Y20"}
+
+  - id: FAT-ST20-11
+    title: A fault after the result does not re-clamp the pack
+    trace: [narrative §4.7, §4.8]
+    duration_ms: 30000
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+      - {when: "M206", delay_ms: 50, plant: {inject: {fault: supply_air_low}}}
+    expect:
+      - {eventually: "M207 and M293", by_ms: 28000}
+      - {never: "Y20 and (M206 or M207)"}
+
+  - id: FAT-ST20-12
+    title: A pressure-signal failure during the test holds the clamp closed with the vent open
+    trace: [narrative §4.7, §4.8]
+    duration_ms: 20000
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+      - {when: "M204", delay_ms: 1000, plant: {inject: {fault: pt_wire_break}}}
+    expect:
+      - {eventually: "M292 and M211 and M205 and Y22", by_ms: 12000}
+      - {always: "Y20", after_ms: 12000}
+      - {never: "M206 or M207"}
+
+  - id: FAT-ST20-13
+    title: Over-pressure while idle opens the vent and raises the alarm
+    trace: [narrative §4.8, CE-ST20-02]
+    duration_ms: 6000
+    stimuli:
+      - {at_ms: 500, plant: {inject: {fault: regulator_fail, supply_kpa: 30}}}
+      - {at_ms: 500, plant: {inject: {fault: fill_valve_stuck_open}}}
+    expect:
+      - {response: {trigger: "P_kpa > 20.5", effect: "Y22 and M291 and Y25"}, within_ms: 100}
+      - {never: "M200"}

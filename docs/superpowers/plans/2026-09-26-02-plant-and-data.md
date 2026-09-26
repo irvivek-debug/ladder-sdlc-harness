@@ -455,7 +455,7 @@ blocked > 5 s while running → stop + jam alarm; CE-ST30-01 guard door opened �
 
 | ID | Station | Patch | Intended catchers (⊆ detected set) |
 |---|---|---|---|
-| D1 | ST20 | vent rung replaced by `LD M205 / OUT Y22`; a separate "Manual vent (added 2021)" rung `LD X25 / ANI X2 / OUT Y22` inserted before "Result signals" | L001; CE-ST20-08 |
+| D1 | ST20 | vent rung reduced to `LD M205 / OR M291 / OUT Y22`; a "Manual vent (added 2021)" rung `LD X25 / ANI X2 / OUT Y22` inserted *above* it (before "S1 start") — latent: manual vent dead | L001; FAT-ST20-06 |
 | D2 | ST20 | documentation: 60% of device comments and all rung statements missing in legacy | T1 evals (not scenarios) |
 | D3 | ST20 | `OUT T24 K5` → `OUT T200 K50`, `AND T24` → `AND T200` | L002; FAT-ST20-04 |
 | D4 | ST20 | remove `AND X20` from the fill-valve rung | CE-ST20-01 |
@@ -563,3 +563,12 @@ def test_st20_mutation_score_at_least_90pct():
 
 Spec §2 cell, defects, realism mess ✓ T6; §4 plant/scenarios/lint/render/guard ✓ T2–T5; §5 data, provenance,
 sealed key, reproducible build ✓ T6; §7 mutation gate ✓ T7. Router/AI/MCP → Plan 3.
+
+## Execution notes (2026-09-26)
+
+- Added `duration` expectations and suite-level `defaults.expect` / binding `invariants` (sequence integrity).
+- Golden ST20 changed twice on evidence: vented-before-unclamp permissive + over-pressure venting (CE-ST20-02/08),
+  and outputs moved below all transitions (one-scan output lag found by the invariants).
+- D1 made latent (production runs; manual vent dead) so the legacy is believable as a running line; only
+  FAT-ST20-04 enforces the 23.0 s budget so failures attribute to one defect each.
+- Mutation gate: 78.9% → 92.5% after strengthening the suite; survivors analysed in `evals/results/mutation_st20.md`.

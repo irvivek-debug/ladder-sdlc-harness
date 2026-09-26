@@ -52,12 +52,12 @@ slide later; the harness has **no** dependency on that estate or on BigQuery.
 presented as any OEM's specification): test pressure ≈ 15 kPa(g), stabilise 5 s, test 10 s,
 ΔP limit 0.30 kPa over the test window, PT-2001 scaled 0–10000 = 0–100.00 kPa.
 
-**Legacy program** ("migrated from an FX3 in 2019") with five seeded defects. The expected catcher is a
+**Legacy program** ("migrated from an FX3 in 2019") with five seeded defects, each a patch on the sealed golden program. The golden program drives all outputs after all step transitions and implements the vented-before-unclamp permissive (C&E CE-ST20-08). The expected catcher is a
 hypothesis; evals decide the real routing.
 
 | # | Defect | Consequence | Expected catcher |
 |---|---|---|---|
-| D1 | Vent valve output driven from two rungs (double coil) | unpredictable output | T0 linter |
+| D1 | Vent valve driven from two rungs (double coil): a 2021 manual-vent rung sits above the auto rung | latent: the manual vent button has done nothing since 2021 | T0 linter |
 | D2 | ~60% of devices uncommented | unmaintainable | T1 Flash (bulk docs) |
 | D3 | `OUT T200 K50` vent timer: 0.5 s on FX3 (10 ms range), 5.0 s on FX5 | +4.5 s cycle time per pack | T0 linter flags, simulator proves |
 | D4 | Fill valve rung lacks clamp-closed interlock | pressurises an unclamped pack | C&E-derived test; T3/T4 |

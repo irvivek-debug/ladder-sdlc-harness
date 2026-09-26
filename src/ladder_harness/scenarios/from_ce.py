@@ -31,7 +31,7 @@ def generate(ce_rows: list[dict], bindings: dict) -> dict[str, dict]:
             "trace": [ce_id, row.get("reference", "")],
             "duration_ms": b["duration_ms"],
             "stimuli": list(cfg.get("preamble", [])) + list(b.get("stimuli", [])),
-            "expect": list(b["expect"]),
+            "expect": list(cfg.get("invariants", [])) + list(b["expect"]),
         }
         if b.get("plant"):
             scenario["plant"] = dict(b["plant"])

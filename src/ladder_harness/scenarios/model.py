@@ -4,7 +4,8 @@ Suite:  {station, plant, scan_ms?, defaults?: {plant?, stimuli?}, scenarios: [..
 Scenario: {id, title, trace?, duration_ms, plant?, stimuli?, expect}
 Stimulus: {at_ms | when (+ delay_ms), set?: {DEV: value}, plant?: {action: args}}
 Expectation (one kind key each): always | never (+ after_ms), eventually (+ by_ms, after_ms), at_end,
-response: {trigger, effect} + within_ms.
+response: {trigger, effect} + within_ms, duration (+ min_ms, max_ms: every true-interval must fit; at least one).
+`defaults.expect` applies to every scenario in the suite (sequence invariants).
 """
 from __future__ import annotations
 
@@ -15,7 +16,7 @@ import yaml
 
 from .expr import Expr, compile_expr
 
-KINDS = ("always", "never", "eventually", "at_end", "response")
+KINDS = ("always", "never", "eventually", "at_end", "response", "duration")
 
 
 @dataclass
@@ -37,6 +38,8 @@ class Expectation:
     by_ms: int | None = None
     after_ms: int = 0
     within_ms: int | None = None
+    min_ms: int | None = None
+    max_ms: int | None = None
 
 
 @dataclass
@@ -71,13 +74,19 @@ def _expectation(d: dict) -> Expectation:
     if len(kinds) != 1:
         raise ValueError(f"expectation needs exactly one of {KINDS}: {d}")
     kind = kinds[0]
-    common = {"by_ms": d.get("by_ms"), "after_ms": int(d.get("after_ms", 0)), "within_ms": d.get("within_ms")}
+    common = {"by_ms": d.get("by_ms"), "after_ms": int(d.get("after_ms", 0)), "within_ms": d.get("within_ms"),
+              "min_ms": d.get("min_ms"), "max_ms": d.get("max_ms")}
     if kind == "response":
         r = d["response"]
         if common["within_ms"] is None:
             raise ValueError(f"response expectation needs within_ms: {d}")
         return Expectation(kind, f"response {r['trigger']} -> {r['effect']} within {common['within_ms']} ms",
                            trigger=compile_expr(r["trigger"]), effect=compile_expr(r["effect"]), **common)
+    if kind == "duration":
+        if common["min_ms"] is None and common["max_ms"] is None:
+            raise ValueError(f"duration expectation needs min_ms and/or max_ms: {d}")
+        return Expectation(kind, f"duration of {d[kind]} in [{common['min_ms']}, {common['max_ms']}] ms",
+                           expr=compile_expr(d[kind]), **common)
     return Expectation(kind, f"{kind} {d[kind]}", expr=compile_expr(d[kind]), **common)
 
 
@@ -89,7 +98,7 @@ def suite_from_dict(d: dict, source: str = "") -> Suite:
             id=s["id"], title=s.get("title", s["id"]), duration_ms=int(s["duration_ms"]),
             trace=list(s.get("trace", [])), plant={**defaults.get("plant", {}), **s.get("plant", {})},
             stimuli=[_stimulus(x) for x in defaults.get("stimuli", []) + s.get("stimuli", [])],
-            expect=[_expectation(x) for x in s.get("expect", [])],
+            expect=[_expectation(x) for x in defaults.get("expect", []) + s.get("expect", [])],
         ))
     ids = [s.id for s in scenarios]
     if len(ids) != len(set(ids)):

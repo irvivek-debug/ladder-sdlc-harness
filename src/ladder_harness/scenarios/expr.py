@@ -26,6 +26,9 @@ class Expr:
     names: tuple[str, ...]
     code: CodeType = field(repr=False, compare=False)
 
+    def __reduce__(self):  # code objects do not pickle; rebuild from the source text in worker processes
+        return (compile_expr, (self.text,))
+
 
 def compile_expr(text: str) -> Expr:
     try:

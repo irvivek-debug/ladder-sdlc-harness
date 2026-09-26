@@ -64,6 +64,8 @@ class _Check:
         self.satisfied = False
         self.pending: list[int] = []      # response trigger times awaiting effect
         self.prev_trigger = False
+        self.started: int | None = None   # duration: start of the current true-interval
+        self.intervals = 0
 
     def fail(self, t: int, message: str) -> None:
         if self.failure is None:
@@ -94,6 +96,22 @@ class _Check:
             if self.pending and t > self.pending[0] + e.within_ms:
                 self.fail(t, f"after `{e.trigger.text}` at t={self.pending[0]} ms, `{e.effect.text}` was not true "
                              f"within {e.within_ms} ms ({env.show(e.trigger, e.effect)})")
+        elif e.kind == "duration":
+            v = bool(env.value(e.expr))
+            if v and self.started is None:
+                self.started, self.intervals = t, self.intervals + 1
+            elif not v and self.started is not None:
+                self._interval(t - self.started, t, closed=True)
+                self.started = None
+            elif v and e.max_ms is not None and t - self.started > e.max_ms:
+                self._interval(t - self.started, t, closed=False)
+
+    def _interval(self, length: int, t: int, closed: bool) -> None:
+        e = self.exp
+        if closed and e.min_ms is not None and length < e.min_ms:
+            self.fail(t, f"`{e.expr.text}` lasted {length} ms, shorter than {e.min_ms} ms (ended at t={t} ms)")
+        elif e.max_ms is not None and length > e.max_ms:
+            self.fail(t, f"`{e.expr.text}` lasted {length} ms, longer than {e.max_ms} ms (at t={t} ms)")
 
     def finish(self, t: int, env: Env) -> None:
         e = self.exp
@@ -106,6 +124,11 @@ class _Check:
             self.fail(t, f"expected at end `{e.expr.text}` ({env.show(e.expr)})")
         elif e.kind == "response" and self.pending:
             self.fail(t, f"after `{e.trigger.text}` at t={self.pending[0]} ms, `{e.effect.text}` never became true")
+        elif e.kind == "duration":
+            if self.intervals == 0:
+                self.fail(t, f"`{e.expr.text}` was never true, so its duration could not be checked")
+            elif self.started is not None:
+                self._interval(t - self.started, t, closed=False)
 
 
 def _apply_set(plc: Plc, values: dict) -> None:

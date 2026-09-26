@@ -8,6 +8,11 @@ stations:
       - {at_ms: 0, set: {X0: true, X2: true}}
       - {at_ms: 100, set: {X23: true}}
       - {when: "M207", delay_ms: 500, set: {X23: false}}
+    invariants:                                   # sequence integrity, checked in every ST20 scenario
+      - {never: "M201 + M202 + M203 + M204 + M205 + M206 + M207 > 1"}
+      - {never: "Y21 and not M202"}
+      - {never: "Y21 and M299"}
+      - {never: "Y21 and Y22"}
   ST10:
     plant: st10
     preamble:
@@ -33,6 +38,7 @@ bindings:
     expect:
       - {response: {trigger: "P_kpa > 20.5", effect: "Y22 and not Y21"}, within_ms: 100}
       - {eventually: "M291 and M211", by_ms: 12000}
+      - {never: "not Y20 and P_kpa > 1.0"}
   CE-ST20-03:
     duration_ms: 3000
     stimuli:

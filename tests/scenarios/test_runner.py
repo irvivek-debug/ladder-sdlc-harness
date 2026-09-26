@@ -56,3 +56,23 @@ def test_stop_on_fail_ends_early():
         "stimuli": [{"at_ms": 0, "set": {"X1": True}}], "expect": [{"never": "Y1"}]}]})
     r = run_scenario(PROG, s.scenarios[0], s.plant, stop_on_fail=True)
     assert not r.passed and r.end_ms < 100
+
+
+def test_duration_within_bounds():
+    stim = [{"at_ms": 0, "set": {"X1": True}}, {"at_ms": 300, "set": {"X1": False}}]
+    assert run([{"duration": "Y1", "min_ms": 290, "max_ms": 310}], stimuli=stim).passed
+    r = run([{"duration": "Y1", "min_ms": 400, "max_ms": 500}], stimuli=stim)
+    assert not r.passed and "lasted 300 ms" in r.failures[0].message
+
+
+def test_duration_requires_an_occurrence():
+    r = run([{"duration": "Y1", "min_ms": 1, "max_ms": 10}], stimuli=[{"at_ms": 0, "set": {"X0": True}}])
+    assert not r.passed and "never" in r.failures[0].message
+
+
+def test_suite_default_expectations_apply_to_every_scenario():
+    s = suite_from_dict({"station": "T", "plant": "none",
+                         "defaults": {"expect": [{"never": "Y1"}]},
+                         "scenarios": [{"id": "A", "duration_ms": 100, "stimuli": [{"at_ms": 0, "set": {"X1": True}}],
+                                        "expect": []}]})
+    assert not run_scenario(PROG, s.scenarios[0], s.plant).passed

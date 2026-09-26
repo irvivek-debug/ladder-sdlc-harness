@@ -32,6 +32,14 @@ scenarios:
       inject:
         fault: clamp_slip
   expect:
+  - &id004
+    never: M201 + M202 + M203 + M204 + M205 + M206 + M207 > 1
+  - &id005
+    never: Y21 and not M202
+  - &id006
+    never: Y21 and M299
+  - &id007
+    never: Y21 and Y22
   - response:
       trigger: M202 and not X20
       effect: not Y21
@@ -59,12 +67,17 @@ scenarios:
       inject:
         fault: fill_valve_stuck_open
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - response:
       trigger: P_kpa > 20.5
       effect: Y22 and not Y21
     within_ms: 100
   - eventually: M291 and M211
     by_ms: 12000
+  - never: not Y20 and P_kpa > 1.0
 - id: CE-ST20-03
   title: Pressure signal under range (below -5.00 kPa; wire break) → Fault beacon on and cycle start inhibited
   trace:
@@ -80,6 +93,10 @@ scenarios:
       inject:
         fault: pt_wire_break
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - eventually: M292 and Y25
     by_ms: 50
   - never: M201 or Y20 or Y21
@@ -98,6 +115,10 @@ scenarios:
     set:
       X0: false
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - response:
       trigger: not X0 and M200
       effect: Y22 and not Y21
@@ -116,6 +137,10 @@ scenarios:
   - *id002
   - *id003
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - eventually: M290 and M211 and Y22
     by_ms: 9300
   - never: M203
@@ -132,6 +157,10 @@ scenarios:
   - *id002
   - *id003
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - eventually: Y24 and M211
     by_ms: 28000
   - never: Y23 or M210
@@ -148,6 +177,10 @@ scenarios:
   - *id002
   - *id003
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - eventually: Y23 and M210
     by_ms: 28000
   - never: Y24 or M211
@@ -164,6 +197,10 @@ scenarios:
   - *id002
   - *id003
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - never: not Y20 and P_kpa > 1.0
   - eventually: M207
     by_ms: 28000
@@ -185,6 +222,10 @@ scenarios:
       inject:
         fault: supply_air_low
   expect:
+  - *id004
+  - *id005
+  - *id006
+  - *id007
   - response:
       trigger: not X22 and M200
       effect: Y22 and not Y21

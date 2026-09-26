@@ -45,26 +45,12 @@ SET    M201             ; step CLAMP
 RST    M210
 RST    M211
 
-# Clamp solenoid held from CLAMP to VENT
-LD     M201
-OR     M202
-OR     M203
-OR     M204
-OR     M205
-OUT    Y20              ; XY-2002 clamp close
-
 # S2 CLAMP to FILL when clamp confirmed closed
 LD     M201
 AND    X20              ; ZS-2002A clamp closed
 ANI    X21              ; ZS-2002B clamp open
 RST    M201
 SET    M202             ; step FILL
-
-# Fill valve: FILL step, clamp confirmed closed, no fault
-LD     M202
-AND    X20              ; clamp closed interlock (CE-ST20-01)
-ANI    M299
-OUT    Y21              ; XV-2003 fill valve
 
 # Fill timeout
 LD     M202
@@ -131,14 +117,6 @@ RST    M204
 SET    M205             ; step VENT
 SET    M211             ; FAIL
 
-# Vent valve: VENT step, latched over-pressure, or manual vent in manual mode
-LD     M205
-OR     M291             ; over-pressure keeps venting (CE-ST20-02)
-LD     X25              ; PB-2010 manual vent
-ANI    X2
-ORB
-OUT    Y22              ; XV-2004 vent valve
-
 # S8 VENT timer
 LD     M205
 OUT    T24 K5           ; vent 0.5 s
@@ -158,6 +136,35 @@ ANI    X20
 RST    M206
 SET    M207             ; step DONE
 
+# S11 DONE to idle when pallet leaves
+LD     M207
+ANI    X23
+RST    M207
+RST    M200             ; not busy
+
+# OUTPUTS (after all transitions, so no output lags its step)
+# Clamp solenoid held from CLAMP to VENT
+LD     M201
+OR     M202
+OR     M203
+OR     M204
+OR     M205
+OUT    Y20              ; XY-2002 clamp close
+
+# Fill valve: FILL step, clamp confirmed closed, no fault
+LD     M202
+AND    X20              ; clamp closed interlock (CE-ST20-01)
+ANI    M299
+OUT    Y21              ; XV-2003 fill valve
+
+# Vent valve: VENT step, latched over-pressure, or manual vent in manual mode
+LD     M205
+OR     M291             ; over-pressure keeps venting (CE-ST20-02)
+LD     X25              ; PB-2010 manual vent
+ANI    X2
+ORB
+OUT    Y22              ; XV-2004 vent valve
+
 # Result signals to line controller
 LD     M207
 MPS
@@ -166,11 +173,5 @@ OUT    Y23              ; ST20 PASS to line controller
 MPP
 AND    M211
 OUT    Y24              ; ST20 FAIL / reject request
-
-# S11 DONE to idle when pallet leaves
-LD     M207
-ANI    X23
-RST    M207
-RST    M200             ; not busy
 
 END
