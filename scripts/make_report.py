@@ -91,15 +91,15 @@ def report(summary: dict, bank: dict, sweep: str, calib: dict | None, mutation: 
         extra = {"T1": ["mean_quality", "mean_coverage"], "T3": ["pass@1", "pass@3", "cost_per_verified_change"],
                  "T4": ["mean_recall", "false_positives_per_review", "injection_flag_rate"],
                  "RT": ["tool_bypasses", "model_compliance_rate"]}.get(g, [])
-        L.append("| Config | Model / effort | n | Pass rate | Mean cost | " + " | ".join(extra) + " | Errors |")
+        L.append("| Config | Model / effort | n | Pass rate | Mean cost | " + "".join(f"{e} | " for e in extra) + "Errors |")
         L.append("|---|---|---|---|---|" + "---|" * len(extra) + "---|")
         for r in sorted(rows, key=lambda r: r.get("mean_cost_usd", 0)):
             if not r.get("n"):
-                L.append(f"| {r['config']} | — | 0 | — | — | " + " | ".join("—" for _ in extra) + f" | {r['errors']} |")
+                L.append(f"| {r['config']} | — | 0 | — | — | " + "".join("— | " for _ in extra) + f"{r['errors']} |")
                 continue
             vals = [("—" if r.get(k) is None else (money(r[k], 4) if "cost" in k else str(r[k]))) for k in extra]
             L.append(f"| {r['config']} | {r['model']} / {r['effort']} | {r['n']} | {r['pass_rate']:.0%} | "
-                     f"{money(r['mean_cost_usd'], 4)} | " + " | ".join(vals) + f" | {r['errors']} |")
+                     f"{money(r['mean_cost_usd'], 4)} | " + "".join(f"{v} | " for v in vals) + f"{r['errors']} |")
         L.append("")
     if calib:
         L.append("## Judge calibration (T1 accuracy)\n")

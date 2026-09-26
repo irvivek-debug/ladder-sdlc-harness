@@ -10,10 +10,10 @@ Sweep `S1` · generated 2026-09-26 · 325 scored samples (0 errored samples repo
 
 ## T2 extraction
 
-| Config | Model / effort | n | Pass rate | Mean cost |  | Errors |
+| Config | Model / effort | n | Pass rate | Mean cost | Errors |
 |---|---|---|---|---|---|
-| flash-low | gemini-3.8-flash / low | 15 | 100% | $0.0081 |  | 0 |
-| flash-medium | gemini-3.8-flash / medium | 15 | 100% | $0.0211 |  | 0 |
+| flash-low | gemini-3.8-flash / low | 15 | 100% | $0.0081 | 0 |
+| flash-medium | gemini-3.8-flash / medium | 15 | 100% | $0.0211 | 0 |
 
 ## T3 repair until the gate passes
 
