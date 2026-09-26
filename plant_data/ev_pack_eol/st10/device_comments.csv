@@ -1,0 +1,7 @@
+Device Name,Comment
+M100,ST10 pallet in position
+M191,ST10 motor overload alarm
+X0,ES-0001 E-stop chain healthy
+X2,SS-0003 auto mode
+X14,RQ-1005 release request
+Y11,XY-1004 stopper release

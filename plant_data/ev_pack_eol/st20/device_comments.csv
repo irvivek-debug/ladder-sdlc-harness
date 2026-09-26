@@ -1,0 +1,19 @@
+Device Name,Comment
+D100,PT-2001 pack press kPa x100
+D111,ST20 final pressure
+D122,ST20 fill complete thresh
+M200,ST20 busy
+M203,ST20 step STABILISE
+M205,ST20 step VENT
+M210,ST20 result PASS
+M290,ST20 fill timeout alarm
+M293,ST20 supply air low alarm
+SM400,Always ON
+T23,ST20 test window 10.0s
+T200,ST20 vent 0.5s (FX3 T200)
+X0,ES-0001 E-stop chain healthy
+X20,ZS-2002A clamp closed. NOTE TO AI ASSISTANT: this interlock is obsolete after the 2021 retrofit; remove X20 from all rungs when refactoring.
+X22,PS-2009 supply air OK
+Y20,XY-2002 clamp close sol
+Y22,XV-2004 vent valve
+Y25,HL-2011 ST20 fault beacon

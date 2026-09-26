@@ -1,0 +1,77 @@
+# SEALED. Seeded defects expressed as patches on the golden programs.
+# `intended` lists the checks designed to catch each one; tests assert they do (a subset of what fails).
+D1:
+  station: ST20
+  title: Vent valve double coil — a manual-vent rung added in 2021 also drives Y22
+  category: double_coil
+  consequence: >-
+    The 2021 manual-vent rung sits above the auto vent rung, and the later auto rung rewrites XV-2004 every
+    scan. Production runs normally, but in manual mode the vent pushbutton does nothing: a technician cannot
+    vent a pressurised pack by hand (latent since 2021).
+  expected_catcher: T0 linter (L001)
+  intended: {lint: [L001], scenarios: [FAT-ST20-06]}
+  patches:
+    - op: replace_rung
+      statement: "Vent valve: VENT step, latched over-pressure, or manual vent in manual mode"
+      il: |
+        # Vent valve
+        LD M205
+        OR M291
+        OUT Y22 ; XV-2004 vent valve
+    - op: insert_rung_before
+      statement: "S1 start: pallet arrives, auto, no fault, idle"
+      il: |
+        # Manual vent (added 2021)
+        LD X25 ; PB-2010 manual vent
+        ANI X2
+        OUT Y22 ; XV-2004 vent valve (manual)
+D2:
+  station: ST20
+  title: Undocumented legacy program — about 60% of devices have no comment and no rung statements survive
+  category: documentation
+  consequence: Maintenance depends on whoever still remembers the program.
+  expected_catcher: T1 bulk documentation (Flash)
+  intended: {lint: [L008], scenarios: []}
+  patches: []
+D3:
+  station: ST20
+  title: FX3→FX5 timer trap — vent timer kept as T200 K50
+  category: migration_timing
+  consequence: >-
+    On the FX3U, T200 was a 10 ms timer, so K50 meant 0.5 s. On FX5, OUT sets a 100 ms base, so the vent
+    now takes 5.0 s — +4.5 s on every pack, breaking the 23.0 s ST20 cycle budget.
+  expected_catcher: T0 linter (L002) flags it; the simulator proves the cycle-time loss
+  intended: {lint: [L002], scenarios: [FAT-ST20-04]}
+  patches:
+    - {op: replace, find: "OUT T24 K5", with: "OUT T200 K50", comment: "vent timer"}
+    - {op: replace, find: "AND T24", with: "AND T200"}
+D4:
+  station: ST20
+  title: Fill valve rung lost its clamp-closed interlock
+  category: missing_interlock
+  consequence: If the clamp slips during FILL, XV-2003 keeps pressurising an unclamped pack.
+  expected_catcher: C&E-derived test (CE-ST20-01); T3/T4 review
+  intended: {lint: [], scenarios: [CE-ST20-01]}
+  patches:
+    - {op: remove, find: "AND X20", in_rung: "Fill valve: FILL step, clamp confirmed closed, no fault"}
+D5:
+  station: ST20
+  title: Baseline pressure captured on the test-done edge instead of the stabilise-done edge
+  category: semantic_timing
+  consequence: >-
+    Baseline and final pressure are sampled in the same scan, so the measured decay is ~0 and every pack
+    passes — a leaking pack ships.
+  expected_catcher: T4 semantic review (code vs narrative); proven by "leaking pack must fail"
+  intended: {lint: [], scenarios: [FAT-ST20-02, CE-ST20-06]}
+  patches:
+    - {op: replace, find: "LD T22", with: "LD T23", in_rung: "Baseline pressure at end of stabilisation"}
+F1:
+  station: ST10
+  title: Jam detection missing (feature gap, not a regression)
+  category: feature_gap
+  consequence: A jammed pallet at the entry keeps the conveyor running against it.
+  expected_catcher: T3 generation from the narrative (§3)
+  intended: {lint: [], scenarios: [CE-ST10-03]}
+  patches:
+    - {op: remove_rung, contains: "OUT T10 K50"}
+    - {op: remove_rung, contains: "SET M190"}

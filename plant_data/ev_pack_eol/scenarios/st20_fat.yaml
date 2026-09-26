@@ -1,0 +1,113 @@
+# ST20 factory-acceptance scenarios — written by the controls engineer from the control narrative
+# (sections cited in `trace`) and the parameter sheet in io_list.xlsx. Never derived from AI output.
+station: ST20
+plant: st20
+scan_ms: 10
+defaults:
+  plant: {leak_kpa_per_s: 0.005}
+  stimuli:
+    - {at_ms: 0, set: {X0: true, X2: true}}          # E-stop chain healthy, auto mode
+scenarios:
+  - id: FAT-ST20-01
+    title: Tight pack passes and is released as PASS
+    trace: [narrative §4.6, parameters dp_limit]
+    duration_ms: 30000
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+      - {when: "M207", delay_ms: 500, set: {X23: false}}
+    expect:
+      - {eventually: "M207 and Y23 and not Y24", by_ms: 28000}
+      - {never: "M211"}
+      - {at_end: "not M200"}
+
+  - id: FAT-ST20-02
+    title: Leaking pack (0.8 kPa over the window) must fail
+    trace: [narrative §4.6, parameters dp_limit]
+    duration_ms: 30000
+    plant: {leak_kpa_per_s: 0.08}
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+      - {when: "M207", delay_ms: 500, set: {X23: false}}
+    expect:
+      - {eventually: "M207 and Y24 and not Y23", by_ms: 28000}
+      - {never: "M210"}
+
+  - id: FAT-ST20-03
+    title: Borderline pack (0.25 kPa over the window) passes
+    trace: [narrative §4.6, parameters dp_limit]
+    duration_ms: 30000
+    plant: {leak_kpa_per_s: 0.025}
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+    expect:
+      - {eventually: "M210 and M207", by_ms: 28000}
+      - {never: "M211"}
+
+  - id: FAT-ST20-04
+    title: Cycle completes inside the 23.0 s ST20 budget
+    trace: [parameters cycle_time_budget]
+    duration_ms: 24000
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+    expect:
+      - {eventually: "M207", by_ms: 23100}
+
+  - id: FAT-ST20-05
+    title: No cycle starts outside auto mode
+    trace: [narrative §4.1]
+    duration_ms: 3000
+    stimuli:
+      - {at_ms: 0, set: {X2: false}}
+      - {at_ms: 100, set: {X23: true}}
+    expect:
+      - {never: "M201 or Y20 or Y21"}
+
+  - id: FAT-ST20-06
+    title: Manual vent opens the vent valve in manual mode only
+    trace: [narrative §4.7]
+    duration_ms: 2000
+    stimuli:
+      - {at_ms: 0, set: {X2: false}}
+      - {at_ms: 500, set: {X25: true}}
+      - {at_ms: 1000, set: {X2: true}}
+    expect:
+      - {never: "Y22 and not X25"}
+      - {eventually: "Y22", by_ms: 520}
+      - {at_end: "not Y22"}
+
+  - id: FAT-ST20-07
+    title: Fault reset clears a latched fill-timeout alarm once the cause is gone
+    trace: [narrative §4.8]
+    duration_ms: 13000
+    plant: {supply_kpa: 13.0}
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+      - {when: "M207", delay_ms: 500, set: {X23: false}}
+      - {at_ms: 12000, set: {X1: true}}
+      - {at_ms: 12200, set: {X1: false}}
+    expect:
+      - {eventually: "M290 and Y25", by_ms: 9500}
+      - {at_end: "not M290 and not Y25"}
+
+  - id: FAT-ST20-08
+    title: Pallet-sensor bounce during a test does not restart the sequence
+    trace: [narrative §4.1]
+    duration_ms: 30000
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+      - {when: "M204", delay_ms: 1000, set: {X23: false}}
+      - {when: "M204", delay_ms: 1200, set: {X23: true}}
+    expect:
+      - {never: "M201", after_ms: 2000}
+      - {eventually: "M210 and M207", by_ms: 28000}
+
+  - id: FAT-ST20-09
+    title: Result is signalled to the line controller only at DONE
+    trace: [narrative §4.7]
+    duration_ms: 30000
+    plant: {leak_kpa_per_s: 0.08}
+    stimuli:
+      - {at_ms: 100, set: {X23: true}}
+    expect:
+      - {never: "(Y23 or Y24) and not M207"}
+      - {eventually: "Y24", by_ms: 28000}

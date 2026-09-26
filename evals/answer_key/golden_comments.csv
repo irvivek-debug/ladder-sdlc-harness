@@ -1,0 +1,62 @@
+Device Name,Comment
+X0,ES-0001 E-stop chain healthy
+X1,PB-0002 fault reset
+X2,SS-0003 auto mode
+X10,PE-1001 pallet at stop
+X11,PE-1002 conveyor entry eye
+X13,MOL-1001 motor overload OK
+X14,RQ-1005 release request
+Y10,M-1001 conveyor motor
+Y11,XY-1004 stopper release
+M100,ST10 pallet in position
+M190,ST10 conveyor jam alarm
+M191,ST10 motor overload alarm
+M199,ST10 any fault
+T10,ST10 jam timer 5.0s
+T11,ST10 release pulse 2.0s
+X20,ZS-2002A clamp closed
+X21,ZS-2002B clamp open
+X22,PS-2009 supply air OK
+X23,ZS-2008 pallet in test pos
+X25,PB-2010 manual vent
+Y20,XY-2002 clamp close sol
+Y21,XV-2003 fill valve
+Y22,XV-2004 vent valve
+Y23,RS-2006 ST20 PASS to line
+Y24,RS-2007 ST20 FAIL/reject
+Y25,HL-2011 ST20 fault beacon
+D100,PT-2001 pack press kPa x100
+D110,ST20 baseline pressure
+D111,ST20 final pressure
+D112,ST20 decay dP kPa x100
+D120,ST20 dP limit kPa x100
+D122,ST20 fill complete thresh
+D123,ST20 over-pressure trip
+M200,ST20 busy
+M201,ST20 step CLAMP
+M202,ST20 step FILL
+M203,ST20 step STABILISE
+M204,ST20 step TEST
+M205,ST20 step VENT
+M206,ST20 step UNCLAMP
+M207,ST20 step DONE
+M210,ST20 result PASS
+M211,ST20 result FAIL
+M290,ST20 fill timeout alarm
+M291,ST20 over-pressure alarm
+M292,ST20 PT-2001 signal fault
+M293,ST20 supply air low alarm
+M299,ST20 any fault
+T21,ST20 fill timeout 8.0s
+T22,ST20 stabilise 5.0s
+T23,ST20 test window 10.0s
+T24,ST20 vent 0.5s
+X30,HP-3003 HiPot PASS
+X31,HP-3004 HiPot FAIL
+X32,ZS-3002 guard door closed
+X33,ZS-3001 pallet in ST30
+Y30,HP-3005 HiPot start HV en
+Y31,HL-3006 HV-on beacon
+M310,ST30 HiPot PASS
+M311,ST30 HiPot FAIL
+SM400,Always ON

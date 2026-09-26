@@ -1,0 +1,14 @@
+parameter,value,units,device,station,note
+test_pressure,15.00,kPa(g),regulator PR-2012 (mechanical),ST20,Supply regulator set to 15.2 kPa
+fill_complete,14.50,kPa(g),D122,ST20,
+fill_timeout,8.0,s,T21,ST20,
+stabilise_time,5.0,s,T22,ST20,Changed from 3.0 s by MOC-2021-044
+test_window,10.0,s,T23,ST20,
+dp_limit,0.30,kPa over the test window,D120,ST20,
+vent_time,0.5,s,T24,ST20,
+overpressure_trip,20.00,kPa(g),D123,ST20,
+pt_fault_below,-5.00,kPa(g),D100 compare,ST20,Wire break reads about -25 kPa
+cycle_time_budget,23.0,s,,ST20,Line takt allowance for ST20 from pallet arrival to DONE
+jam_time,5.0,s,T10,ST10,
+release_pulse,2.0,s,T11,ST10,
+hipot_test_time,3.0,s,tester internal,ST30,

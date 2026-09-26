@@ -1,0 +1,39 @@
+# ST30 factory-acceptance scenarios — from narrative §6.
+station: ST30
+plant: st30
+scan_ms: 10
+defaults:
+  stimuli:
+    - {at_ms: 0, set: {X0: true, X32: true}}
+scenarios:
+  - id: FAT-ST30-01
+    title: Good pack passes HiPot and HV switches off
+    trace: [narrative §6]
+    duration_ms: 4000
+    stimuli:
+      - {at_ms: 100, set: {X33: true}}
+    expect:
+      - {eventually: "M310", by_ms: 3200}
+      - {at_end: "M310 and not Y30 and not Y31"}
+
+  - id: FAT-ST30-02
+    title: Insulation fault fails HiPot and HV switches off
+    trace: [narrative §6]
+    duration_ms: 4000
+    plant: {insulation_ok: false}
+    stimuli:
+      - {at_ms: 100, set: {X33: true}}
+    expect:
+      - {eventually: "M311", by_ms: 3200}
+      - {never: "M310"}
+      - {at_end: "not Y30"}
+
+  - id: FAT-ST30-03
+    title: No HV without the guard door closed
+    trace: [narrative §6]
+    duration_ms: 2000
+    stimuli:
+      - {at_ms: 0, set: {X32: false}}
+      - {at_ms: 100, set: {X33: true}}
+    expect:
+      - {never: "Y30 or Y31"}

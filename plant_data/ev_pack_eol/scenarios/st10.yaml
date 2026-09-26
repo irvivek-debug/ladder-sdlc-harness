@@ -1,0 +1,45 @@
+# ST10 factory-acceptance scenarios — from narrative §3 and the parameter sheet.
+station: ST10
+plant: st10
+scan_ms: 10
+defaults:
+  stimuli:
+    - {at_ms: 0, set: {X0: true, X2: true}}
+    - {at_ms: 0, plant: {spawn_pallet: {}}}
+scenarios:
+  - id: FAT-ST10-01
+    title: Pallet is conveyed to the stop and held there
+    trace: [narrative §3]
+    duration_ms: 9000
+    expect:
+      - {eventually: "M100 and X10", by_ms: 6000}
+      - {always: "X10", after_ms: 6000}
+      - {always: "Y10", after_ms: 100}
+
+  - id: FAT-ST10-02
+    title: Release request lets the pallet leave and the stopper returns after 2.0 s
+    trace: [narrative §3, parameters release_pulse]
+    duration_ms: 12000
+    stimuli:
+      - {when: "M100", delay_ms: 500, set: {X14: true}}
+      - {when: "M100", delay_ms: 700, set: {X14: false}}
+    expect:
+      - {eventually: "Y11", by_ms: 6000}
+      - {eventually: "not X10 and not Y11", by_ms: 9000, after_ms: 7000}
+      - {at_end: "not X10 and not Y11"}
+
+  - id: FAT-ST10-03
+    title: Conveyor does not run outside auto mode
+    trace: [narrative §3]
+    duration_ms: 2000
+    stimuli:
+      - {at_ms: 0, set: {X2: false}}
+    expect:
+      - {never: "Y10"}
+
+  - id: FAT-ST10-04
+    title: Normal pallet transit does not raise a jam alarm
+    trace: [narrative §3, parameters jam_time]
+    duration_ms: 9000
+    expect:
+      - {never: "M190"}

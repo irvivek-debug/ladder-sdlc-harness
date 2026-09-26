@@ -1,0 +1,10 @@
+Device Name,Comment
+M310,ST30 HiPot PASS
+M311,ST30 HiPot FAIL
+X0,ES-0001 E-stop chain healthy
+X30,HP-3003 HiPot PASS
+X31,HP-3004 HiPot FAIL
+X32,ZS-3002 guard door closed
+X33,ZS-3001 pallet in ST30
+Y30,HP-3005 HiPot start HV en
+Y31,HL-3006 HV-on beacon

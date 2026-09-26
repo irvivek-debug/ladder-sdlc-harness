@@ -1,0 +1,15 @@
+id,station,cause_tag,cause,effect_tag,effect,action,response_ms,safety_class,reference
+CE-ST20-01,ST20,ZS-2002A,Clamp not confirmed closed during FILL,XV-2003,Fill valve closed,CLOSE,20,,narrative §4.3
+CE-ST20-02,ST20,PT-2001,Pack pressure above 20.00 kPa,XV-2003 / XV-2004,Fill valve closed and vent valve open,CLOSE / OPEN,100,,narrative §4.8
+CE-ST20-03,ST20,PT-2001,Pressure signal under range (below -5.00 kPa; wire break),HL-2011,Fault beacon on and cycle start inhibited,ALARM / INHIBIT,50,,narrative §4.8
+CE-ST20-04,ST20,ES-0001,E-stop circuit not healthy during a cycle,XV-2003 / XV-2004,Fill valve closed and vent valve open; result FAIL,CLOSE / OPEN,50,SAFETY (cause),narrative §5
+CE-ST20-05,ST20,T21,Fill not complete within 8.0 s,HL-2011 / RS-2007,Fill-timeout alarm; abort to vent; result FAIL,ALARM,500,,narrative §4.3
+CE-ST20-06,ST20,PT-2001,Decay over the test window above 0.30 kPa,RS-2007,Result FAIL (reject request),REJECT,,,narrative §4.6
+CE-ST20-07,ST20,PT-2001,Decay over the test window at or below 0.30 kPa,RS-2006,Result PASS,PASS,,,narrative §4.6
+CE-ST20-08,ST20,XY-2002,Clamp release,PT-2001,Permitted only when the pack is vented (below 1.00 kPa),PERMISSIVE,,,narrative §4.7
+CE-ST20-09,ST20,PS-2009,Supply air low during a cycle,XV-2003 / XV-2004,Fill valve closed and vent valve open; result FAIL,CLOSE / OPEN,50,,narrative §4.8
+CE-ST10-01,ST10,ES-0001,E-stop circuit not healthy,M-1001,Conveyor motor stopped,STOP,20,SAFETY (cause),narrative §3
+CE-ST10-02,ST10,MOL-1001,Conveyor motor overload trip,M-1001,Conveyor motor stopped,STOP,20,,narrative §3
+CE-ST10-03,ST10,PE-1002,Entry eye blocked more than 5.0 s while running (jam),M-1001,Conveyor motor stopped and jam alarm,STOP / ALARM,500,,narrative §3
+CE-ST30-01,ST30,ZS-3002,Guard door opened,HP-3005 / HL-3006,HV enable off and HV beacon off,STOP,20,SAFETY,narrative §6
+CE-ST30-02,ST30,ES-0001,E-stop circuit not healthy,HP-3005 / HL-3006,HV enable off and HV beacon off,STOP,20,SAFETY,narrative §6
