@@ -1,0 +1,7 @@
+Ladder SDLC Harness
+Copyright 2026 the Ladder SDLC Harness authors. Licensed under the Apache License, Version 2.0.
+
+MELSEC, iQ-F, iQ-R and GX Works3 are trademarks or registered trademarks of Mitsubishi Electric
+Corporation. This project implements a subset of the publicly documented MELSEC FX5 instruction
+dialect for simulation and testing. It is not affiliated with, endorsed by, or supported by
+Mitsubishi Electric. Mitsubishi manuals are cited by number and page and are not redistributed.

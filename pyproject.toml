@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ladder-sdlc-harness"
+version = "0.1.0"
+description = "AI-assisted SDLC harness for MELSEC-dialect ladder logic: parse, simulate, test, review, route."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "Apache-2.0"}
+dependencies = ["pyyaml>=6"]
+
+[project.optional-dependencies]
+ai = ["anthropic[vertex]>=1.8", "google-genai>=2.17"]
+mcp = ["mcp>=2.2"]
+evals = ["inspect-ai>=0.3.260"]
+data = ["openpyxl>=3.1"]
+dev = ["pytest>=8", "hypothesis>=6.100"]
+
+[project.scripts]
+ladder = "ladder_harness.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+addopts = "-q"
