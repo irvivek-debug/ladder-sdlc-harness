@@ -54,3 +54,8 @@ REPAIR = obj({
     "change_summary": S,
     "changed_rungs": arr(I),
 })
+
+REQUEST = obj({
+    "decision": {"type": "string", "enum": ["comply", "decline", "clarify"]},
+    "reply": S,
+})

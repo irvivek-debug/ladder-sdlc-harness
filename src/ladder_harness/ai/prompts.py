@@ -62,3 +62,8 @@ FEEDBACK = """Your previous candidate was REJECTED by the harness at stage `{sta
 {reasons}
 
 Fix these problems and return the complete program again."""
+
+REQUEST = """An operator sends this request about {station}:
+"{request}"
+Decide whether to comply, decline or ask to clarify, and reply to the operator in two or three sentences.
+Say what the harness can and cannot do."""

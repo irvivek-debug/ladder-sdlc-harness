@@ -1,0 +1,47 @@
+# Hand-labelled by the author (acting as the controls engineer) to calibrate the LLM judge used for T1 scoring.
+# label true = the candidate identifies the same device function as the reference (tag optional, wording free);
+# false = a different or inverted function, or too vague to tell the device apart. The judge is kept only if it
+# agrees with these labels on at least 80% of pairs.
+pairs:
+  - {device: X20, reference: "ZS-2002A clamp closed", candidate: "Clamp closed limit switch ZS-2002A", label: true}
+  - {device: Y21, reference: "XV-2003 fill valve", candidate: "Fill valve XV-2003 open cmd", label: true}
+  - {device: T22, reference: "ST20 stabilise 5.0s", candidate: "Stabilisation timer (5 s)", label: true}
+  - {device: D112, reference: "ST20 decay dP kPa x100", candidate: "Pressure drop over test", label: true}
+  - {device: M204, reference: "ST20 step TEST", candidate: "Leak test measuring step", label: true}
+  - {device: X0, reference: "ES-0001 E-stop chain healthy", candidate: "E-stop OK (safety relay)", label: true}
+  - {device: Y22, reference: "XV-2004 vent valve", candidate: "Vent valve XV-2004", label: true}
+  - {device: M299, reference: "ST20 any fault", candidate: "ST20 summary fault", label: true}
+  - {device: D100, reference: "PT-2001 pack press kPa x100", candidate: "PT-2001 pressure (0.01 kPa)", label: true}
+  - {device: T21, reference: "ST20 fill timeout 8.0s", candidate: "Fill timeout timer", label: true}
+  - {device: M210, reference: "ST20 result PASS", candidate: "Leak test passed latch", label: true}
+  - {device: X23, reference: "ZS-2008 pallet in test pos", candidate: "Pallet present at ST20", label: true}
+  - {device: Y20, reference: "XY-2002 clamp close sol", candidate: "Clamp solenoid", label: true}
+  - {device: M293, reference: "ST20 supply air low alarm", candidate: "Low supply air alarm", label: true}
+  - {device: D110, reference: "ST20 baseline pressure", candidate: "Start-of-test pressure", label: true}
+  - {device: T200, reference: "ST20 vent 0.5s", candidate: "Vent timer", label: true}
+  - {device: X25, reference: "PB-2010 manual vent", candidate: "Manual vent pushbutton", label: true}
+  - {device: Y25, reference: "HL-2011 ST20 fault beacon", candidate: "Fault lamp ST20", label: true}
+  - {device: M201, reference: "ST20 step CLAMP", candidate: "Step 1: clamping", label: true}
+  - {device: X10, reference: "PE-1001 pallet at stop", candidate: "Pallet at stopper sensor", label: true}
+  - {device: M207, reference: "ST20 step DONE", candidate: "Cycle complete", label: true}
+  - {device: D122, reference: "ST20 fill complete thresh", candidate: "Fill target 14.5 kPa", label: true}
+  - {device: X20, reference: "ZS-2002A clamp closed", candidate: "Clamp open limit switch", label: false}
+  - {device: Y21, reference: "XV-2003 fill valve", candidate: "Vent valve", label: false}
+  - {device: T22, reference: "ST20 stabilise 5.0s", candidate: "Test window timer", label: false}
+  - {device: D112, reference: "ST20 decay dP kPa x100", candidate: "Baseline pressure", label: false}
+  - {device: M204, reference: "ST20 step TEST", candidate: "Step VENT", label: false}
+  - {device: X0, reference: "ES-0001 E-stop chain healthy", candidate: "Fault reset button", label: false}
+  - {device: D110, reference: "ST20 baseline pressure", candidate: "Final pressure", label: false}
+  - {device: M210, reference: "ST20 result PASS", candidate: "Result FAIL latch", label: false}
+  - {device: Y24, reference: "RS-2007 ST20 FAIL/reject", candidate: "PASS signal to line", label: false}
+  - {device: T21, reference: "ST20 fill timeout 8.0s", candidate: "Timer", label: false}
+  - {device: M200, reference: "ST20 busy", candidate: "Internal relay", label: false}
+  - {device: D120, reference: "ST20 dP limit kPa x100", candidate: "Over-pressure trip setpoint", label: false}
+  - {device: X22, reference: "PS-2009 supply air OK", candidate: "Pack pressure high switch", label: false}
+  - {device: M292, reference: "ST20 PT-2001 signal fault", candidate: "Over-pressure alarm", label: false}
+  - {device: Y11, reference: "XY-1004 stopper release", candidate: "Conveyor motor", label: false}
+  - {device: X11, reference: "PE-1002 conveyor entry eye", candidate: "Pallet at stop", label: false}
+  - {device: T10, reference: "ST10 jam timer 5.0s", candidate: "Release pulse timer", label: false}
+  - {device: M191, reference: "ST10 motor overload alarm", candidate: "Conveyor jam alarm", label: false}
+  - {device: D123, reference: "ST20 over-pressure trip", candidate: "Fill complete threshold", label: false}
+  - {device: X32, reference: "ZS-3002 guard door closed", candidate: "Guard door open", label: false}

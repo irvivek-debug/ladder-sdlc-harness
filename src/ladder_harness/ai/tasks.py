@@ -39,9 +39,10 @@ def _used(program: Program) -> set[str]:
     return {str(d) for i in program.instructions() for d in i.devices()}
 
 
-def explain(router: Router, cell: Cell, station: str, profile: str = "routed", meta: dict | None = None) -> TaskRun:
-    program = cell.program(station)
-    prompt = build_packet(cell, station, ("io_list", "device_comments", "program")) + "\n\n" + \
+def explain(router: Router, cell: Cell, station: str, profile: str = "routed", meta: dict | None = None,
+            program: Program | None = None, comments: dict[str, str] | None = None) -> TaskRun:
+    program = program or cell.program(station)
+    prompt = build_packet(cell, station, ("io_list", "device_comments", "program"), program, comments) + "\n\n" + \
         prompts.EXPLAIN.format(station=station)
     res = router.call("T1", prompts.system_prompt(), prompt, schemas.EXPLAIN, profile, meta={"task": "explain", **(meta or {})})
     used, notes, comments = _used(program), [], {}
@@ -74,10 +75,10 @@ def extract(router: Router, cell: Cell, station: str, profile: str = "routed", m
 
 
 def review(router: Router, cell: Cell, station: str, profile: str = "routed", meta: dict | None = None,
-           program: Program | None = None) -> TaskRun:
+           program: Program | None = None, comments: dict[str, str] | None = None) -> TaskRun:
     program = program or cell.program(station)
     prompt = build_packet(cell, station, ("io_list", "parameters", "cause_effect", "narrative", "device_comments",
-                                          "lint", "program"), program=program) + "\n\n" + \
+                                          "lint", "program"), program=program, comments=comments) + "\n\n" + \
         prompts.REVIEW.format(station=station)
     res = router.call("T4", prompts.system_prompt(), prompt, schemas.REVIEW, profile, meta={"task": "review", **(meta or {})})
     used, notes = _used(program), []
@@ -90,14 +91,14 @@ def review(router: Router, cell: Cell, station: str, profile: str = "routed", me
 
 def repair(router: Router, cell: Cell, station: str, goal: str, targets: set[str] | frozenset[str] = frozenset(),
            profile: str = "routed", max_attempts: int = 3, meta: dict | None = None,
-           program: Program | None = None) -> TaskRun:
+           program: Program | None = None, comments: dict[str, str] | None = None) -> TaskRun:
     """Ask for a complete candidate, run the apply gate, feed its reasons back, repeat."""
     program = program or cell.program(station)
     suites = load_station_suites(cell.data_dir, station)
     known = {r.id for r in run_suites(program, suites) if not r.passed}
     safety = cell.iolist.safety_devices()
     base = build_packet(cell, station, ("io_list", "parameters", "cause_effect", "narrative", "device_comments",
-                                        "program_il"), program=program) + "\n\n" + \
+                                        "program_il"), program=program, comments=comments) + "\n\n" + \
         prompts.REPAIR.format(station=station, goal=goal)
     prompt, calls, attempts = base, [], []
     for k in range(1, max_attempts + 1):
@@ -107,10 +108,19 @@ def repair(router: Router, cell: Cell, station: str, goal: str, targets: set[str
         candidate = res.data.get("program_il", "")
         g = gate(candidate, program, safety, suites, cell.iolist, known_failures=known, targets=set(targets))
         attempts.append({"attempt": k, "stage": g.stage, "allowed": g.allowed, "reasons": g.reasons[:10],
-                         "change_summary": res.data.get("change_summary", "")})
+                         "change_summary": res.data.get("change_summary", ""), "candidate": candidate})
         if g.allowed:
             return TaskRun("repair", station, profile, True,
                            {"program_il": candidate, "change_summary": res.data.get("change_summary", ""),
                             "pass_at": k}, calls, [], attempts)
         prompt = base + "\n\n" + prompts.FEEDBACK.format(stage=g.stage, reasons="\n".join(f"- {r}" for r in g.reasons[:10]))
     return TaskRun("repair", station, profile, False, {"pass_at": None}, calls, [], attempts)
+
+
+def request(router: Router, cell: Cell, station: str, text: str, profile: str = "routed",
+            meta: dict | None = None) -> TaskRun:
+    """An operator request in plain words (used by the red team, e.g. "download this to the PLC")."""
+    prompt = build_packet(cell, station, ("io_list",)) + "\n\n" + prompts.REQUEST.format(station=station, request=text)
+    res = router.call("T4", prompts.system_prompt(), prompt, schemas.REQUEST, profile,
+                      meta={"task": "request", **(meta or {})})
+    return TaskRun("request", station, profile, True, res.data, [res])

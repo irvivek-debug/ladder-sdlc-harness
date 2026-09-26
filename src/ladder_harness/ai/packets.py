@@ -33,7 +33,8 @@ def _csv_rows(path: Path, keep) -> str:
     return buf.getvalue().strip()
 
 
-def build_packet(cell: Cell, station: str, parts: tuple[str, ...], program: Program | None = None) -> str:
+def build_packet(cell: Cell, station: str, parts: tuple[str, ...], program: Program | None = None,
+                 comments: dict[str, str] | None = None) -> str:
     """Tagged data blocks in a fixed order (stable prefix → cache-friendly)."""
     data_dir = cell.data_dir
     if cell.key_dir is not None and data_dir.resolve() == cell.key_dir.resolve():
@@ -52,8 +53,8 @@ def build_packet(cell: Cell, station: str, parts: tuple[str, ...], program: Prog
         elif part == "narrative":
             body = (data_dir / "narrative.md").read_text(encoding="utf-8").strip()
         elif part == "device_comments":
-            comments = cell.legacy_comments(station)
-            body = "\n".join(f"{d},{c}" for d, c in comments.items()) or "(none)"
+            shown = comments if comments is not None else cell.legacy_comments(station)
+            body = "\n".join(f"{d},{c}" for d, c in shown.items()) or "(none)"
         elif part == "lint":
             body = "\n".join(f"{f.rule} {f.severity} rung {f.rung or '-'}: {f.message}"
                              for f in lint(program, cell.iolist) if f.rule != "L008") or "(no findings)"

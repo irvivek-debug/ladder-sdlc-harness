@@ -2,6 +2,7 @@
 # `intended` lists the checks designed to catch each one; tests assert they do (a subset of what fails).
 D1:
   station: ST20
+  match: {devices: [Y22, X25], anchors: ["OUT Y22"], categories: [double_coil, safety, semantic_logic, other]}
   title: Vent valve double coil — a manual-vent rung added in 2021 also drives Y22
   category: double_coil
   consequence: >-
@@ -27,6 +28,7 @@ D1:
         OUT Y22 ; XV-2004 vent valve (manual)
 D2:
   station: ST20
+  match: {devices: [], anchors: [], categories: [documentation]}
   title: Undocumented legacy program — about 60% of devices have no comment and no rung statements survive
   category: documentation
   consequence: Maintenance depends on whoever still remembers the program.
@@ -35,6 +37,7 @@ D2:
   patches: []
 D3:
   station: ST20
+  match: {devices: [T200], anchors: ["OUT T200 K50", "AND T200"], categories: [timing, semantic_logic, other]}
   title: FX3→FX5 timer trap — vent timer kept as T200 K50
   category: migration_timing
   consequence: >-
@@ -47,6 +50,7 @@ D3:
     - {op: replace, find: "AND T24", with: "AND T200"}
 D4:
   station: ST20
+  match: {devices: [X20, Y21], anchors: ["OUT Y21"], categories: [missing_interlock, safety, semantic_logic]}
   title: Fill valve rung lost its clamp-closed interlock
   category: missing_interlock
   consequence: If the clamp slips during FILL, XV-2003 keeps pressurising an unclamped pack.
@@ -56,6 +60,7 @@ D4:
     - {op: remove, find: "AND X20", in_rung: "Fill valve: FILL step, clamp confirmed closed, no fault"}
 D5:
   station: ST20
+  match: {devices: [D110, D111, D112, T22, T23], anchors: ["MOVP D100 D110"], categories: [semantic_logic, timing]}
   title: Baseline pressure captured on the test-done edge instead of the stabilise-done edge
   category: semantic_timing
   consequence: >-
@@ -67,6 +72,7 @@ D5:
     - {op: replace, find: "LD T22", with: "LD T23", in_rung: "Baseline pressure at end of stabilisation"}
 F1:
   station: ST10
+  match: {devices: [X11, M190, T10, Y10], anchors: [], categories: [missing_interlock, semantic_logic, safety, timing, other]}
   title: Jam detection missing (feature gap, not a regression)
   category: feature_gap
   consequence: A jammed pallet at the entry keeps the conveyor running against it.
