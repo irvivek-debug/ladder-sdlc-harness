@@ -173,6 +173,23 @@ def _validate_rung(rung: Rung) -> None:
         raise ParseError(last.line, "rung has no output instruction")
 
 
+def parse_instruction(text: str, line: int = 0) -> Instruction:
+    """Parse one instruction line (`OP operands ; comment`) without rung-structure checks."""
+    code, _, comment = text.strip().partition(";")
+    tokens = code.split()
+    if not tokens:
+        raise ParseError(line, "empty instruction")
+    op = tokens[0].upper()
+    if op not in SPECS:
+        raise UnsupportedInstruction(line, f"{tokens[0]!r} is not in the supported FX5 subset")
+    try:
+        operands = tuple(parse_operand(t) for t in tokens[1:])
+        check_operands(SPECS[op], operands)
+    except (DeviceError, ValueError) as e:
+        raise ParseError(line, f"{op}: {e}") from None
+    return Instruction(op, operands, comment.strip(), line)
+
+
 def parse_il(text: str, name: str = "program") -> Program:
     header: list[str] = []
     pending: list[str] = []
@@ -188,21 +205,12 @@ def parse_il(text: str, name: str = "program") -> Program:
         if line.startswith(";"):
             (pending if items or pending else header).append(line[1:].strip())
             continue
-        code, _, comment = line.partition(";")
-        tokens = code.split()
-        op = tokens[0].upper()
         if ended:
-            raise ParseError(lineno, f"{op} appears after END")
-        if op not in SPECS:
-            raise UnsupportedInstruction(lineno, f"{tokens[0]!r} is not in the supported FX5 subset")
-        try:
-            operands = tuple(parse_operand(t) for t in tokens[1:])
-            check_operands(SPECS[op], operands)
-        except (DeviceError, ValueError) as e:
-            raise ParseError(lineno, f"{op}: {e}") from None
-        items.append((Instruction(op, operands, comment.strip(), lineno), pending))
+            raise ParseError(lineno, f"{line.split()[0].upper()} appears after END")
+        ins = parse_instruction(line, lineno)
+        items.append((ins, pending))
         pending = []
-        ended = op == "END"
+        ended = ins.op == "END"
     rungs = _segment(items)
     for rung in rungs:
         _validate_rung(rung)
