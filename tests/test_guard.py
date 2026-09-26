@@ -40,3 +40,25 @@ def test_gate_runs_stages_in_order():
     assert r.stage == "scenarios" and not r.allowed
     ok = gate("LD X33\nAND X32\nAND X0\nOUT Y30\nLD X1\nOR M0\nORI X0\nOUT M99\nEND\n", OLD, SAFETY, [suite])
     assert ok.allowed and ok.stage == "passed"
+
+
+def test_gate_accepts_a_targeted_fix_despite_known_failures():
+    suite = suite_from_dict({"station": "T", "plant": "none", "scenarios": [
+        {"id": "A", "title": "M99 follows X1", "duration_ms": 100,
+         "stimuli": [{"at_ms": 0, "set": {"X1": True, "X0": True}}], "expect": [{"eventually": "M99", "by_ms": 50}]},
+        {"id": "B", "title": "Y5 on", "duration_ms": 100, "expect": [{"eventually": "Y5", "by_ms": 50}]}]})
+    base = "LD X33\nAND X32\nAND X0\nOUT Y30\nLD X1\nAND M0\nORI X0\nOUT M99\nEND\n"
+    old = parse_il(base)
+    fixed = base.replace("AND M0", "OR M0")
+    r = gate(fixed, old, SAFETY, [suite], known_failures={"A", "B"}, targets={"A"})
+    assert r.allowed, r.reasons
+    r = gate(base, old, SAFETY, [suite], known_failures={"A", "B"}, targets={"A"})
+    assert not r.allowed and r.reasons[0].startswith("TARGET STILL FAILING")
+
+
+def test_gate_rejects_new_lint_errors_only():
+    old = parse_il("LD X1\nOUT Y1\nLD X2\nOUT Y1\nLD X0\nOUT M99\nEND\n")      # already has a double coil
+    same = "LD X1\nOUT Y1\nLD X2\nOUT Y1\nLD X0\nOR X3\nOUT M99\nEND\n"
+    assert gate(same, old, set(), []).allowed
+    worse = "LD X1\nOUT Y1\nLD X2\nOUT Y1\nLD X0\nOUT M99\nLD X4\nOUT M99\nEND\n"
+    assert gate(worse, old, set(), []).stage == "lint"

@@ -66,9 +66,19 @@ def check_patch(old: Program, new: Program, safety: set[Device]) -> GuardVerdict
     return GuardVerdict(not reasons, reasons)
 
 
+def _lint_errors(program: Program, iolist: IoList | None) -> dict[tuple, str]:
+    return {(f.rule, f.devices): f"{f.rule}: {f.message}" for f in lint(program, iolist) if f.severity == "error"}
+
+
 def gate(new_text: str, old: Program, safety: set[Device], suites: list[Suite],
-         iolist: IoList | None = None) -> GateResult:
-    """Parse → guard → lint errors → every scenario. Stops at the first failing stage."""
+         iolist: IoList | None = None, known_failures: frozenset[str] | set[str] = frozenset(),
+         targets: frozenset[str] | set[str] = frozenset()) -> GateResult:
+    """Parse → guard → no new lint errors → scenarios. Stops at the first failing stage.
+
+    A candidate passes the scenario stage when every scenario in `targets` passes and nothing fails
+    that was not already failing on the old program (`known_failures`): fix what you were asked to,
+    break nothing that worked.
+    """
     try:
         new = parse_il(new_text, old.name)
     except ParseError as e:
@@ -76,11 +86,15 @@ def gate(new_text: str, old: Program, safety: set[Device], suites: list[Suite],
     verdict = check_patch(old, new, safety)
     if not verdict.allowed:
         return GateResult(False, "guard", verdict.reasons, program=new)
-    errors = [f for f in lint(new, iolist) if f.severity == "error"]
-    if errors:
-        return GateResult(False, "lint", [f"{f.rule}: {f.message}" for f in errors], program=new)
+    old_errors, new_errors = _lint_errors(old, iolist), _lint_errors(new, iolist)
+    introduced = [msg for key, msg in new_errors.items() if key not in old_errors]
+    if introduced:
+        return GateResult(False, "lint", introduced, program=new)
     results = run_suites(new, suites, stop_on_fail=True)
-    failed = [r for r in results if not r.passed]
-    if failed:
-        return GateResult(False, "scenarios", [r.summary() for r in failed], results, new)
+    failed = {r.id: r for r in results if not r.passed}
+    regressions = [failed[i].summary() for i in sorted(set(failed) - set(known_failures))]
+    unfixed = [failed[i].summary() for i in sorted(set(failed) & set(targets))]
+    if regressions or unfixed:
+        reasons = [f"REGRESSION {r}" for r in regressions] + [f"TARGET STILL FAILING {r}" for r in unfixed]
+        return GateResult(False, "scenarios", reasons, results, new)
     return GateResult(True, "passed", [], results, new)
