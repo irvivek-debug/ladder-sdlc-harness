@@ -51,3 +51,7 @@ class ReplayMiss(LookupError):
 
 class ModelRefused(RuntimeError):
     """The model declined the request (stop_reason == refusal)."""
+
+
+class BudgetExceeded(RuntimeError):
+    """The run's spending cap was reached; the sweep aborts rather than warns."""

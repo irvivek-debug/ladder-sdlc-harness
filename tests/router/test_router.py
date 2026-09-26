@@ -66,3 +66,29 @@ def test_failed_call_is_logged_and_raised(tmp_path):
     with pytest.raises(RuntimeError):
         r.call("T1", "s", "p", {"type": "object"})
     assert r.ledger.read()[0]["ok"] is False
+
+
+def test_budget_guard_aborts_live_calls_but_not_replay(tmp_path):
+    from ladder_harness.router.router import BudgetGuard
+    from ladder_harness.router.types import BudgetExceeded
+    fb, backends = fake_backends([{"a": 1}, {"a": 2}, {"a": 3}])
+    guard = BudgetGuard(cap_usd=0.0001)
+    r = Router.from_config(ROOT / "config", tmp_path / "l.jsonl", mode="record", backends=backends,
+                           cassette_dir=tmp_path / "c", budget=guard)
+    r.call("T4", "s", "p1", {"type": "object"})           # spends more than the cap
+    with pytest.raises(BudgetExceeded):
+        r.call("T4", "s", "p2", {"type": "object"})
+    rep = Router.from_config(ROOT / "config", tmp_path / "l.jsonl", mode="replay", cassette_dir=tmp_path / "c",
+                             budget=guard)
+    assert rep.call("T4", "s", "p1", {"type": "object"}).data == {"a": 1}
+
+
+def test_cassette_tags_keep_epochs_apart(tmp_path):
+    rec, _ = router(tmp_path, mode="record", answers=[{"e": 0}, {"e": 1}])
+    rec.with_tag("e0").call("T1", "s", "p", {"type": "object"})
+    rec.with_tag("e1").call("T1", "s", "p", {"type": "object"})
+    rep, _ = router(tmp_path, mode="replay")
+    assert rep.with_tag("e0").call("T1", "s", "p", {"type": "object"}).data == {"e": 0}
+    assert rep.with_tag("e1").call("T1", "s", "p", {"type": "object"}).data == {"e": 1}
+    with pytest.raises(ReplayMiss):
+        rep.call("T1", "s", "p", {"type": "object"})

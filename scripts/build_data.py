@@ -24,48 +24,16 @@ import yaml
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from ladder_harness.cell import read_comments_csv, write_comments_csv  # noqa: E402
-from ladder_harness.melsec.devices import dev  # noqa: E402
+from ladder_harness.cell import load_cell, read_comments_csv, write_comments_csv  # noqa: E402
 from ladder_harness.melsec.gxw3_csv import comments_to_csv_bytes, program_to_csv_bytes  # noqa: E402
-from ladder_harness.melsec.program import Instruction, Program, format_il, parse_il  # noqa: E402
-from ladder_harness.patching import apply_patches  # noqa: E402
+from ladder_harness.melsec.program import format_il, parse_il  # noqa: E402
 from ladder_harness.scenarios.from_ce import generate  # noqa: E402
+from ladder_harness.variants import make_variant, used_devices  # noqa: E402
 
 CELL = Path("plant_data/ev_pack_eol")
 KEY = ROOT / "evals" / "answer_key"
 FIXED_TIME = (2026, 9, 26, 0, 0, 0)
 LEGACY_DEFECTS = {"ST20": ["D1", "D3", "D4", "D5"], "ST10": ["F1"]}
-
-
-def used_devices(program: Program) -> list[str]:
-    return sorted({str(d) for i in program.instructions() for d in i.devices()}, key=dev)
-
-
-def legacy_comments(station: str, program: Program, golden: dict[str, str], realism: dict) -> dict[str, str]:
-    keep = realism["comment_keep"]
-    used = used_devices(program)
-    chosen = {d for i, d in enumerate(used) if i % 5 in (0, 2)} | set(keep["forced"].get(station, []))
-    out = {}
-    for d in used:
-        if d in chosen:
-            text = realism["legacy_comment_overrides"].get(d, golden.get(d, ""))
-            if text:
-                out[d] = text
-    rt = realism["red_team"]
-    if rt["station"] == station:
-        out[rt["device"]] = " ".join(rt["text"].split())
-    return out
-
-
-def strip_documentation(program: Program, comments: dict[str, str], header: list[str]) -> Program:
-    rungs = []
-    for rung in program.rungs:
-        rung.statements = []
-        rung.instructions = [Instruction(i.op, i.operands, comments.get(str(i.devices()[0]), "") if i.devices() else "",
-                                         i.line) for i in rung.instructions]
-        rungs.append(rung)
-    program.header = list(header)
-    return parse_il(format_il(program), program.name)
 
 
 def normalize_zip(path: Path) -> None:
@@ -149,18 +117,12 @@ def build(out_root: Path) -> list[Path]:
     out = out_root / CELL
     for sub in ("st10", "st20", "st30", "gxw3", "scenarios"):
         (out / sub).mkdir(parents=True, exist_ok=True)
-    defects = yaml.safe_load((KEY / "defects.yaml").read_text(encoding="utf-8"))
-    realism = yaml.safe_load((KEY / "realism.yaml").read_text(encoding="utf-8"))
+    cell = load_cell(src, KEY)
     golden_comments = read_comments_csv(KEY / "golden_comments.csv")
     written: list[Path] = []
 
     for station, ids in LEGACY_DEFECTS.items():
-        golden = parse_il((KEY / f"{station.lower()}_golden.il").read_text(encoding="utf-8"), station)
-        patched = golden
-        for d in ids:
-            patched = apply_patches(patched, defects[d]["patches"])
-        comments = legacy_comments(station, patched, golden_comments, realism)
-        legacy = strip_documentation(patched, comments, realism["legacy_header"][station])
+        legacy, comments = make_variant(cell, station, ids)
         (out / station.lower() / "legacy.il").write_text(format_il(legacy), encoding="utf-8")
         write_comments_csv(out / station.lower() / "device_comments.csv", comments)
         (out / "gxw3" / f"{station}_legacy.csv").write_bytes(

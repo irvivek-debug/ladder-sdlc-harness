@@ -2,8 +2,11 @@
 from __future__ import annotations
 
 import json
+import threading
 from collections import defaultdict
 from pathlib import Path
+
+_LOCK = threading.Lock()
 
 
 class Ledger:
@@ -12,8 +15,9 @@ class Ledger:
 
     def append(self, entry: dict) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("a", encoding="utf-8") as f:
-            f.write(json.dumps(entry, sort_keys=True) + "\n")
+        line = json.dumps(entry, sort_keys=True) + "\n"
+        with _LOCK, self.path.open("a", encoding="utf-8") as f:
+            f.write(line)
 
     def read(self) -> list[dict]:
         if not self.path.exists():
