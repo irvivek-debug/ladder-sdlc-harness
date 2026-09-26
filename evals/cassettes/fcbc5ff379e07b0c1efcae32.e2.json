@@ -1,0 +1,79 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Conveyor stops and a jam alarm is raised until it is reset",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs",
+    "name": "Jam alarm"
+   },
+   {
+    "action": "Conveyor stops immediately",
+    "condition": "MOL-1001 trips",
+    "name": "Motor overload"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "Parameter sheet (for values) / Narrative (for intended logic)",
+    "item": "Jam detection logic",
+    "narrative_says": "If entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs, the conveyor stops and a jam alarm is raised.",
+    "parameter_sheet_says": "jam_time is 5.0 s using timer T10.",
+    "program_says": "The logic for the jam alarm (setting M190 based on T10 and PE-1002) is completely missing."
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Motor overload (MOL-1001) active",
+    "effect": "Stops the conveyor immediately"
+   },
+   {
+    "cause": "E-stop chain lost",
+    "effect": "Stops the conveyor immediately"
+   },
+   {
+    "cause": "ST10 fault present (including Jam alarm)",
+    "effect": "Inhibits the conveyor motor from running"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "jam_time",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "5.0"
+   },
+   {
+    "name": "release_pulse",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "2.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Auto mode is active AND no ST10 fault is present",
+    "exit": "Auto mode is lost OR an ST10 fault becomes active",
+    "name": "Conveyor Run"
+   },
+   {
+    "entry": "Rising edge of release request (RQ-1005)",
+    "exit": "Release timer (2.0 s) completes",
+    "name": "Stopper Release"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "fcbc5ff379e07b0c1efcae32.e2",
+ "latency_s": 24.76,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    },\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Conveyor Run\",\n      \"entry\": \"Auto mode is active AND no ST10 fault is present\",\n      \"exit\": \"Auto mode is lost OR an ST10 fault becomes active\"\n    },\n    {\n      \"name\": \"Stopper Release\",\n      \"entry\": \"Rising edge of release request (RQ-1005)\",\n      \"exit\": \"Release timer (2.0 s) completes\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Motor overload (MOL-1001) active\",\n      \"effect\": \"Stops the conveyor immediately\"\n    },\n    {\n      \"cause\": \"E-stop chain lost\",\n      \"effect\": \"Stops the conveyor immediately\"\n    },\n    {\n      \"cause\": \"ST10 fault present (including Jam alarm)\",\n      \"effect\": \"Inhibits the conveyor motor from running\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Jam alarm\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs\",\n      \"action\": \"Conveyor stops and a jam alarm is raised until it is reset\"\n    },\n    {\n      \"name\": \"Motor overload\",\n      \"condition\": \"MOL-1001 trips\",\n      \"action\": \"Conveyor stops immediately\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"Jam detection logic\",\n      \"narrative_says\": \"If entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs, the conveyor stops and a jam alarm is raised.\",\n      \"parameter_sheet_says\": \"jam_time is 5.0 s using timer T10.\",\n      \"program_says\": \"The logic for the jam alarm (setting M190 based on T10 and PE-1002) is completely missing.\",\n      \"authoritative\": \"Parameter sheet (for values) / Narrative (for intended logic)\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 600,
+  "thinking": 2620
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ES-0001 E-stop circuit healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "PB-0002 Fault reset pushbutton",
+    "device": "X1"
+   },
+   {
+    "comment": "SS-0003 Auto mode selector",
+    "device": "X2"
+   },
+   {
+    "comment": "PE-1001 Pallet at stop photo-eye",
+    "device": "X10"
+   },
+   {
+    "comment": "MOL-1001 Motor overload healthy",
+    "device": "X13"
+   },
+   {
+    "comment": "RQ-1005 Pallet release request",
+    "device": "X14"
+   },
+   {
+    "comment": "M-1001 Conveyor motor contactor",
+    "device": "Y10"
+   },
+   {
+    "comment": "XY-1004 Stopper release solenoid",
+    "device": "Y11"
+   },
+   {
+    "comment": "ST10 pallet in position",
+    "device": "M100"
+   },
+   {
+    "comment": "ST10 latched fault",
+    "device": "M190"
+   },
+   {
+    "comment": "ST10 motor overload alarm",
+    "device": "M191"
+   },
+   {
+    "comment": "ST10 conveyor fault interlock",
+    "device": "M199"
+   },
+   {
+    "comment": "ST10 stopper release timer",
+    "device": "T11"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Detect conveyor motor overload trip (X13 low) and set motor overload alarm M191.",
+    "rung": 1
+   },
+   {
+    "purpose": "Reset latched fault M190 on fault reset pushbutton X1 (PB-0002).",
+    "rung": 2
+   },
+   {
+    "purpose": "Combine latched fault, motor overload, and E-stop open into conveyor fault interlock M199.",
+    "rung": 3
+   },
+   {
+    "purpose": "Run conveyor motor contactor Y10 when auto mode is selected and no fault interlock is active.",
+    "rung": 4
+   },
+   {
+    "purpose": "Indicate pallet in position M100 when pallet at stop photo-eye X10 is blocked.",
+    "rung": 5
+   },
+   {
+    "purpose": "Latch stopper release solenoid Y11 on rising edge of pallet release request X14.",
+    "rung": 6
+   },
+   {
+    "purpose": "Time stopper release solenoid Y11 active duration (2.0 s delay via T11).",
+    "rung": 7
+   },
+   {
+    "purpose": "Reset stopper release solenoid Y11 when timer T11 completes.",
+    "rung": 8
+   },
+   {
+    "purpose": "End of program scan.",
+    "rung": 9
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "high",
+ "key": "d67743874d0dffd918c50291.e4",
+ "latency_s": 51.498,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\"device_comments\":[{\"device\":\"X0\",\"comment\":\"ES-0001 E-stop circuit healthy\"},{\"device\":\"X1\",\"comment\":\"PB-0002 Fault reset pushbutton\"},{\"device\":\"X2\",\"comment\":\"SS-0003 Auto mode selector\"},{\"device\":\"X10\",\"comment\":\"PE-1001 Pallet at stop photo-eye\"},{\"device\":\"X13\",\"comment\":\"MOL-1001 Motor overload healthy\"},{\"device\":\"X14\",\"comment\":\"RQ-1005 Pallet release request\"},{\"device\":\"Y10\",\"comment\":\"M-1001 Conveyor motor contactor\"},{\"device\":\"Y11\",\"comment\":\"XY-1004 Stopper release solenoid\"},{\"device\":\"M100\",\"comment\":\"ST10 pallet in position\"},{\"device\":\"M190\",\"comment\":\"ST10 latched fault\"},{\"device\":\"M191\",\"comment\":\"ST10 motor overload alarm\"},{\"device\":\"M199\",\"comment\":\"ST10 conveyor fault interlock\"},{\"device\":\"T11\",\"comment\":\"ST10 stopper release timer\"}],\"rung_purposes\":[{\"rung\":1,\"purpose\":\"Detect conveyor motor overload trip (X13 low) and set motor overload alarm M191.\"},{\"rung\":2,\"purpose\":\"Reset latched fault M190 on fault reset pushbutton X1 (PB-0002).\"},{\"rung\":3,\"purpose\":\"Combine latched fault, motor overload, and E-stop open into conveyor fault interlock M199.\"},{\"rung\":4,\"purpose\":\"Run conveyor motor contactor Y10 when auto mode is selected and no fault interlock is active.\"},{\"rung\":5,\"purpose\":\"Indicate pallet in position M100 when pallet at stop photo-eye X10 is blocked.\"},{\"rung\":6,\"purpose\":\"Latch stopper release solenoid Y11 on rising edge of pallet release request X14.\"},{\"rung\":7,\"purpose\":\"Time stopper release solenoid Y11 active duration (2.0 s delay via T11).\"},{\"rung\":8,\"purpose\":\"Reset stopper release solenoid Y11 when timer T11 completes.\"},{\"rung\":9,\"purpose\":\"End of program scan.\"}],\"suspicious\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2607,
+  "output": 478,
+  "thinking": 8505
+ }
+}

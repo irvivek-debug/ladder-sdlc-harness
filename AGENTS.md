@@ -37,12 +37,13 @@ Use the cheapest tool that can do the job:
 |---|---|---|
 | T0 | parse, lint, simulate, render, diff, apply gate | deterministic, **$0** |
 | T1 | device comments, rung purposes | Gemini 3.8 Flash, low effort |
-| T2 | narrative → structured spec, conflicts | Gemini 3.8 Flash, medium |
-| T3 | generate / repair until the scenarios pass | the lane the evaluations picked (`config/routing.yaml`) |
-| T4 | semantic review against the narrative | Claude Opus 5.5 on Vertex |
+| T2 | narrative → structured spec, conflicts | Gemini 3.8 Flash, low effort |
+| T3 | generate / repair until the scenarios pass | Gemini 3.8 Flash, medium effort |
+| T4 | semantic review against the narrative | Gemini 3.8 Flash, medium effort |
 | T5 | may this SAFETY rung change? | deterministic guard; never a model |
 
-`ladder_task` routes T1–T4 and returns the dollar cost of each call. `cost_ledger` summarises spend.
+Lanes come from `config/routing.yaml`, which the evaluation sweep generates. `ladder_task` routes T1–T4 and returns the
+dollar cost of each call. `cost_ledger` summarises spend.
 
 ## Tools (MCP server `ladder-harness`, or the `ladder` CLI)
 

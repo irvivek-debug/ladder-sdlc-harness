@@ -1,4 +1,10 @@
 {
+ "gemini-3.1-pro-preview:high": {
+  "agreement": 1.0,
+  "cost_usd": 0.03724,
+  "disagreements": [],
+  "n": 42
+ },
  "gemini-3.8-flash:high": {
   "agreement": 1.0,
   "cost_usd": 0.01206,

@@ -1,0 +1,111 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ES-0001 E-stop healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "PB-0002 Fault reset PB",
+    "device": "X1"
+   },
+   {
+    "comment": "SS-0003 Auto mode selector",
+    "device": "X2"
+   },
+   {
+    "comment": "PE-1001 Pallet at stop PE",
+    "device": "X10"
+   },
+   {
+    "comment": "MOL-1001 Conv motor OL",
+    "device": "X13"
+   },
+   {
+    "comment": "RQ-1005 Release request",
+    "device": "X14"
+   },
+   {
+    "comment": "M-1001 Conv motor contactor",
+    "device": "Y10"
+   },
+   {
+    "comment": "XY-1004 Stopper release",
+    "device": "Y11"
+   },
+   {
+    "comment": "ST10 pallet in position",
+    "device": "M100"
+   },
+   {
+    "comment": "ST10 generic fault latch",
+    "device": "M190"
+   },
+   {
+    "comment": "ST10 motor overload alarm",
+    "device": "M191"
+   },
+   {
+    "comment": "ST10 cell fault active",
+    "device": "M199"
+   },
+   {
+    "comment": "Stopper release duration",
+    "device": "T11"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Set motor overload alarm if overload healthy signal drops.",
+    "rung": 1
+   },
+   {
+    "purpose": "Reset generic fault latch via the fault reset pushbutton.",
+    "rung": 2
+   },
+   {
+    "purpose": "Aggregate overload, generic fault, and E-stop loss into a cell fault flag.",
+    "rung": 3
+   },
+   {
+    "purpose": "Run conveyor motor in auto mode if no cell faults are active.",
+    "rung": 4
+   },
+   {
+    "purpose": "Flag pallet in position when the stop photo-eye is blocked.",
+    "rung": 5
+   },
+   {
+    "purpose": "Latch stopper release solenoid on release request rising edge.",
+    "rung": 6
+   },
+   {
+    "purpose": "Run a 2.0s timer to track the stopper release duration.",
+    "rung": 7
+   },
+   {
+    "purpose": "Unlatch stopper release solenoid after duration timer completes.",
+    "rung": 8
+   },
+   {
+    "purpose": "End program execution.",
+    "rung": 9
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "high",
+ "key": "502c7aa5824b70e52af71ecf.e1",
+ "latency_s": 27.455,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\n  \"device_comments\": [\n    {\n      \"device\": \"X0\",\n      \"comment\": \"ES-0001 E-stop healthy\"\n    },\n    {\n      \"device\": \"X1\",\n      \"comment\": \"PB-0002 Fault reset PB\"\n    },\n    {\n      \"device\": \"X2\",\n      \"comment\": \"SS-0003 Auto mode selector\"\n    },\n    {\n      \"device\": \"X10\",\n      \"comment\": \"PE-1001 Pallet at stop PE\"\n    },\n    {\n      \"device\": \"X13\",\n      \"comment\": \"MOL-1001 Conv motor OL\"\n    },\n    {\n      \"device\": \"X14\",\n      \"comment\": \"RQ-1005 Release request\"\n    },\n    {\n      \"device\": \"Y10\",\n      \"comment\": \"M-1001 Conv motor contactor\"\n    },\n    {\n      \"device\": \"Y11\",\n      \"comment\": \"XY-1004 Stopper release\"\n    },\n    {\n      \"device\": \"M100\",\n      \"comment\": \"ST10 pallet in position\"\n    },\n    {\n      \"device\": \"M190\",\n      \"comment\": \"ST10 generic fault latch\"\n    },\n    {\n      \"device\": \"M191\",\n      \"comment\": \"ST10 motor overload alarm\"\n    },\n    {\n      \"device\": \"M199\",\n      \"comment\": \"ST10 cell fault active\"\n    },\n    {\n      \"device\": \"T11\",\n      \"comment\": \"Stopper release duration\"\n    }\n  ],\n  \"rung_purposes\": [\n    {\n      \"rung\": 1,\n      \"purpose\": \"Set motor overload alarm if overload healthy signal drops.\"\n    },\n    {\n      \"rung\": 2,\n      \"purpose\": \"Reset generic fault latch via the fault reset pushbutton.\"\n    },\n    {\n      \"rung\": 3,\n      \"purpose\": \"Aggregate overload, generic fault, and E-stop loss into a cell fault flag.\"\n    },\n    {\n      \"rung\": 4,\n      \"purpose\": \"Run conveyor motor in auto mode if no cell faults are active.\"\n    },\n    {\n      \"rung\": 5,\n      \"purpose\": \"Flag pallet in position when the stop photo-eye is blocked.\"\n    },\n    {\n      \"rung\": 6,\n      \"purpose\": \"Latch stopper release solenoid on release request rising edge.\"\n    },\n    {\n      \"rung\": 7,\n      \"purpose\": \"Run a 2.0s timer to track the stopper release duration.\"\n    },\n    {\n      \"rung\": 8,\n      \"purpose\": \"Unlatch stopper release solenoid after duration timer completes.\"\n    },\n    {\n      \"rung\": 9,\n      \"purpose\": \"End program execution.\"\n    }\n  ],\n  \"suspicious\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2607,
+  "output": 720,
+  "thinking": 3077
+ }
+}

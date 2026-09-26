@@ -50,7 +50,7 @@ ladder task explain ST20
 **AGY prompt:** `Use the ladder-review skill on ST20.`
 
 **Expect:**
-- The Opus 5.5 review names the baseline captured on the wrong timer edge, the missing clamp interlock, the timer
+- The review (Gemini 3.8 Flash, medium effort) names the baseline captured on the wrong timer edge, the missing clamp interlock, the timer
   trap and the dead manual vent.
 - `ladder_simulate` shows `FAT-ST20-02 leaking pack must fail` failing on the running program.
 
@@ -66,8 +66,9 @@ ladder task review ST20
 **AGY prompt:** `Use the ladder-fix skill on ST20 with bank task RP-D5.`
 
 **Expect:**
-- The attempts are listed with their gate stage. If the pinned run has one, the first attempt is refused by the
-  simulator (the "simulator says no" moment) and the second passes.
+- The attempts are listed with their gate stage. In the recorded runs Flash fixed it first time. For the "simulator
+  says no" moment, run `ladder apply ST20 plant_data/ev_pack_eol/st20/legacy.il --targets FAT-ST20-02`: the
+  unfixed program is refused with `TARGET STILL FAILING`.
 - The changed rung is drawn as ladder (`demo/out/st20_diff.html`).
 - `ladder_apply` writes `proposed.il`, and the export writes GX Works3 CSV. Say plainly that the GX Works3 import is
   unverified and that an engineer signs.
@@ -98,10 +99,12 @@ ladder export ST20
 
 **Say:**
 - "Same work, staffed four ways, measured over repeated runs."
-- "The linter and simulator cost nothing. Flash writes the documentation. Opus is the review gate. Repair runs on
-  whichever lane the evidence picked."
+- "The linter and simulator cost nothing. Flash at low effort writes the documentation and reads the narrative.
+  Flash at medium effort reviews and repairs. The premium model and maximum effort were measured, and they bought
+  nothing on this work."
 - Read the honesty line exactly as printed.
-- "Everything bills to one Google Cloud project: Gemini, Opus on Vertex, and AGY seats."
+- "Everything bills to one Google Cloud project: Gemini on Vertex and the AGY seats. Opus on Vertex plugs into the
+  same router when a task earns it."
 - The IDE agent's own tokens are on the AGY seat, not in this ledger.
 
 ## Beat 7 · Your turn (2 min)
@@ -124,7 +127,7 @@ ladder export ST20
 | Surface | Status |
 |---|---|
 | CLI and MCP server | Automated tests (stdio handshake, nine tools, no PLC tool) |
-| `agy` 1.2.2 headless, Argolis Cloud Shell | **lint** beat: SUCCESS (Flash summarised L001/L002, reported $0.00). **guard** beat: SUCCESS (`ladder_apply` refused at stage `guard`, reasons verbatim). Model-backed beats: after the Opus half of the sweep and demo pinning. |
+| `agy` 1.2.2 headless, Argolis Cloud Shell | **lint** beat: SUCCESS (Flash summarised L001/L002, reported $0.00). **guard** beat: SUCCESS (`ladder_apply` refused at stage `guard`, reasons verbatim). Model-backed beats: see below. |
 | Antigravity IDE (Jetski) | To be verified by the presenter on the showcase machine |
 
 ### Setting up `agy` (one time, done in Cloud Shell with the owner's approval)

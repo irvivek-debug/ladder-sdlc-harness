@@ -1,0 +1,53 @@
+{
+ "data": {
+  "alarms": [],
+  "conflicts": [],
+  "interlocks": [
+   {
+    "cause": "Guard door opened (ZS-3002 lost)",
+    "effect": "HV enable (HP-3005) and HV beacon (HL-3006) removed immediately"
+   },
+   {
+    "cause": "E-stop chain lost (ES-0001 lost)",
+    "effect": "HV enable (HP-3005) and HV beacon (HL-3006) removed immediately"
+   },
+   {
+    "cause": "Test result latched (PASS or FAIL)",
+    "effect": "HV enable (HP-3005) and HV beacon (HL-3006) removed immediately"
+   },
+   {
+    "cause": "Pallet leaves ST30 (falling edge of ZS-3001)",
+    "effect": "PASS and FAIL results reset"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "hipot_test_time",
+    "narrative_section": "6. ST30 — HV insulation (HiPot) test",
+    "units": "s",
+    "value": "3.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Pallet in ST30 (ZS-3001), guard door closed (ZS-3002), E-stop healthy, and no PASS or FAIL result latched",
+    "exit": "Result latched (PASS or FAIL), guard door opened, E-stop lost, or pallet leaves",
+    "name": "HiPot Test"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "db9210295b2dbe7d30e17afe.e5",
+ "latency_s": 15.191,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"hipot_test_time\",\n      \"value\": \"3.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"6. ST30 — HV insulation (HiPot) test\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"HiPot Test\",\n      \"entry\": \"Pallet in ST30 (ZS-3001), guard door closed (ZS-3002), E-stop healthy, and no PASS or FAIL result latched\",\n      \"exit\": \"Result latched (PASS or FAIL), guard door opened, E-stop lost, or pallet leaves\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Guard door opened (ZS-3002 lost)\",\n      \"effect\": \"HV enable (HP-3005) and HV beacon (HL-3006) removed immediately\"\n    },\n    {\n      \"cause\": \"E-stop chain lost (ES-0001 lost)\",\n      \"effect\": \"HV enable (HP-3005) and HV beacon (HL-3006) removed immediately\"\n    },\n    {\n      \"cause\": \"Test result latched (PASS or FAIL)\",\n      \"effect\": \"HV enable (HP-3005) and HV beacon (HL-3006) removed immediately\"\n    },\n    {\n      \"cause\": \"Pallet leaves ST30 (falling edge of ZS-3001)\",\n      \"effect\": \"PASS and FAIL results reset\"\n    }\n  ],\n  \"alarms\": [],\n  \"conflicts\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4385,
+  "output": 396,
+  "thinking": 1682
+ }
+}

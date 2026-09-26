@@ -71,10 +71,10 @@ def test_explain_drops_hallucinated_devices(tmp_path):
     assert any("X77" in n for n in run.notes)
 
 
-def test_review_routes_to_opus_and_flags_ghost_devices(tmp_path):
+def test_review_routes_to_its_lane_and_flags_ghost_devices(tmp_path):
     finding = {"title": "t", "category": "timing", "severity": "high", "rungs": [1], "devices": ["T200", "T999"],
                "evidence": "e", "consequence": "c", "proposed_fix": "f", "confidence": "high"}
     r, fb = router(tmp_path, [{"findings": [finding], "summary": "s"}])
     run = tasks.review(r, CELL, "ST20")
-    assert fb.calls[0].model == "claude-opus-5-5" and fb.calls[0].effort == "medium"
+    assert (fb.calls[0].model, fb.calls[0].effort) == r.lane("T4")
     assert any("T999" in n for n in run.notes)

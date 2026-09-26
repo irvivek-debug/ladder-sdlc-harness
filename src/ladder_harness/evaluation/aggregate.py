@@ -2,8 +2,8 @@
 
 Lane rule: per class, the cheapest config whose pass rate is not significantly below the best config's
 (one-sided Fisher exact test, alpha 0.05). T4 (review) takes the best config by mean recall, cost aside.
-Profiles are views over the same matrix: all-opus = opus-medium everywhere, all-opus-low = opus-low,
-all-flash = flash-medium, routed = the chosen lanes.
+Profiles are views over the same matrix: all-pro = Gemini 3.1 Pro high everywhere (the premium horse),
+all-flash-high = Flash high everywhere, all-flash = Flash medium everywhere, routed = the chosen lanes.
 """
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from collections import defaultdict
 from pathlib import Path
 
 WORKLOAD = {"T1": ["EX-ST20"], "T2": ["XT-ST20"], "T4": ["RV-LEGACY"], "T3": ["RP-D1", "RP-D3", "RP-D4", "RP-D5"]}
-PROFILES = {"all-opus": "opus-medium", "all-opus-low": "opus-low", "all-flash": "flash-medium"}
+PROFILES = {"all-pro": "pro-high", "all-flash-high": "flash-high", "all-flash": "flash-medium"}
 LINT_CAUGHT = {"D1", "D3"}      # the $0 linter finds these on the legacy program every time (tested)
 
 

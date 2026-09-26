@@ -1,0 +1,75 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Conveyor stops and a jam alarm is raised until reset",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs",
+    "name": "Jam alarm"
+   },
+   {
+    "action": "Conveyor stops immediately",
+    "condition": "Motor overload (MOL-1001) contact opens",
+    "name": "Motor overload"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "Parameter sheet",
+    "item": "Jam detection timer (T10)",
+    "narrative_says": "Requires a 5.0 s jam detection timer when PE-1002 is blocked while the conveyor runs.",
+    "parameter_sheet_says": "5.0 s, assigned to T10.",
+    "program_says": "T10 and the jam detection logic are completely missing from the ST10 program block."
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Motor overload (MOL-1001) tripped",
+    "effect": "Stops the conveyor immediately"
+   },
+   {
+    "cause": "E-stop chain lost",
+    "effect": "Stops the conveyor immediately"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "jam_time",
+    "narrative_section": "3. ST10 — Pallet conveyor",
+    "units": "s",
+    "value": "5.0"
+   },
+   {
+    "name": "release_pulse",
+    "narrative_section": "3. ST10 — Pallet conveyor",
+    "units": "s",
+    "value": "2.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Auto mode is active AND no ST10 fault is present",
+    "exit": "Auto mode is lost OR an ST10 fault becomes active",
+    "name": "Conveyor Run"
+   },
+   {
+    "entry": "Line controller requests a release (RQ-1005 rising edge)",
+    "exit": "2.0 s release pulse timer expires",
+    "name": "Stopper Release"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "fcbc5ff379e07b0c1efcae32.e3",
+ "latency_s": 22.868,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3. ST10 — Pallet conveyor\"\n    },\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3. ST10 — Pallet conveyor\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Conveyor Run\",\n      \"entry\": \"Auto mode is active AND no ST10 fault is present\",\n      \"exit\": \"Auto mode is lost OR an ST10 fault becomes active\"\n    },\n    {\n      \"name\": \"Stopper Release\",\n      \"entry\": \"Line controller requests a release (RQ-1005 rising edge)\",\n      \"exit\": \"2.0 s release pulse timer expires\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Motor overload (MOL-1001) tripped\",\n      \"effect\": \"Stops the conveyor immediately\"\n    },\n    {\n      \"cause\": \"E-stop chain lost\",\n      \"effect\": \"Stops the conveyor immediately\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Jam alarm\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs\",\n      \"action\": \"Conveyor stops and a jam alarm is raised until reset\"\n    },\n    {\n      \"name\": \"Motor overload\",\n      \"condition\": \"Motor overload (MOL-1001) contact opens\",\n      \"action\": \"Conveyor stops immediately\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"Jam detection timer (T10)\",\n      \"narrative_says\": \"Requires a 5.0 s jam detection timer when PE-1002 is blocked while the conveyor runs.\",\n      \"parameter_sheet_says\": \"5.0 s, assigned to T10.\",\n      \"program_says\": \"T10 and the jam detection logic are completely missing from the ST10 program block.\",\n      \"authoritative\": \"Parameter sheet\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 551,
+  "thinking": 2416
+ }
+}

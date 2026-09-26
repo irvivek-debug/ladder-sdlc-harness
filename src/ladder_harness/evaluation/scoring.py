@@ -18,9 +18,16 @@ different or inverted function (open vs closed, PASS vs FAIL, baseline vs final)
 tell the device apart from others (for example just "Timer" or "Internal relay"). Reply with JSON only."""
 
 
+JUDGES = {  # a model never grades its own output; each judge must pass calibration (evals/results/judge_calibration.json)
+    "gemini-3.8-flash": ("gemini-3.1-pro-preview", "high"),
+    "gemini-3.1-pro-preview": ("gemini-3.8-flash", "high"),
+}
+
+
 def judge_lane(candidate_model: str) -> tuple[str, str]:
-    """Cross-family judging: a model never grades its own family."""
-    return ("claude-opus-5-5", "low") if candidate_model.startswith("gemini") else ("gemini-3.8-flash", "high")
+    """Different-model judging. Claude was unavailable in the project, so Gemini models grade each other; the
+    preferred cross-family judge for Gemini output is Claude when it is enabled."""
+    return JUDGES.get(candidate_model, ("gemini-3.8-flash", "high"))
 
 
 def judge_pairs(router: Router, pairs: list[dict], candidate_model: str,

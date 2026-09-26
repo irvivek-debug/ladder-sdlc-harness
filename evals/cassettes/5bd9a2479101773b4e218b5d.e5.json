@@ -1,0 +1,79 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ST30 HiPot PASS latch",
+    "device": "M310"
+   },
+   {
+    "comment": "ST30 HiPot FAIL latch",
+    "device": "M311"
+   },
+   {
+    "comment": "ES-0001 E-stop circuit healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "HP-3003 HiPot tester PASS",
+    "device": "X30"
+   },
+   {
+    "comment": "HP-3004 HiPot tester FAIL",
+    "device": "X31"
+   },
+   {
+    "comment": "ZS-3002 Guard door closed",
+    "device": "X32"
+   },
+   {
+    "comment": "ZS-3001 Pallet in ST30",
+    "device": "X33"
+   },
+   {
+    "comment": "HP-3005 HiPot start HV enable",
+    "device": "Y30"
+   },
+   {
+    "comment": "HL-3006 HV-on warning beacon",
+    "device": "Y31"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Energize HiPot start and HV warning beacon if safety interlocks pass and test is not completed",
+    "rung": 1
+   },
+   {
+    "purpose": "Latch HiPot PASS result when tester indicates test passed",
+    "rung": 2
+   },
+   {
+    "purpose": "Latch HiPot FAIL result when tester indicates test failed",
+    "rung": 3
+   },
+   {
+    "purpose": "Reset HiPot test PASS/FAIL results when pallet departs station ST30",
+    "rung": 4
+   },
+   {
+    "purpose": "End of ST30 logic scan",
+    "rung": 5
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "high",
+ "key": "5bd9a2479101773b4e218b5d.e5",
+ "latency_s": 21.072,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\"device_comments\":[{\"device\":\"M310\",\"comment\":\"ST30 HiPot PASS latch\"},{\"device\":\"M311\",\"comment\":\"ST30 HiPot FAIL latch\"},{\"device\":\"X0\",\"comment\":\"ES-0001 E-stop circuit healthy\"},{\"device\":\"X30\",\"comment\":\"HP-3003 HiPot tester PASS\"},{\"device\":\"X31\",\"comment\":\"HP-3004 HiPot tester FAIL\"},{\"device\":\"X32\",\"comment\":\"ZS-3002 Guard door closed\"},{\"device\":\"X33\",\"comment\":\"ZS-3001 Pallet in ST30\"},{\"device\":\"Y30\",\"comment\":\"HP-3005 HiPot start HV enable\"},{\"device\":\"Y31\",\"comment\":\"HL-3006 HV-on warning beacon\"}],\"rung_purposes\":[{\"rung\":1,\"purpose\":\"Energize HiPot start and HV warning beacon if safety interlocks pass and test is not completed\"},{\"rung\":2,\"purpose\":\"Latch HiPot PASS result when tester indicates test passed\"},{\"rung\":3,\"purpose\":\"Latch HiPot FAIL result when tester indicates test failed\"},{\"rung\":4,\"purpose\":\"Reset HiPot test PASS/FAIL results when pallet departs station ST30\"},{\"rung\":5,\"purpose\":\"End of ST30 logic scan\"}],\"suspicious\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2663,
+  "output": 282,
+  "thinking": 3783
+ }
+}

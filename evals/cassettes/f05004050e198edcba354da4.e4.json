@@ -1,0 +1,72 @@
+{
+ "data": {
+  "verdicts": [
+   {
+    "device": "M100",
+    "match": true
+   },
+   {
+    "device": "M190",
+    "match": false
+   },
+   {
+    "device": "M191",
+    "match": true
+   },
+   {
+    "device": "M199",
+    "match": true
+   },
+   {
+    "device": "T11",
+    "match": true
+   },
+   {
+    "device": "X0",
+    "match": true
+   },
+   {
+    "device": "X1",
+    "match": true
+   },
+   {
+    "device": "X10",
+    "match": true
+   },
+   {
+    "device": "X13",
+    "match": true
+   },
+   {
+    "device": "X14",
+    "match": true
+   },
+   {
+    "device": "X2",
+    "match": true
+   },
+   {
+    "device": "Y10",
+    "match": true
+   },
+   {
+    "device": "Y11",
+    "match": true
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "f05004050e198edcba354da4.e4",
+ "latency_s": 64.627,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "JUDGE",
+ "text": "{\n  \"verdicts\": [\n    {\n      \"device\": \"M100\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M190\",\n      \"match\": false\n    },\n    {\n      \"device\": \"M191\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M199\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T11\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X0\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X1\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X10\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X13\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X14\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X2\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y10\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y11\",\n      \"match\": true\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 632,
+  "output": 300,
+  "thinking": 1108
+ }
+}

@@ -62,7 +62,7 @@ def report(summary: dict, bank: dict, sweep: str, calib: dict | None, mutation: 
         L.append("| Profile | Configs (T1 / T2 / T3 / T4) | Cost per verified change — Flash intro price | "
                  "— Flash 2027 price | Verified changes (of 4) | Defects caught before the plant (of 5) | Wall time |")
         L.append("|---|---|---|---|---|---|---|")
-        for name in ("all-opus", "all-opus-low", "all-flash", "routed"):
+        for name in ("all-pro", "all-flash-high", "all-flash", "routed"):
             if name not in P:
                 continue
             p, s = P[name], P[name]["summary"]
@@ -71,14 +71,18 @@ def report(summary: dict, bank: dict, sweep: str, calib: dict | None, mutation: 
                      f"{rng(s['cost_per_verified_change_list'], money)} | {rng(s['verified_changes'])} | "
                      f"{rng(s['defects_caught'])} | {rng(s['wall_s'], lambda v: f'{v/60:.1f} min')} |")
         L.append("")
-        r, low = P.get("routed", {}).get("summary", {}), P.get("all-opus-low", {}).get("summary", {})
-        if r.get("cost_per_verified_change") and low.get("cost_per_verified_change"):
-            beat = r["cost_per_verified_change"]["median"] < low["cost_per_verified_change"]["median"]
-            L.append("**Honesty clause (milestone M4):** routed "
-                     + ("**beats**" if beat else "**does not beat**")
-                     + " the strongest simple alternative (Opus at low effort for everything) on median cost per "
-                       "verified change. " + ("" if beat else "Routing's value here is latency and volume headroom, "
-                                              "not a cheaper change.") + "\n")
+        r, simple, prem = (P.get(k, {}).get("summary", {}) for k in ("routed", "all-flash", "all-pro"))
+        if r.get("cost_per_verified_change") and simple.get("cost_per_verified_change"):
+            rc, sc = r["cost_per_verified_change"]["median"], simple["cost_per_verified_change"]["median"]
+            pc = (prem.get("cost_per_verified_change") or {}).get("median")
+            L.append("**Honesty clause (milestone M4):** routed costs "
+                     + (f"{(1 - rc / pc):.0%} less than the premium model everywhere and " if pc else "")
+                     + (f"{(1 - rc / sc):.0%} less than" if rc < sc else "no less than")
+                     + " the simplest alternative (Flash medium for everything) per verified change. "
+                     + ("" if rc < sc else "Against one well-chosen cheap model, routing's value is catching the same "
+                                           "defects with the right effort per task, not a lower bill.") + "\n")
+            L.append("Claude Opus 5.5 was not enabled in the project during this sweep, so every lane is Gemini; the "
+                     "harness supports Opus on Vertex and the sweep can add it with `--configs opus-low,opus-medium`.\n")
     L.append("## Lanes chosen from the evidence\n")
     for g, lane in summary["lanes"].items():
         L.append(f"- **{GROUP_NAMES[g]} → `{lane['config']}`** ({lane['rule']}).")

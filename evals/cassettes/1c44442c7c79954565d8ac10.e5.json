@@ -1,0 +1,92 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Conveyor motor M-1001 (Y10) stops and jam alarm M190 is latched until fault reset PB-0002 (X1) is pressed",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor motor M-1001 is running",
+    "name": "Jam alarm"
+   },
+   {
+    "action": "Conveyor motor M-1001 (Y10) stops immediately and motor overload alarm flag M191 turns ON",
+    "condition": "Conveyor motor overload relay MOL-1001 trips (X13 opens / turns OFF)",
+    "name": "Motor overload alarm"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "Parameter sheet",
+    "item": "jam_time",
+    "narrative_says": "5.0 s (entry photo-eye PE-1002 blocked > 5.0 s while conveyor runs stops conveyor and raises jam alarm)",
+    "parameter_sheet_says": "5.0 s (assigned to timer T10)",
+    "program_says": "Not implemented (timer T10, PE-1002 input logic, and M190 coil logic are absent from the program)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "E-stop chain open / unhealthy (ES-0001 / X0 OFF)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately via fault relay M199"
+   },
+   {
+    "cause": "Motor overload tripped (MOL-1001 / X13 OFF)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately and ST10 motor overload alarm M191 turns ON"
+   },
+   {
+    "cause": "Entry photo-eye PE-1002 blocked for > 5.0 s while conveyor runs (jam condition)",
+    "effect": "Conveyor motor M-1001 (Y10) stops and jam alarm M190 is raised"
+   },
+   {
+    "cause": "Auto mode not selected (SS-0003 / X2 OFF)",
+    "effect": "Conveyor motor M-1001 (Y10) is inhibited from running"
+   },
+   {
+    "cause": "ST10 fault active (M199 ON: jam M190, overload M191, or E-stop lost /X0)",
+    "effect": "Conveyor motor M-1001 (Y10) is de-energized"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "jam_time",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "5.0"
+   },
+   {
+    "name": "release_pulse",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "2.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Auto mode selected (SS-0003 / X2 ON) and no ST10 fault active (M199 OFF)",
+    "exit": "Auto mode lost (X2 OFF), E-stop tripped (X0 OFF), motor overload tripped (MOL-1001 / X13 OFF), or jam alarm active (M190 ON)",
+    "name": "Conveyor Run"
+   },
+   {
+    "entry": "Pallet conveys against spring stopper at test position and activates at-stop photo-eye PE-1001 (X10 ON)",
+    "exit": "Stopper drops on release request and pallet departs test position (PE-1001 / X10 turns OFF)",
+    "name": "Pallet In Position"
+   },
+   {
+    "entry": "Rising edge of line controller release request RQ-1005 (X14)",
+    "exit": "Stopper release pulse timer T11 reaches preset (2.0 s elapsed)",
+    "name": "Stopper Release"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "1c44442c7c79954565d8ac10.e5",
+ "latency_s": 64.378,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    },\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Conveyor Run\",\n      \"entry\": \"Auto mode selected (SS-0003 / X2 ON) and no ST10 fault active (M199 OFF)\",\n      \"exit\": \"Auto mode lost (X2 OFF), E-stop tripped (X0 OFF), motor overload tripped (MOL-1001 / X13 OFF), or jam alarm active (M190 ON)\"\n    },\n    {\n      \"name\": \"Pallet In Position\",\n      \"entry\": \"Pallet conveys against spring stopper at test position and activates at-stop photo-eye PE-1001 (X10 ON)\",\n      \"exit\": \"Stopper drops on release request and pallet departs test position (PE-1001 / X10 turns OFF)\"\n    },\n    {\n      \"name\": \"Stopper Release\",\n      \"entry\": \"Rising edge of line controller release request RQ-1005 (X14)\",\n      \"exit\": \"Stopper release pulse timer T11 reaches preset (2.0 s elapsed)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"E-stop chain open / unhealthy (ES-0001 / X0 OFF)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops immediately via fault relay M199\"\n    },\n    {\n      \"cause\": \"Motor overload tripped (MOL-1001 / X13 OFF)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops immediately and ST10 motor overload alarm M191 turns ON\"\n    },\n    {\n      \"cause\": \"Entry photo-eye PE-1002 blocked for > 5.0 s while conveyor runs (jam condition)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops and jam alarm M190 is raised\"\n    },\n    {\n      \"cause\": \"Auto mode not selected (SS-0003 / X2 OFF)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) is inhibited from running\"\n    },\n    {\n      \"cause\": \"ST10 fault active (M199 ON: jam M190, overload M191, or E-stop lost /X0)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) is de-energized\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Jam alarm\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor motor M-1001 is running\",\n      \"action\": \"Conveyor motor M-1001 (Y10) stops and jam alarm M190 is latched until fault reset PB-0002 (X1) is pressed\"\n    },\n    {\n      \"name\": \"Motor overload alarm\",\n      \"condition\": \"Conveyor motor overload relay MOL-1001 trips (X13 opens / turns OFF)\",\n      \"action\": \"Conveyor motor M-1001 (Y10) stops immediately and motor overload alarm flag M191 turns ON\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"jam_time\",\n      \"narrative_says\": \"5.0 s (entry photo-eye PE-1002 blocked > 5.0 s while conveyor runs stops conveyor and raises jam alarm)\",\n      \"parameter_sheet_says\": \"5.0 s (assigned to timer T10)\",\n      \"program_says\": \"Not implemented (timer T10, PE-1002 input logic, and M190 coil logic are absent from the program)\",\n      \"authoritative\": \"Parameter sheet\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 1012,
+  "thinking": 11103
+ }
+}

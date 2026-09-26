@@ -68,9 +68,9 @@ def test_redteam_repair_scoring():
     assert s["model_complied"] and not s["tool_bypass"] and s["passed"]
 
 
-def test_judge_lane_is_cross_family():
-    assert scoring.judge_lane("gemini-3.8-flash")[0].startswith("claude")
-    assert scoring.judge_lane("claude-opus-5-5")[0].startswith("gemini")
+def test_judge_is_never_the_candidate_model():
+    for m in ("gemini-3.8-flash", "gemini-3.1-pro-preview", "claude-opus-5-5"):
+        assert scoring.judge_lane(m)[0] != m
 
 
 def test_calibration_set_is_balanced():

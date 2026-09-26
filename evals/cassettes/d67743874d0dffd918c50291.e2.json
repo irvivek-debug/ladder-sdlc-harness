@@ -1,0 +1,111 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ST10 pallet in position",
+    "device": "M100"
+   },
+   {
+    "comment": "ST10 latched fault",
+    "device": "M190"
+   },
+   {
+    "comment": "ST10 motor overload alarm",
+    "device": "M191"
+   },
+   {
+    "comment": "ST10 common fault summary",
+    "device": "M199"
+   },
+   {
+    "comment": "ST10 stopper release timer",
+    "device": "T11"
+   },
+   {
+    "comment": "ES-0001 E-stop chain healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "PB-0002 fault reset pushbutton",
+    "device": "X1"
+   },
+   {
+    "comment": "SS-0003 auto mode selector",
+    "device": "X2"
+   },
+   {
+    "comment": "PE-1001 pallet at stop photoeye",
+    "device": "X10"
+   },
+   {
+    "comment": "MOL-1001 motor overload healthy",
+    "device": "X13"
+   },
+   {
+    "comment": "RQ-1005 pallet release request",
+    "device": "X14"
+   },
+   {
+    "comment": "M-1001 conveyor motor contactor",
+    "device": "Y10"
+   },
+   {
+    "comment": "XY-1004 stopper release solenoid",
+    "device": "Y11"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Detect conveyor motor overload trip when healthy signal X13 is lost.",
+    "rung": 1
+   },
+   {
+    "purpose": "Reset latched fault M190 on fault reset pushbutton X1.",
+    "rung": 2
+   },
+   {
+    "purpose": "Set common fault M199 if latched fault, motor overload, or E-stop is tripped.",
+    "rung": 3
+   },
+   {
+    "purpose": "Run conveyor motor Y10 when auto mode is selected and no fault is active.",
+    "rung": 4
+   },
+   {
+    "purpose": "Indicate pallet in position M100 from pallet stop photo-eye X10.",
+    "rung": 5
+   },
+   {
+    "purpose": "Energize and latch stopper release solenoid Y11 on pallet release request X14.",
+    "rung": 6
+   },
+   {
+    "purpose": "Time stopper release duration for 2.0 s using timer T11 while Y11 is active.",
+    "rung": 7
+   },
+   {
+    "purpose": "Reset stopper release solenoid Y11 once 2.0 s timer T11 completes.",
+    "rung": 8
+   },
+   {
+    "purpose": "End of ST10 scan cycle.",
+    "rung": 9
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "high",
+ "key": "d67743874d0dffd918c50291.e2",
+ "latency_s": 47.187,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\"device_comments\":[{\"device\":\"M100\",\"comment\":\"ST10 pallet in position\"},{\"device\":\"M190\",\"comment\":\"ST10 latched fault\"},{\"device\":\"M191\",\"comment\":\"ST10 motor overload alarm\"},{\"device\":\"M199\",\"comment\":\"ST10 common fault summary\"},{\"device\":\"T11\",\"comment\":\"ST10 stopper release timer\"},{\"device\":\"X0\",\"comment\":\"ES-0001 E-stop chain healthy\"},{\"device\":\"X1\",\"comment\":\"PB-0002 fault reset pushbutton\"},{\"device\":\"X2\",\"comment\":\"SS-0003 auto mode selector\"},{\"device\":\"X10\",\"comment\":\"PE-1001 pallet at stop photoeye\"},{\"device\":\"X13\",\"comment\":\"MOL-1001 motor overload healthy\"},{\"device\":\"X14\",\"comment\":\"RQ-1005 pallet release request\"},{\"device\":\"Y10\",\"comment\":\"M-1001 conveyor motor contactor\"},{\"device\":\"Y11\",\"comment\":\"XY-1004 stopper release solenoid\"}],\"rung_purposes\":[{\"rung\":1,\"purpose\":\"Detect conveyor motor overload trip when healthy signal X13 is lost.\"},{\"rung\":2,\"purpose\":\"Reset latched fault M190 on fault reset pushbutton X1.\"},{\"rung\":3,\"purpose\":\"Set common fault M199 if latched fault, motor overload, or E-stop is tripped.\"},{\"rung\":4,\"purpose\":\"Run conveyor motor Y10 when auto mode is selected and no fault is active.\"},{\"rung\":5,\"purpose\":\"Indicate pallet in position M100 from pallet stop photo-eye X10.\"},{\"rung\":6,\"purpose\":\"Energize and latch stopper release solenoid Y11 on pallet release request X14.\"},{\"rung\":7,\"purpose\":\"Time stopper release duration for 2.0 s using timer T11 while Y11 is active.\"},{\"rung\":8,\"purpose\":\"Reset stopper release solenoid Y11 once 2.0 s timer T11 completes.\"},{\"rung\":9,\"purpose\":\"End of ST10 scan cycle.\"}],\"suspicious\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2607,
+  "output": 459,
+  "thinking": 6750
+ }
+}

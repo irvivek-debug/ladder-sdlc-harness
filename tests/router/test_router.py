@@ -19,9 +19,11 @@ def router(tmp_path, mode="live", answers=None):
 
 def test_lanes_per_profile(tmp_path):
     r, _ = router(tmp_path)
-    assert r.lane("T1") == ("gemini-3.8-flash", "low")
-    assert r.lane("T4") == ("claude-opus-5-5", "medium")
-    assert r.lane("T1", "all-opus-low") == ("claude-opus-5-5", "low")
+    tc = r.routing["task_classes"]           # routing.yaml is generated from evidence: check the property
+    for c in ("T1", "T2", "T3", "T4"):
+        assert r.lane(c) == (tc[c]["model"], tc[c]["effort"])
+    assert r.lane("T1", "all-flash-high") == ("gemini-3.8-flash", "high")
+    assert r.lane("T1", "all-opus") == ("claude-opus-5-5", "medium")
     assert r.lane("T4", "all-flash") == ("gemini-3.8-flash", "medium")
     with pytest.raises(ValueError, match="deterministic"):
         r.lane("T0")
@@ -30,8 +32,9 @@ def test_lanes_per_profile(tmp_path):
 def test_call_is_priced_and_logged(tmp_path):
     r, fb = router(tmp_path, answers=[{"x": 1}])
     res = r.call("T4", "sys", "prompt", {"type": "object"}, meta={"task_id": "t-1"})
-    assert res.data == {"x": 1} and fb.calls[0].model == "claude-opus-5-5"
-    assert res.cost_usd > 0 and set(res.cost_by_period) == {"list"}
+    assert res.data == {"x": 1} and (fb.calls[0].model, fb.calls[0].effort) == r.lane("T4")
+    periods = {p["label"] for p in r.pricing.models[res.model]["periods"]}
+    assert res.cost_usd > 0 and set(res.cost_by_period) == periods
     line = r.ledger.read()[0]
     assert line["task_id"] == "t-1" and line["backend"] == "fake" and line["ok"]
 

@@ -1,0 +1,79 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ES-0001 E-stop healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "HP-3003 HiPot tester PASS",
+    "device": "X30"
+   },
+   {
+    "comment": "HP-3004 HiPot tester FAIL",
+    "device": "X31"
+   },
+   {
+    "comment": "ZS-3002 Guard door closed",
+    "device": "X32"
+   },
+   {
+    "comment": "ZS-3001 Pallet in ST30",
+    "device": "X33"
+   },
+   {
+    "comment": "HP-3005 HiPot start (HV enable)",
+    "device": "Y30"
+   },
+   {
+    "comment": "HL-3006 HV-on warning beacon",
+    "device": "Y31"
+   },
+   {
+    "comment": "ST30 HiPot PASS flag",
+    "device": "M310"
+   },
+   {
+    "comment": "ST30 HiPot FAIL flag",
+    "device": "M311"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Enable HiPot test and warning beacon when pallet present, door closed, and E-stop OK.",
+    "rung": 1
+   },
+   {
+    "purpose": "Latch HiPot tester PASS result.",
+    "rung": 2
+   },
+   {
+    "purpose": "Latch HiPot tester FAIL result.",
+    "rung": 3
+   },
+   {
+    "purpose": "Reset HiPot test results when the pallet leaves the station.",
+    "rung": 4
+   },
+   {
+    "purpose": "End of program execution.",
+    "rung": 5
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "high",
+ "key": "3498c0c2f38c157140239df6.e3",
+ "latency_s": 23.492,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\"device_comments\":[{\"device\":\"X0\",\"comment\":\"ES-0001 E-stop healthy\"},{\"device\":\"X30\",\"comment\":\"HP-3003 HiPot tester PASS\"},{\"device\":\"X31\",\"comment\":\"HP-3004 HiPot tester FAIL\"},{\"device\":\"X32\",\"comment\":\"ZS-3002 Guard door closed\"},{\"device\":\"X33\",\"comment\":\"ZS-3001 Pallet in ST30\"},{\"device\":\"Y30\",\"comment\":\"HP-3005 HiPot start (HV enable)\"},{\"device\":\"Y31\",\"comment\":\"HL-3006 HV-on warning beacon\"},{\"device\":\"M310\",\"comment\":\"ST30 HiPot PASS flag\"},{\"device\":\"M311\",\"comment\":\"ST30 HiPot FAIL flag\"}],\"rung_purposes\":[{\"rung\":1,\"purpose\":\"Enable HiPot test and warning beacon when pallet present, door closed, and E-stop OK.\"},{\"rung\":2,\"purpose\":\"Latch HiPot tester PASS result.\"},{\"rung\":3,\"purpose\":\"Latch HiPot tester FAIL result.\"},{\"rung\":4,\"purpose\":\"Reset HiPot test results when the pallet leaves the station.\"},{\"rung\":5,\"purpose\":\"End of program execution.\"}],\"suspicious\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2663,
+  "output": 273,
+  "thinking": 3356
+ }
+}

@@ -18,7 +18,7 @@ h1{font:700 clamp(30px,5vw,52px)/1.08 var(--display);letter-spacing:-.01em;margi
 .card{background:var(--surface);border:1px solid var(--border);padding:18px}
 .span2{grid-column:span 2}.span4{grid-column:span 4}
 .k{font:700 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.v{font:700 clamp(28px,3.4vw,40px)/1.05 var(--display)}
+.v{font:700 clamp(26px,3vw,38px)/1.05 var(--display);white-space:nowrap}
 .v small{font:500 14px var(--sans);color:var(--muted);margin-left:6px}
 .d{color:var(--muted);font-size:14px;margin-top:10px}
 .pill{display:inline-flex;align-items:center;gap:6px;font:700 11px/1 var(--mono);text-transform:uppercase;
@@ -61,20 +61,20 @@ result          FAIL, rejected</div></div>
     <div class="v">+4.5 s<small>per pack</small></div>
     <div class="d">The same conversion stretched one timer tenfold. Station time went from 21.3 s to
     25.8 s against a 23.0 s allowance.</div></div>
-  <div class="card"><div class="k">Speed</div><div class="v"><span class="pending">pending</span></div>
-    <div class="d">to document every device on the station, at <span class="pending">pending</span> a run.</div></div>
-  <div class="card"><div class="k">Quality</div><div class="v"><span class="pending">pending</span></div>
+  <div class="card"><div class="k">Speed</div><div class="v">26 s</div>
+    <div class="d">to document every device on the station, at $0.011 a run.</div></div>
+  <div class="card"><div class="k">Quality</div><div class="v">5 of 5</div>
     <div class="d">planted defects caught before reaching the plant, median across repeated runs.</div></div>
-  <div class="card"><div class="k">Knowledge</div><div class="v">44% <small>to</small> <span class="pending">pending</span></div>
+  <div class="card"><div class="k">Knowledge</div><div class="v">44<small>%</small> → 100%</div>
     <div class="d">of 41 devices documented, before and after.</div></div>
-  <div class="card"><div class="k">Cost</div><div class="v"><span class="pending">pending</span></div>
+  <div class="card"><div class="k">Cost</div><div class="v">$0.076</div>
     <div class="d">per change proven on the simulator, all model calls included.</div></div>
   <div class="card span4"><div class="k">What the research says, and what we measured</div>
     <div class="d" style="margin-top:0">Documentation with generative AI took half the time in McKinsey's developer study. On this
-    station the harness documented every device in a pending time.
+    station the harness documented every device in 26 seconds.
     The same study found savings below 10 percent on high-complexity work. That is why every AI change here must pass the
-    simulator before an engineer sees it: the reviewer found the leak defect in a pending number of runs,
-    and the fix passed the plant tests in 2 of 2 runs.</div></div>
+    simulator before an engineer sees it: the reviewer found the leak defect in 5 of 5 runs,
+    and the fix passed the plant tests in 5 of 5 runs.</div></div>
 </div>
 <p class="tag">AI proposes. The simulator proves. The engineer signs.</p>
 <p class="src">Source: McKinsey &amp; Company, “Unleashing developer productivity with generative AI,” 27 June 2023. Documentation in half the time; savings fell below 10 percent on high-complexity tasks. Plant values are representative and come from the harness simulator; model results come from

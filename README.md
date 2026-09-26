@@ -22,7 +22,7 @@ python3 -m venv .venv && . .venv/bin/activate
 pip install -e ".[ai,mcp,dev]"
 ladder lint ST20                       # free: double coil, FX3 timer trap, spare input, comment coverage
 ladder simulate ST20                   # free: 22 factory and C&E scenarios on the FX5 simulator
-LADDER_MODE=replay ladder task review ST20   # a recorded Opus 5.5 review, labelled REPLAY
+LADDER_MODE=replay ladder task review ST20   # a recorded Gemini review, labelled REPLAY
 ```
 
 ## Horses for courses
@@ -30,16 +30,21 @@ LADDER_MODE=replay ladder task review ST20   # a recorded Opus 5.5 review, label
 | Task class | Examples | Runs on |
 |---|---|---|
 | T0 deterministic | parse, lint, simulate, render, diff, the apply gate | no model, $0 |
-| T1 bulk | device comments, rung purposes | Gemini 3.8 Flash |
-| T2 extraction | narrative to structured spec, conflicts | Gemini 3.8 Flash |
-| T3 change | repair until the plant tests pass | the lane the evaluations chose |
-| T4 review | code against narrative, interlocks | Claude Opus 5.5 on Vertex AI |
+| T1 bulk | device comments, rung purposes | Gemini 3.8 Flash, low effort |
+| T2 extraction | narrative to structured spec, conflicts | Gemini 3.8 Flash, low effort |
+| T3 change | repair until the plant tests pass | Gemini 3.8 Flash, medium effort |
+| T4 review | code against narrative, interlocks | Gemini 3.8 Flash, medium effort |
 | T5 SAFETY | may this safety rung change? | a deterministic guard, never a model |
 
+Measured on this cell, routing costs about $0.08 per change proven on the simulator: 62% less than Gemini 3.1 Pro
+everywhere and 9% less than Flash on one setting, with the same fixes and defects caught. Maximum thinking effort
+cost as much as the premium model and took three times longer.
+
 The lanes in `config/routing.yaml` are an **output** of the evaluation sweep: for each class, the cheapest model and
-effort that is not significantly worse than the best. The exception is review, which takes the best reviewer. See
-`evals/REPORT.md` for the four staffing profiles (all Opus, Opus at low effort, all Flash, routed), reported as
-ranges over repeated runs.
+effort that is not significantly worse than the best. The exception is review, which takes the best reviewer.
+`evals/REPORT.md` reports the four staffing profiles (Pro everywhere, Flash high everywhere, Flash medium everywhere,
+routed) as ranges over repeated runs. Claude Opus 5.5 on Vertex is supported by the router but was not enabled in
+the evaluation project.
 
 ## Use it from any IDE
 

@@ -1,0 +1,188 @@
+{
+ "data": {
+  "verdicts": [
+   {
+    "device": "X20#0",
+    "match": true
+   },
+   {
+    "device": "Y21#1",
+    "match": true
+   },
+   {
+    "device": "T22#2",
+    "match": true
+   },
+   {
+    "device": "D112#3",
+    "match": true
+   },
+   {
+    "device": "M204#4",
+    "match": true
+   },
+   {
+    "device": "X0#5",
+    "match": true
+   },
+   {
+    "device": "Y22#6",
+    "match": true
+   },
+   {
+    "device": "M299#7",
+    "match": true
+   },
+   {
+    "device": "D100#8",
+    "match": true
+   },
+   {
+    "device": "T21#9",
+    "match": true
+   },
+   {
+    "device": "M210#10",
+    "match": true
+   },
+   {
+    "device": "X23#11",
+    "match": true
+   },
+   {
+    "device": "Y20#12",
+    "match": true
+   },
+   {
+    "device": "M293#13",
+    "match": true
+   },
+   {
+    "device": "D110#14",
+    "match": true
+   },
+   {
+    "device": "T200#15",
+    "match": true
+   },
+   {
+    "device": "X25#16",
+    "match": true
+   },
+   {
+    "device": "Y25#17",
+    "match": true
+   },
+   {
+    "device": "M201#18",
+    "match": true
+   },
+   {
+    "device": "X10#19",
+    "match": true
+   },
+   {
+    "device": "M207#20",
+    "match": true
+   },
+   {
+    "device": "D122#21",
+    "match": true
+   },
+   {
+    "device": "X20#22",
+    "match": false
+   },
+   {
+    "device": "Y21#23",
+    "match": false
+   },
+   {
+    "device": "T22#24",
+    "match": false
+   },
+   {
+    "device": "D112#25",
+    "match": false
+   },
+   {
+    "device": "M204#26",
+    "match": false
+   },
+   {
+    "device": "X0#27",
+    "match": false
+   },
+   {
+    "device": "D110#28",
+    "match": false
+   },
+   {
+    "device": "M210#29",
+    "match": false
+   },
+   {
+    "device": "Y24#30",
+    "match": false
+   },
+   {
+    "device": "T21#31",
+    "match": false
+   },
+   {
+    "device": "M200#32",
+    "match": false
+   },
+   {
+    "device": "D120#33",
+    "match": false
+   },
+   {
+    "device": "X22#34",
+    "match": false
+   },
+   {
+    "device": "M292#35",
+    "match": false
+   },
+   {
+    "device": "Y11#36",
+    "match": false
+   },
+   {
+    "device": "X11#37",
+    "match": false
+   },
+   {
+    "device": "T10#38",
+    "match": false
+   },
+   {
+    "device": "M191#39",
+    "match": false
+   },
+   {
+    "device": "D123#40",
+    "match": false
+   },
+   {
+    "device": "X32#41",
+    "match": false
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "e8d8718041720692c0b9b494",
+ "latency_s": 18.801,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "JUDGE",
+ "text": "{\n  \"verdicts\": [\n    {\n      \"device\": \"X20#0\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y21#1\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T22#2\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D112#3\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M204#4\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X0#5\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y22#6\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M299#7\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D100#8\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T21#9\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M210#10\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X23#11\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y20#12\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M293#13\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D110#14\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T200#15\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X25#16\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y25#17\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M201#18\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X10#19\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M207#20\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D122#21\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X20#22\",\n      \"match\": false\n    },\n    {\n      \"device\": \"Y21#23\",\n      \"match\": false\n    },\n    {\n      \"device\": \"T22#24\",\n      \"match\": false\n    },\n    {\n      \"device\": \"D112#25\",\n      \"match\": false\n    },\n    {\n      \"device\": \"M204#26\",\n      \"match\": false\n    },\n    {\n      \"device\": \"X0#27\",\n      \"match\": false\n    },\n    {\n      \"device\": \"D110#28\",\n      \"match\": false\n    },\n    {\n      \"device\": \"M210#29\",\n      \"match\": false\n    },\n    {\n      \"device\": \"Y24#30\",\n      \"match\": false\n    },\n    {\n      \"device\": \"T21#31\",\n      \"match\": false\n    },\n    {\n      \"device\": \"M200#32\",\n      \"match\": false\n    },\n    {\n      \"device\": \"D120#33\",\n      \"match\": false\n    },\n    {\n      \"device\": \"X22#34\",\n      \"match\": false\n    },\n    {\n      \"device\": \"M292#35\",\n      \"match\": false\n    },\n    {\n      \"device\": \"Y11#36\",\n      \"match\": false\n    },\n    {\n      \"device\": \"X11#37\",\n      \"match\": false\n    },\n    {\n      \"device\": \"T10#38\",\n      \"match\": false\n    },\n    {\n      \"device\": \"M191#39\",\n      \"match\": false\n    },\n    {\n      \"device\": \"D123#40\",\n      \"match\": false\n    },\n    {\n      \"device\": \"X32#41\",\n      \"match\": false\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 1567,
+  "output": 1071,
+  "thinking": 1771
+ }
+}

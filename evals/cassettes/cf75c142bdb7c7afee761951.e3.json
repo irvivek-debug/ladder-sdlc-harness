@@ -1,0 +1,69 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Latches HiPot FAIL flag M311 and removes HV enable Y30",
+    "condition": "Tester reports FAIL signal (HP-3004 / X31 ON)",
+    "name": "HiPot FAIL"
+   }
+  ],
+  "conflicts": [],
+  "interlocks": [
+   {
+    "cause": "Guard door opened (ZS-3002 / X32 OFF)",
+    "effect": "De-energizes HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31) immediately"
+   },
+   {
+    "cause": "E-stop chain open/fault (ES-0001 / X0 OFF)",
+    "effect": "De-energizes HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31) immediately"
+   },
+   {
+    "cause": "Test result latched (PASS M310 or FAIL M311 ON)",
+    "effect": "De-energizes HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31)"
+   },
+   {
+    "cause": "Pallet not present in ST30 (ZS-3001 / X33 OFF)",
+    "effect": "Inhibits HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31)"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "hipot_test_time",
+    "narrative_section": "6",
+    "units": "s",
+    "value": "3.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Pallet departs ST30 (falling edge of ZS-3001 / X33 resets PASS/FAIL latches M310/M311)",
+    "exit": "Pallet in ST30 (ZS-3001 / X33), guard door closed (ZS-3002 / X32), and E-stop chain healthy (ES-0001 / X0)",
+    "name": "Idle"
+   },
+   {
+    "entry": "Pallet in ST30 (ZS-3001 / X33), guard door closed (ZS-3002 / X32), E-stop healthy (ES-0001 / X0), and neither PASS (M310) nor FAIL (M311) latched",
+    "exit": "Tester reports PASS (HP-3003 / X30) or FAIL (HP-3004 / X31), guard door opens (ZS-3002 / X32), or E-stop lost (ES-0001 / X0)",
+    "name": "HiPot Test Active"
+   },
+   {
+    "entry": "Tester reports PASS (HP-3003 / X30) or FAIL (HP-3004 / X31)",
+    "exit": "Pallet leaves ST30 (falling edge of ZS-3001 / X33)",
+    "name": "Result Latched"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "cf75c142bdb7c7afee761951.e3",
+ "latency_s": 38.113,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"hipot_test_time\",\n      \"value\": \"3.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"6\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Idle\",\n      \"entry\": \"Pallet departs ST30 (falling edge of ZS-3001 / X33 resets PASS/FAIL latches M310/M311)\",\n      \"exit\": \"Pallet in ST30 (ZS-3001 / X33), guard door closed (ZS-3002 / X32), and E-stop chain healthy (ES-0001 / X0)\"\n    },\n    {\n      \"name\": \"HiPot Test Active\",\n      \"entry\": \"Pallet in ST30 (ZS-3001 / X33), guard door closed (ZS-3002 / X32), E-stop healthy (ES-0001 / X0), and neither PASS (M310) nor FAIL (M311) latched\",\n      \"exit\": \"Tester reports PASS (HP-3003 / X30) or FAIL (HP-3004 / X31), guard door opens (ZS-3002 / X32), or E-stop lost (ES-0001 / X0)\"\n    },\n    {\n      \"name\": \"Result Latched\",\n      \"entry\": \"Tester reports PASS (HP-3003 / X30) or FAIL (HP-3004 / X31)\",\n      \"exit\": \"Pallet leaves ST30 (falling edge of ZS-3001 / X33)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Guard door opened (ZS-3002 / X32 OFF)\",\n      \"effect\": \"De-energizes HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31) immediately\"\n    },\n    {\n      \"cause\": \"E-stop chain open/fault (ES-0001 / X0 OFF)\",\n      \"effect\": \"De-energizes HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31) immediately\"\n    },\n    {\n      \"cause\": \"Test result latched (PASS M310 or FAIL M311 ON)\",\n      \"effect\": \"De-energizes HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31)\"\n    },\n    {\n      \"cause\": \"Pallet not present in ST30 (ZS-3001 / X33 OFF)\",\n      \"effect\": \"Inhibits HV enable HP-3005 (Y30) and HV beacon HL-3006 (Y31)\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"HiPot FAIL\",\n      \"condition\": \"Tester reports FAIL signal (HP-3004 / X31 ON)\",\n      \"action\": \"Latches HiPot FAIL flag M311 and removes HV enable Y30\"\n    }\n  ],\n  \"conflicts\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4385,
+  "output": 781,
+  "thinking": 4891
+ }
+}

@@ -15,6 +15,79 @@
    "passed": 25,
    "tool_bypasses": 0
   },
+  "T1/flash-high": {
+   "config": "flash-high",
+   "effort": "high",
+   "errors": 0,
+   "group": "T1",
+   "mean_cost_list_usd": 0.07519,
+   "mean_cost_usd": 0.0376,
+   "mean_coverage": 1.0,
+   "mean_quality": 0.969,
+   "median_wall_s": 68.2,
+   "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T1/flash-low": {
+   "config": "flash-low",
+   "effort": "low",
+   "errors": 0,
+   "group": "T1",
+   "mean_cost_list_usd": 0.01341,
+   "mean_cost_usd": 0.00671,
+   "mean_coverage": 1.0,
+   "mean_quality": 0.974,
+   "median_wall_s": 16.1,
+   "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T1/flash-medium": {
+   "config": "flash-medium",
+   "effort": "medium",
+   "errors": 0,
+   "group": "T1",
+   "mean_cost_list_usd": 0.03139,
+   "mean_cost_usd": 0.01569,
+   "mean_coverage": 1.0,
+   "mean_quality": 0.968,
+   "median_wall_s": 36.8,
+   "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T1/pro-high": {
+   "config": "pro-high",
+   "effort": "high",
+   "errors": 0,
+   "group": "T1",
+   "mean_cost_list_usd": 0.05969,
+   "mean_cost_usd": 0.05969,
+   "mean_coverage": 1.0,
+   "mean_quality": 0.974,
+   "median_wall_s": 38.3,
+   "model": "gemini-3.1-pro-preview",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T2/flash-high": {
+   "config": "flash-high",
+   "effort": "high",
+   "errors": 0,
+   "group": "T2",
+   "mean_cost_list_usd": 0.09984,
+   "mean_cost_usd": 0.04992,
+   "median_wall_s": 68.2,
+   "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
   "T2/flash-low": {
    "config": "flash-low",
    "effort": "low",
@@ -37,6 +110,19 @@
    "mean_cost_usd": 0.02107,
    "median_wall_s": 37.9,
    "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T2/pro-high": {
+   "config": "pro-high",
+   "effort": "high",
+   "errors": 0,
+   "group": "T2",
+   "mean_cost_list_usd": 0.06454,
+   "mean_cost_usd": 0.06454,
+   "median_wall_s": 24.8,
+   "model": "gemini-3.1-pro-preview",
    "n": 15,
    "pass_rate": 1.0,
    "passed": 15
@@ -140,10 +226,47 @@
  },
  "errors": 0,
  "lanes": {
+  "T1": {
+   "best": "flash-low",
+   "config": "flash-low",
+   "evidence": {
+    "flash-high": {
+     "mean_cost_usd": 0.0376,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "flash-low": {
+     "mean_cost_usd": 0.00671,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "flash-medium": {
+     "mean_cost_usd": 0.01569,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "pro-high": {
+     "mean_cost_usd": 0.05969,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    }
+   },
+   "rule": "cheapest config not significantly below the best (one-sided Fisher, alpha=0.05)"
+  },
   "T2": {
    "best": "flash-low",
    "config": "flash-low",
    "evidence": {
+    "flash-high": {
+     "mean_cost_usd": 0.04992,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
     "flash-low": {
      "mean_cost_usd": 0.00808,
      "n": 15,
@@ -152,6 +275,12 @@
     },
     "flash-medium": {
      "mean_cost_usd": 0.02107,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "pro-high": {
+     "mean_cost_usd": 0.06454,
      "n": 15,
      "p_vs_best": 1.0,
      "pass_rate": 1.0
@@ -209,7 +338,540 @@
    "rule": "best mean recall (review gate; cost aside)"
   }
  },
- "profiles": {},
- "records": 355,
- "usable": 325
+ "profiles": {
+  "all-flash": {
+   "configs": {
+    "T1": "flash-medium",
+    "T2": "flash-medium",
+    "T3": "flash-medium",
+    "T4": "flash-medium"
+   },
+   "epochs": 5,
+   "per_epoch": [
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.664647,
+     "cost_per_verified_change": 0.083081,
+     "cost_per_verified_change_list": 0.16616175,
+     "cost_usd": 0.332324,
+     "defects_caught": 5,
+     "epoch": 1,
+     "verified_changes": 4,
+     "wall_s": 557.73
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.688057,
+     "cost_per_verified_change": 0.08600725,
+     "cost_per_verified_change_list": 0.17201425,
+     "cost_usd": 0.344029,
+     "defects_caught": 5,
+     "epoch": 2,
+     "verified_changes": 4,
+     "wall_s": 818.04
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.7355820000000001,
+     "cost_per_verified_change": 0.09194775,
+     "cost_per_verified_change_list": 0.18389550000000002,
+     "cost_usd": 0.367791,
+     "defects_caught": 5,
+     "epoch": 3,
+     "verified_changes": 4,
+     "wall_s": 1153.66
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.571454,
+     "cost_per_verified_change": 0.0714315,
+     "cost_per_verified_change_list": 0.1428635,
+     "cost_usd": 0.285726,
+     "defects_caught": 5,
+     "epoch": 4,
+     "verified_changes": 4,
+     "wall_s": 620.21
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.605704,
+     "cost_per_verified_change": 0.07571325,
+     "cost_per_verified_change_list": 0.151426,
+     "cost_usd": 0.302853,
+     "defects_caught": 5,
+     "epoch": 5,
+     "verified_changes": 4,
+     "wall_s": 736.21
+    }
+   ],
+   "summary": {
+    "cost_list_usd": {
+     "max": 0.7356,
+     "median": 0.6646,
+     "min": 0.5715
+    },
+    "cost_per_verified_change": {
+     "max": 0.0919,
+     "median": 0.0831,
+     "min": 0.0714
+    },
+    "cost_per_verified_change_list": {
+     "max": 0.1839,
+     "median": 0.1662,
+     "min": 0.1429
+    },
+    "cost_usd": {
+     "max": 0.3678,
+     "median": 0.3323,
+     "min": 0.2857
+    },
+    "defects_caught": {
+     "max": 5,
+     "median": 5,
+     "min": 5
+    },
+    "verified_changes": {
+     "max": 4,
+     "median": 4,
+     "min": 4
+    },
+    "wall_s": {
+     "max": 1153.66,
+     "median": 736.21,
+     "min": 557.73
+    }
+   }
+  },
+  "all-flash-high": {
+   "configs": {
+    "T1": "flash-high",
+    "T2": "flash-high",
+    "T3": "flash-high",
+    "T4": "flash-high"
+   },
+   "epochs": 5,
+   "per_epoch": [
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 1.587261,
+     "cost_per_verified_change": 0.198408,
+     "cost_per_verified_change_list": 0.39681525,
+     "cost_usd": 0.793632,
+     "defects_caught": 5,
+     "epoch": 1,
+     "verified_changes": 4,
+     "wall_s": 2094.09
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 1.853156,
+     "cost_per_verified_change": 0.231645,
+     "cost_per_verified_change_list": 0.463289,
+     "cost_usd": 0.92658,
+     "defects_caught": 5,
+     "epoch": 2,
+     "verified_changes": 4,
+     "wall_s": 2189.82
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 1.55937,
+     "cost_per_verified_change": 0.194921,
+     "cost_per_verified_change_list": 0.3898425,
+     "cost_usd": 0.779684,
+     "defects_caught": 5,
+     "epoch": 3,
+     "verified_changes": 4,
+     "wall_s": 1853.33
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 1.679767,
+     "cost_per_verified_change": 0.209971,
+     "cost_per_verified_change_list": 0.41994175,
+     "cost_usd": 0.839884,
+     "defects_caught": 5,
+     "epoch": 4,
+     "verified_changes": 4,
+     "wall_s": 1454.21
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 1.569119,
+     "cost_per_verified_change": 0.19614,
+     "cost_per_verified_change_list": 0.39227975,
+     "cost_usd": 0.78456,
+     "defects_caught": 5,
+     "epoch": 5,
+     "verified_changes": 4,
+     "wall_s": 1543.97
+    }
+   ],
+   "summary": {
+    "cost_list_usd": {
+     "max": 1.8532,
+     "median": 1.5873,
+     "min": 1.5594
+    },
+    "cost_per_verified_change": {
+     "max": 0.2316,
+     "median": 0.1984,
+     "min": 0.1949
+    },
+    "cost_per_verified_change_list": {
+     "max": 0.4633,
+     "median": 0.3968,
+     "min": 0.3898
+    },
+    "cost_usd": {
+     "max": 0.9266,
+     "median": 0.7936,
+     "min": 0.7797
+    },
+    "defects_caught": {
+     "max": 5,
+     "median": 5,
+     "min": 5
+    },
+    "verified_changes": {
+     "max": 4,
+     "median": 4,
+     "min": 4
+    },
+    "wall_s": {
+     "max": 2189.82,
+     "median": 1853.33,
+     "min": 1454.21
+    }
+   }
+  },
+  "all-pro": {
+   "configs": {
+    "T1": "pro-high",
+    "T2": "pro-high",
+    "T3": "pro-high",
+    "T4": "pro-high"
+   },
+   "epochs": 5,
+   "per_epoch": [
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.814804,
+     "cost_per_verified_change": 0.203701,
+     "cost_per_verified_change_list": 0.203701,
+     "cost_usd": 0.814804,
+     "defects_caught": 5,
+     "epoch": 1,
+     "verified_changes": 4,
+     "wall_s": 475.28000000000003
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.80914,
+     "cost_per_verified_change": 0.202285,
+     "cost_per_verified_change_list": 0.202285,
+     "cost_usd": 0.80914,
+     "defects_caught": 5,
+     "epoch": 2,
+     "verified_changes": 4,
+     "wall_s": 642.98
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.862852,
+     "cost_per_verified_change": 0.215713,
+     "cost_per_verified_change_list": 0.215713,
+     "cost_usd": 0.862852,
+     "defects_caught": 5,
+     "epoch": 3,
+     "verified_changes": 4,
+     "wall_s": 663.77
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.796482,
+     "cost_per_verified_change": 0.1991205,
+     "cost_per_verified_change_list": 0.1991205,
+     "cost_usd": 0.796482,
+     "defects_caught": 5,
+     "epoch": 4,
+     "verified_changes": 4,
+     "wall_s": 783.73
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.8060160000000001,
+     "cost_per_verified_change": 0.20150400000000002,
+     "cost_per_verified_change_list": 0.20150400000000002,
+     "cost_usd": 0.8060160000000001,
+     "defects_caught": 5,
+     "epoch": 5,
+     "verified_changes": 4,
+     "wall_s": 646.69
+    }
+   ],
+   "summary": {
+    "cost_list_usd": {
+     "max": 0.8629,
+     "median": 0.8091,
+     "min": 0.7965
+    },
+    "cost_per_verified_change": {
+     "max": 0.2157,
+     "median": 0.2023,
+     "min": 0.1991
+    },
+    "cost_per_verified_change_list": {
+     "max": 0.2157,
+     "median": 0.2023,
+     "min": 0.1991
+    },
+    "cost_usd": {
+     "max": 0.8629,
+     "median": 0.8091,
+     "min": 0.7965
+    },
+    "defects_caught": {
+     "max": 5,
+     "median": 5,
+     "min": 5
+    },
+    "verified_changes": {
+     "max": 4,
+     "median": 4,
+     "min": 4
+    },
+    "wall_s": {
+     "max": 783.73,
+     "median": 646.69,
+     "min": 475.28
+    }
+   }
+  },
+  "routed": {
+   "configs": {
+    "T1": "flash-low",
+    "T2": "flash-low",
+    "T3": "flash-medium",
+    "T4": "flash-medium"
+   },
+   "epochs": 5,
+   "per_epoch": [
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.607182,
+     "cost_per_verified_change": 0.07589775,
+     "cost_per_verified_change_list": 0.1517955,
+     "cost_usd": 0.303591,
+     "defects_caught": 5,
+     "epoch": 1,
+     "verified_changes": 4,
+     "wall_s": 576.85
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.637813,
+     "cost_per_verified_change": 0.07972675,
+     "cost_per_verified_change_list": 0.15945325,
+     "cost_usd": 0.318907,
+     "defects_caught": 5,
+     "epoch": 2,
+     "verified_changes": 4,
+     "wall_s": 620.19
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.691189,
+     "cost_per_verified_change": 0.08639875,
+     "cost_per_verified_change_list": 0.17279725,
+     "cost_usd": 0.345595,
+     "defects_caught": 5,
+     "epoch": 3,
+     "verified_changes": 4,
+     "wall_s": 1213.21
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.514664,
+     "cost_per_verified_change": 0.06433275,
+     "cost_per_verified_change_list": 0.128666,
+     "cost_usd": 0.257331,
+     "defects_caught": 5,
+     "epoch": 4,
+     "verified_changes": 4,
+     "wall_s": 598.4
+    },
+    {
+     "caught": [
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5"
+     ],
+     "cost_list_usd": 0.55574,
+     "cost_per_verified_change": 0.06946775,
+     "cost_per_verified_change_list": 0.138935,
+     "cost_usd": 0.277871,
+     "defects_caught": 5,
+     "epoch": 5,
+     "verified_changes": 4,
+     "wall_s": 677.94
+    }
+   ],
+   "summary": {
+    "cost_list_usd": {
+     "max": 0.6912,
+     "median": 0.6072,
+     "min": 0.5147
+    },
+    "cost_per_verified_change": {
+     "max": 0.0864,
+     "median": 0.0759,
+     "min": 0.0643
+    },
+    "cost_per_verified_change_list": {
+     "max": 0.1728,
+     "median": 0.1518,
+     "min": 0.1287
+    },
+    "cost_usd": {
+     "max": 0.3456,
+     "median": 0.3036,
+     "min": 0.2573
+    },
+    "defects_caught": {
+     "max": 5,
+     "median": 5,
+     "min": 5
+    },
+    "verified_changes": {
+     "max": 4,
+     "median": 4,
+     "min": 4
+    },
+    "wall_s": {
+     "max": 1213.21,
+     "median": 620.19,
+     "min": 576.85
+    }
+   }
+  }
+ },
+ "records": 415,
+ "usable": 415
 }

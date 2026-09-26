@@ -1,0 +1,88 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Conveyor stops and jam alarm is raised until reset by PB-0002 (X1)",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs",
+    "name": "Conveyor Jam"
+   },
+   {
+    "action": "Conveyor stops immediately and motor overload alarm M191 is raised",
+    "condition": "Motor overload MOL-1001 trips (X13 opens)",
+    "name": "Motor Overload"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "parameter_sheet",
+    "item": "jam_time",
+    "narrative_says": "5.0 s",
+    "parameter_sheet_says": "5.0 s",
+    "program_says": "Not implemented (timer T10 and PE-1002 jam logic missing from program)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Motor overload MOL-1001 tripped (X13 OFF)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately"
+   },
+   {
+    "cause": "E-stop chain not healthy (ES-0001 / X0 OFF)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately"
+   },
+   {
+    "cause": "Conveyor jam alarm active (PE-1002 blocked > 5.0 s while running)",
+    "effect": "Conveyor motor M-1001 (Y10) stops"
+   },
+   {
+    "cause": "Auto mode not selected (SS-0003 / X2 OFF)",
+    "effect": "Conveyor motor M-1001 (Y10) is inhibited from running"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "release_pulse",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "2.0"
+   },
+   {
+    "name": "jam_time",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "5.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Auto mode active (SS-0003 / X2) with no ST10 faults active and E-stop chain healthy (ES-0001 / X0)",
+    "exit": "ST10 fault occurs, E-stop chain lost, or auto mode deselected",
+    "name": "Conveyor Run"
+   },
+   {
+    "entry": "Pallet travels against spring stopper and at-stop photo-eye PE-1001 (X10) activates",
+    "exit": "Stopper release request received from line controller (RQ-1005 / X14)",
+    "name": "Pallet In Position"
+   },
+   {
+    "entry": "Rising edge of line controller release request RQ-1005 (X14)",
+    "exit": "Stopper release timer T11 (2.0 s) elapses",
+    "name": "Stopper Release"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "1c44442c7c79954565d8ac10.e1",
+ "latency_s": 56.695,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\"parameters\":[{\"name\":\"release_pulse\",\"value\":\"2.0\",\"units\":\"s\",\"narrative_section\":\"3\"},{\"name\":\"jam_time\",\"value\":\"5.0\",\"units\":\"s\",\"narrative_section\":\"3\"}],\"steps\":[{\"name\":\"Conveyor Run\",\"entry\":\"Auto mode active (SS-0003 / X2) with no ST10 faults active and E-stop chain healthy (ES-0001 / X0)\",\"exit\":\"ST10 fault occurs, E-stop chain lost, or auto mode deselected\"},{\"name\":\"Pallet In Position\",\"entry\":\"Pallet travels against spring stopper and at-stop photo-eye PE-1001 (X10) activates\",\"exit\":\"Stopper release request received from line controller (RQ-1005 / X14)\"},{\"name\":\"Stopper Release\",\"entry\":\"Rising edge of line controller release request RQ-1005 (X14)\",\"exit\":\"Stopper release timer T11 (2.0 s) elapses\"}],\"interlocks\":[{\"cause\":\"Motor overload MOL-1001 tripped (X13 OFF)\",\"effect\":\"Conveyor motor M-1001 (Y10) stops immediately\"},{\"cause\":\"E-stop chain not healthy (ES-0001 / X0 OFF)\",\"effect\":\"Conveyor motor M-1001 (Y10) stops immediately\"},{\"cause\":\"Conveyor jam alarm active (PE-1002 blocked > 5.0 s while running)\",\"effect\":\"Conveyor motor M-1001 (Y10) stops\"},{\"cause\":\"Auto mode not selected (SS-0003 / X2 OFF)\",\"effect\":\"Conveyor motor M-1001 (Y10) is inhibited from running\"}],\"alarms\":[{\"name\":\"Conveyor Jam\",\"condition\":\"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs\",\"action\":\"Conveyor stops and jam alarm is raised until reset by PB-0002 (X1)\"},{\"name\":\"Motor Overload\",\"condition\":\"Motor overload MOL-1001 trips (X13 opens)\",\"action\":\"Conveyor stops immediately and motor overload alarm M191 is raised\"}],\"conflicts\":[{\"item\":\"jam_time\",\"narrative_says\":\"5.0 s\",\"parameter_sheet_says\":\"5.0 s\",\"program_says\":\"Not implemented (timer T10 and PE-1002 jam logic missing from program)\",\"authoritative\":\"parameter_sheet\"}]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 551,
+  "thinking": 10510
+ }
+}

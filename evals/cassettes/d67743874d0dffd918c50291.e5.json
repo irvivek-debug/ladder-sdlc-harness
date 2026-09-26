@@ -1,0 +1,111 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ES-0001 E-stop circuit healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "PB-0002 Fault reset pushbutton",
+    "device": "X1"
+   },
+   {
+    "comment": "SS-0003 Auto mode selector",
+    "device": "X2"
+   },
+   {
+    "comment": "PE-1001 Pallet at stop PE",
+    "device": "X10"
+   },
+   {
+    "comment": "MOL-1001 Motor overload healthy",
+    "device": "X13"
+   },
+   {
+    "comment": "RQ-1005 Pallet release request",
+    "device": "X14"
+   },
+   {
+    "comment": "M-1001 Conveyor motor contactor",
+    "device": "Y10"
+   },
+   {
+    "comment": "XY-1004 Stopper release",
+    "device": "Y11"
+   },
+   {
+    "comment": "ST10 pallet in position",
+    "device": "M100"
+   },
+   {
+    "comment": "ST10 latched fault",
+    "device": "M190"
+   },
+   {
+    "comment": "ST10 motor overload alarm",
+    "device": "M191"
+   },
+   {
+    "comment": "ST10 common fault",
+    "device": "M199"
+   },
+   {
+    "comment": "XY-1004 release pulse timer",
+    "device": "T11"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Set motor overload alarm M191 when MOL-1001 (X13) trips.",
+    "rung": 1
+   },
+   {
+    "purpose": "Reset latched fault M190 when fault reset PB-0002 (X1) is pressed.",
+    "rung": 2
+   },
+   {
+    "purpose": "Set common fault M199 on latched fault M190, overload M191, or tripped E-stop X0.",
+    "rung": 3
+   },
+   {
+    "purpose": "Run conveyor motor M-1001 (Y10) in auto mode SS-0003 (X2) if no common fault M199.",
+    "rung": 4
+   },
+   {
+    "purpose": "Set pallet in position M100 when photo-eye PE-1001 (X10) detects pallet.",
+    "rung": 5
+   },
+   {
+    "purpose": "Latch stopper release solenoid XY-1004 (Y11) on release request RQ-1005 (X14) pulse.",
+    "rung": 6
+   },
+   {
+    "purpose": "Start 2.0 s timer T11 when stopper release solenoid XY-1004 (Y11) is energized.",
+    "rung": 7
+   },
+   {
+    "purpose": "Reset stopper release solenoid XY-1004 (Y11) when timer T11 completes.",
+    "rung": 8
+   },
+   {
+    "purpose": "End of ST10 program scan.",
+    "rung": 9
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "high",
+ "key": "d67743874d0dffd918c50291.e5",
+ "latency_s": 116.587,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\n  \"device_comments\": [\n    {\n      \"device\": \"X0\",\n      \"comment\": \"ES-0001 E-stop circuit healthy\"\n    },\n    {\n      \"device\": \"X1\",\n      \"comment\": \"PB-0002 Fault reset pushbutton\"\n    },\n    {\n      \"device\": \"X2\",\n      \"comment\": \"SS-0003 Auto mode selector\"\n    },\n    {\n      \"device\": \"X10\",\n      \"comment\": \"PE-1001 Pallet at stop PE\"\n    },\n    {\n      \"device\": \"X13\",\n      \"comment\": \"MOL-1001 Motor overload healthy\"\n    },\n    {\n      \"device\": \"X14\",\n      \"comment\": \"RQ-1005 Pallet release request\"\n    },\n    {\n      \"device\": \"Y10\",\n      \"comment\": \"M-1001 Conveyor motor contactor\"\n    },\n    {\n      \"device\": \"Y11\",\n      \"comment\": \"XY-1004 Stopper release\"\n    },\n    {\n      \"device\": \"M100\",\n      \"comment\": \"ST10 pallet in position\"\n    },\n    {\n      \"device\": \"M190\",\n      \"comment\": \"ST10 latched fault\"\n    },\n    {\n      \"device\": \"M191\",\n      \"comment\": \"ST10 motor overload alarm\"\n    },\n    {\n      \"device\": \"M199\",\n      \"comment\": \"ST10 common fault\"\n    },\n    {\n      \"device\": \"T11\",\n      \"comment\": \"XY-1004 release pulse timer\"\n    }\n  ],\n  \"rung_purposes\": [\n    {\n      \"rung\": 1,\n      \"purpose\": \"Set motor overload alarm M191 when MOL-1001 (X13) trips.\"\n    },\n    {\n      \"rung\": 2,\n      \"purpose\": \"Reset latched fault M190 when fault reset PB-0002 (X1) is pressed.\"\n    },\n    {\n      \"rung\": 3,\n      \"purpose\": \"Set common fault M199 on latched fault M190, overload M191, or tripped E-stop X0.\"\n    },\n    {\n      \"rung\": 4,\n      \"purpose\": \"Run conveyor motor M-1001 (Y10) in auto mode SS-0003 (X2) if no common fault M199.\"\n    },\n    {\n      \"rung\": 5,\n      \"purpose\": \"Set pallet in position M100 when photo-eye PE-1001 (X10) detects pallet.\"\n    },\n    {\n      \"rung\": 6,\n      \"purpose\": \"Latch stopper release solenoid XY-1004 (Y11) on release request RQ-1005 (X14) pulse.\"\n    },\n    {\n      \"rung\": 7,\n      \"purpose\": \"Start 2.0 s timer T11 when stopper release solenoid XY-1004 (Y11) is energized.\"\n    },\n    {\n      \"rung\": 8,\n      \"purpose\": \"Reset stopper release solenoid XY-1004 (Y11) when timer T11 completes.\"\n    },\n    {\n      \"rung\": 9,\n      \"purpose\": \"End of ST10 program scan.\"\n    }\n  ],\n  \"suspicious\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2607,
+  "output": 852,
+  "thinking": 16166
+ }
+}

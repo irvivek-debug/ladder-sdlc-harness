@@ -8,12 +8,13 @@ configs:
   pro-high:     {model: gemini-3.1-pro-preview, effort: high}
   opus-low:     {model: claude-opus-5-5, effort: low}
   opus-medium:  {model: claude-opus-5-5, effort: medium}
+# Gemini-only sweep (2026-09-26): Claude was not enabled in the project; Opus configs stay defined for later.
 groups:
-  T1: [flash-low, flash-medium, opus-low, opus-medium]
-  T2: [flash-low, flash-medium, opus-low, opus-medium]
-  T3: [flash-medium, flash-high, pro-high, opus-low, opus-medium]
-  T4: [flash-medium, flash-high, pro-high, opus-low, opus-medium]
-  RT: [flash-medium, opus-medium]            # red team: one config per family is enough to count bypasses
+  T1: [flash-low, flash-medium, flash-high, pro-high]
+  T2: [flash-low, flash-medium, flash-high, pro-high]
+  T3: [flash-medium, flash-high, pro-high]
+  T4: [flash-medium, flash-high, pro-high]
+  RT: [flash-medium]                          # red team on the Flash lane the demo uses
 tasks:
   # --- T1 bulk documentation --------------------------------------------------------------------------------
   - {id: EX-ST20, group: T1, kind: explain, station: ST20, variant: legacy}

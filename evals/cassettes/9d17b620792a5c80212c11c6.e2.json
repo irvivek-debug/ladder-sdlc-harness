@@ -1,0 +1,180 @@
+{
+ "data": {
+  "verdicts": [
+   {
+    "device": "D100",
+    "match": true
+   },
+   {
+    "device": "D110",
+    "match": true
+   },
+   {
+    "device": "D111",
+    "match": true
+   },
+   {
+    "device": "D112",
+    "match": true
+   },
+   {
+    "device": "D120",
+    "match": true
+   },
+   {
+    "device": "D122",
+    "match": true
+   },
+   {
+    "device": "D123",
+    "match": true
+   },
+   {
+    "device": "M200",
+    "match": true
+   },
+   {
+    "device": "M201",
+    "match": true
+   },
+   {
+    "device": "M202",
+    "match": true
+   },
+   {
+    "device": "M203",
+    "match": true
+   },
+   {
+    "device": "M204",
+    "match": true
+   },
+   {
+    "device": "M205",
+    "match": true
+   },
+   {
+    "device": "M206",
+    "match": true
+   },
+   {
+    "device": "M207",
+    "match": true
+   },
+   {
+    "device": "M210",
+    "match": true
+   },
+   {
+    "device": "M211",
+    "match": true
+   },
+   {
+    "device": "M290",
+    "match": true
+   },
+   {
+    "device": "M291",
+    "match": true
+   },
+   {
+    "device": "M292",
+    "match": true
+   },
+   {
+    "device": "M293",
+    "match": true
+   },
+   {
+    "device": "M299",
+    "match": true
+   },
+   {
+    "device": "SM400",
+    "match": true
+   },
+   {
+    "device": "T21",
+    "match": true
+   },
+   {
+    "device": "T22",
+    "match": true
+   },
+   {
+    "device": "T23",
+    "match": true
+   },
+   {
+    "device": "X0",
+    "match": true
+   },
+   {
+    "device": "X1",
+    "match": true
+   },
+   {
+    "device": "X2",
+    "match": true
+   },
+   {
+    "device": "X20",
+    "match": true
+   },
+   {
+    "device": "X21",
+    "match": true
+   },
+   {
+    "device": "X22",
+    "match": true
+   },
+   {
+    "device": "X23",
+    "match": true
+   },
+   {
+    "device": "X25",
+    "match": true
+   },
+   {
+    "device": "Y20",
+    "match": true
+   },
+   {
+    "device": "Y21",
+    "match": true
+   },
+   {
+    "device": "Y22",
+    "match": true
+   },
+   {
+    "device": "Y23",
+    "match": true
+   },
+   {
+    "device": "Y24",
+    "match": true
+   },
+   {
+    "device": "Y25",
+    "match": true
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "9d17b620792a5c80212c11c6.e2",
+ "latency_s": 14.124,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "JUDGE",
+ "text": "{\n  \"verdicts\": [\n    {\n      \"device\": \"D100\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D110\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D111\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D112\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D120\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D122\",\n      \"match\": true\n    },\n    {\n      \"device\": \"D123\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M200\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M201\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M202\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M203\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M204\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M205\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M206\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M207\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M210\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M211\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M290\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M291\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M292\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M293\",\n      \"match\": true\n    },\n    {\n      \"device\": \"M299\",\n      \"match\": true\n    },\n    {\n      \"device\": \"SM400\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T21\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T22\",\n      \"match\": true\n    },\n    {\n      \"device\": \"T23\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X0\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X1\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X2\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X20\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X21\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X22\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X23\",\n      \"match\": true\n    },\n    {\n      \"device\": \"X25\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y20\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y21\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y22\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y23\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y24\",\n      \"match\": true\n    },\n    {\n      \"device\": \"Y25\",\n      \"match\": true\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 1511,
+  "output": 913,
+  "thinking": 1267
+ }
+}

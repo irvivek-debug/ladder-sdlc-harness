@@ -1,0 +1,79 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Conveyor stops and jam alarm is raised until reset",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs",
+    "name": "Jam alarm"
+   },
+   {
+    "action": "Conveyor stops immediately",
+    "condition": "MOL-1001 trips",
+    "name": "Motor overload"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "Parameter sheet",
+    "item": "Jam detection logic",
+    "narrative_says": "If entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs, jam alarm is raised.",
+    "parameter_sheet_says": "jam_time is 5.0 s on timer T10.",
+    "program_says": "The entire jam detection logic (T10, PE-1002, and setting the jam fault M190) is missing from the program."
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Motor overload (MOL-1001)",
+    "effect": "Stops the conveyor immediately"
+   },
+   {
+    "cause": "E-stop chain lost",
+    "effect": "Stops the conveyor immediately"
+   },
+   {
+    "cause": "Jam alarm active",
+    "effect": "Stops the conveyor immediately"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "jam_time",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "5.0"
+   },
+   {
+    "name": "release_pulse",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "2.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Auto mode (SS-0003) active and no ST10 fault present",
+    "exit": "Auto mode lost or ST10 fault becomes active (MOL-1001, Jam, E-stop)",
+    "name": "Conveyor Run"
+   },
+   {
+    "entry": "Line controller requests release (RQ-1005 rising edge)",
+    "exit": "2.0 seconds elapsed (T11)",
+    "name": "Stopper Release"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "fcbc5ff379e07b0c1efcae32.e1",
+ "latency_s": 21.143,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    },\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Conveyor Run\",\n      \"entry\": \"Auto mode (SS-0003) active and no ST10 fault present\",\n      \"exit\": \"Auto mode lost or ST10 fault becomes active (MOL-1001, Jam, E-stop)\"\n    },\n    {\n      \"name\": \"Stopper Release\",\n      \"entry\": \"Line controller requests release (RQ-1005 rising edge)\",\n      \"exit\": \"2.0 seconds elapsed (T11)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Motor overload (MOL-1001)\",\n      \"effect\": \"Stops the conveyor immediately\"\n    },\n    {\n      \"cause\": \"E-stop chain lost\",\n      \"effect\": \"Stops the conveyor immediately\"\n    },\n    {\n      \"cause\": \"Jam alarm active\",\n      \"effect\": \"Stops the conveyor immediately\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Jam alarm\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while the conveyor runs\",\n      \"action\": \"Conveyor stops and jam alarm is raised until reset\"\n    },\n    {\n      \"name\": \"Motor overload\",\n      \"condition\": \"MOL-1001 trips\",\n      \"action\": \"Conveyor stops immediately\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"Jam detection logic\",\n      \"narrative_says\": \"If entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs, jam alarm is raised.\",\n      \"parameter_sheet_says\": \"jam_time is 5.0 s on timer T10.\",\n      \"program_says\": \"The entire jam detection logic (T10, PE-1002, and setting the jam fault M190) is missing from the program.\",\n      \"authoritative\": \"Parameter sheet\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 593,
+  "thinking": 2049
+ }
+}

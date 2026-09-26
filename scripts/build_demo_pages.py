@@ -100,7 +100,7 @@ h1{font:700 clamp(30px,5vw,52px)/1.08 var(--display);letter-spacing:-.01em;margi
 .card{background:var(--surface);border:1px solid var(--border);padding:18px}
 .span2{grid-column:span 2}.span4{grid-column:span 4}
 .k{font:700 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
-.v{font:700 clamp(28px,3.4vw,40px)/1.05 var(--display)}
+.v{font:700 clamp(26px,3vw,38px)/1.05 var(--display);white-space:nowrap}
 .v small{font:500 14px var(--sans);color:var(--muted);margin-left:6px}
 .d{color:var(--muted);font-size:14px;margin-top:10px}
 .pill{display:inline-flex;align-items:center;gap:6px;font:700 11px/1 var(--mono);text-transform:uppercase;
@@ -171,9 +171,9 @@ result          {'FAIL, rejected' if plant['leak_failed_ref'] else 'PASS'}</div>
     <div class="d">to document every device on the station, at {money(sweep.get('doc_cost'), 3)} a run.</div></div>
   <div class="card"><div class="k">Quality</div><div class="v">{('%g of 5' % caught['median']) if caught else PENDING}</div>
     <div class="d">planted defects caught before reaching the plant, median across repeated runs.</div></div>
-  <div class="card"><div class="k">Knowledge</div><div class="v">{plant['documented_pct']}% <small>to</small> {('%d%%' % round(100 * cov)) if cov else PENDING}</div>
+  <div class="card"><div class="k">Knowledge</div><div class="v">{plant['documented_pct']}<small>%</small> → {('%d%%' % round(100 * cov)) if cov else PENDING}</div>
     <div class="d">of {plant['devices']} devices documented, before and after.</div></div>
-  <div class="card"><div class="k">Cost</div><div class="v">{money(cpvc['median']) if cpvc else PENDING}</div>
+  <div class="card"><div class="k">Cost</div><div class="v">{money(cpvc['median'], 3) if cpvc else PENDING}</div>
     <div class="d">per change proven on the simulator, all model calls included.</div></div>
   <div class="card span4"><div class="k">What the research says, and what we measured</div>
     <div class="d" style="margin-top:0">Documentation with generative AI took half the time in McKinsey's developer study. On this
@@ -191,9 +191,9 @@ the evaluation sweep in evals/REPORT.md.</p>"""
 def ledger(sweep: dict) -> str:
     s = sweep.get("summary", {})
     P = s.get("profiles", {})
-    order = [("all-opus", "Opus for everything", "Claude Opus 5.5, medium effort"),
-             ("all-opus-low", "Opus, low effort", "The strongest simple alternative"),
-             ("all-flash", "Flash for everything", "Gemini 3.8 Flash, medium effort"),
+    order = [("all-pro", "Premium model everywhere", "Gemini 3.1 Pro, high effort (preview)"),
+             ("all-flash-high", "Flash, maximum effort", "Gemini 3.8 Flash, high thinking everywhere"),
+             ("all-flash", "Flash, one setting", "Gemini 3.8 Flash, medium effort everywhere"),
              ("routed", "Horses for courses", "Each task on the lane the evidence chose")]
 
     def cell(p, key, fmt):
@@ -207,24 +207,30 @@ def ledger(sweep: dict) -> str:
     for p, name, sub in order:
         cls = ' class="routed"' if p == "routed" else ""
         rows.append(f'<tr{cls}><td><b>{name}</b><span class="sub">{sub}</span></td>'
-                    f'<td class="num">{cell(p, "cost_per_verified_change", lambda v: f"${v:.2f}")}</td>'
-                    f'<td class="num">{cell(p, "cost_per_verified_change_list", lambda v: f"${v:.2f}")}</td>'
+                    f'<td class="num">{cell(p, "cost_per_verified_change", lambda v: f"${v:.3f}")}</td>'
+                    f'<td class="num">{cell(p, "cost_per_verified_change_list", lambda v: f"${v:.3f}")}</td>'
                     f'<td class="num">{cell(p, "verified_changes", lambda v: f"{v:g} of 4")}</td>'
                     f'<td class="num">{cell(p, "defects_caught", lambda v: f"{v:g} of 5")}</td>'
                     f'<td class="num">{cell(p, "wall_s", lambda v: f"{v / 60:.1f} min")}</td></tr>')
-    lanes = s.get("lanes", {})
+    names = {"flash-low": "Gemini 3.8 Flash, low effort", "flash-medium": "Gemini 3.8 Flash, medium effort",
+             "flash-high": "Gemini 3.8 Flash, high effort", "pro-high": "Gemini 3.1 Pro, high effort",
+             "opus-low": "Claude Opus 5.5, low effort", "opus-medium": "Claude Opus 5.5, medium effort"}
+    lanes = {g: {**v, "config": names.get(v["config"], v["config"])} for g, v in s.get("lanes", {}).items()}
     lane_rows = "".join(
         f'<tr><td><b>{n}</b><span class="sub">{d}</span></td><td class="num">{escape(lanes[g]["config"]) if g in lanes else PENDING}</td></tr>'
         for g, n, d in (("T0", "Parse, lint, simulate, prove", "Deterministic"), ("T1", "Document every device", "Bulk"),
                         ("T2", "Read the narrative", "Extraction"), ("T3", "Change the program", "Until the plant tests pass"),
                         ("T4", "Engineering review", "The gate before a human"))
     ).replace(f'<td class="num">{PENDING}</td></tr>', '<td class="num">$0, no model</td></tr>', 1)
-    r_s, low_s = P.get("routed", {}).get("summary", {}), P.get("all-opus-low", {}).get("summary", {})
+    r_s, simple_s, prem_s = (P.get(k, {}).get("summary", {}) for k in ("routed", "all-flash", "all-pro"))
     verdict = ""
-    if r_s.get("cost_per_verified_change") and low_s.get("cost_per_verified_change"):
-        beat = r_s["cost_per_verified_change"]["median"] < low_s["cost_per_verified_change"]["median"]
-        verdict = ("Routing beats the strongest simple alternative on cost per proven change." if beat else
-                   "Routing does not beat Opus at low effort on cost per proven change here. Its value is speed and headroom.")
+    if r_s.get("cost_per_verified_change") and prem_s.get("cost_per_verified_change"):
+        rc, pc = r_s["cost_per_verified_change"]["median"], prem_s["cost_per_verified_change"]["median"]
+        sc = (simple_s.get("cost_per_verified_change") or {}).get("median")
+        verdict = (f"Routing costs {1 - rc / pc:.0%} less per proven change than the premium model everywhere"
+                   + (f" and {1 - rc / sc:.0%} less than Flash on one setting." if sc and rc < sc else
+                      ". Against Flash on one well-chosen setting it is about the same: the saving comes from not "
+                      "paying premium rates for work a cheaper horse does just as well."))
     body = f"""
 <div class="strip"><span>Horses for courses</span><span>Measured, not estimated</span><span class="acc">Ranges over repeated runs</span></div>
 <h1>Right model, right task.</h1>
@@ -237,7 +243,8 @@ the plant tests. Median cost with the range across runs.</p>
 <div class="grid" style="grid-template-columns:1fr 1fr">
   <div class="card"><div class="k">Where each task runs</div><table><tbody>{lane_rows}</tbody></table></div>
   <div class="card"><div class="k">What is not in these numbers</div><div class="d" style="margin-top:0">The IDE agent's own tokens are
-  billed to the Antigravity seat. Gemini 3.1 Pro is a preview model. Prices are Google Cloud list prices read on 26 September 2026;
+  billed to the Antigravity seat. Gemini 3.1 Pro is a preview model. Claude Opus 5.5 was not enabled in the project for this
+  run, so every lane here is Gemini. Prices are Google Cloud list prices read on 26 September 2026;
   Gemini 3.8 Flash doubles on 1 January 2027, shown in its own column. One synthetic cell: this shows the method, not a model benchmark.</div></div>
 </div>
 <p class="src">Source: evals/REPORT.md and evals/results/summary.json, sweep {escape(str(s.get('records', 0)))} records.</p>"""

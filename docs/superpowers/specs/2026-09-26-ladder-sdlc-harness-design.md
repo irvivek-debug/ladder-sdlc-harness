@@ -254,3 +254,19 @@ prompts, timing, expected output, a recorded fallback and a reset command.
 4. Headless `agy` run of the arc succeeds in Cloud Shell (every step `SUCCESS`).
 5. MCP server verified in `agy` and Claude Code.
 6. Local commits clean of secrets and scrub findings; private push only on the owner's go-ahead.
+
+---
+
+## Execution addendum (2026-09-26)
+
+- Claude Opus 5.5 was not enabled for the evaluation project, so, at the owner's direction, the sweep ran on Gemini
+  only: Gemini 3.8 Flash (low, medium and high effort) and Gemini 3.1 Pro (preview, high) as the premium comparison.
+  Opus support stays in the router.
+- Documentation accuracy is judged by a different Gemini model (Flash judged by 3.1 Pro, and 3.1 Pro by Flash). Both
+  judges passed calibration at 42/42; the report notes the departure from cross-family judging.
+- Result (sweep S1, 415 samples, about $43):
+  - Every lane is Flash. T1 and T2 run at low effort; T3 and T4 at medium.
+  - Routing costs $0.076 per verified change: 62% less than Pro everywhere and 9% less than Flash-medium everywhere.
+  - Every profile fixed 4 of 4 changes and caught 5 of 5 defects.
+- Reviewers found four real flaws in the author's reference program. Each was confirmed on the simulator and recorded
+  in `evals/answer_key/latent.yaml`.

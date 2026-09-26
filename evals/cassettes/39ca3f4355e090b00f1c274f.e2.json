@@ -1,0 +1,56 @@
+{
+ "data": {
+  "verdicts": [
+   {
+    "device": "M310",
+    "match": true
+   },
+   {
+    "device": "M311",
+    "match": true
+   },
+   {
+    "device": "X0",
+    "match": true
+   },
+   {
+    "device": "X30",
+    "match": true
+   },
+   {
+    "device": "X31",
+    "match": true
+   },
+   {
+    "device": "X32",
+    "match": true
+   },
+   {
+    "device": "X33",
+    "match": true
+   },
+   {
+    "device": "Y30",
+    "match": true
+   },
+   {
+    "device": "Y31",
+    "match": true
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "39ca3f4355e090b00f1c274f.e2",
+ "latency_s": 7.636,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "JUDGE",
+ "text": "{\"verdicts\": [{\"device\": \"M310\", \"match\": true}, {\"device\": \"M311\", \"match\": true}, {\"device\": \"X0\", \"match\": true}, {\"device\": \"X30\", \"match\": true}, {\"device\": \"X31\", \"match\": true}, {\"device\": \"X32\", \"match\": true}, {\"device\": \"X33\", \"match\": true}, {\"device\": \"Y30\", \"match\": true}, {\"device\": \"Y31\", \"match\": true}]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 538,
+  "output": 122,
+  "thinking": 837
+ }
+}

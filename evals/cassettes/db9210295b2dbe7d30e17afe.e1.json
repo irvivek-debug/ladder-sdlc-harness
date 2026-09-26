@@ -1,0 +1,53 @@
+{
+ "data": {
+  "alarms": [],
+  "conflicts": [],
+  "interlocks": [
+   {
+    "cause": "Opening the guard door",
+    "effect": "Removes HV at once"
+   },
+   {
+    "cause": "Losing the E-stop chain",
+    "effect": "Removes HV at once"
+   },
+   {
+    "cause": "Result (PASS or FAIL) is latched",
+    "effect": "HV is removed"
+   },
+   {
+    "cause": "Pallet leaves",
+    "effect": "Results reset"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "hipot_test_time",
+    "narrative_section": "6. ST30 — HV insulation (HiPot) test",
+    "units": "s",
+    "value": "3.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Pallet in ST30 (ZS-3001) AND guard door closed (ZS-3002) AND E-stop healthy (X0) AND no result latched",
+    "exit": "Tester result latched (PASS or FAIL) OR guard door opened OR E-stop lost OR pallet leaves",
+    "name": "HiPot Test"
+   }
+  ]
+ },
+ "effort": "high",
+ "key": "db9210295b2dbe7d30e17afe.e1",
+ "latency_s": 28.21,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\"parameters\":[{\"name\":\"hipot_test_time\",\"value\":\"3.0\",\"units\":\"s\",\"narrative_section\":\"6. ST30 — HV insulation (HiPot) test\"}],\"steps\":[{\"name\":\"HiPot Test\",\"entry\":\"Pallet in ST30 (ZS-3001) AND guard door closed (ZS-3002) AND E-stop healthy (X0) AND no result latched\",\"exit\":\"Tester result latched (PASS or FAIL) OR guard door opened OR E-stop lost OR pallet leaves\"}],\"interlocks\":[{\"cause\":\"Opening the guard door\",\"effect\":\"Removes HV at once\"},{\"cause\":\"Losing the E-stop chain\",\"effect\":\"Removes HV at once\"},{\"cause\":\"Result (PASS or FAIL) is latched\",\"effect\":\"HV is removed\"},{\"cause\":\"Pallet leaves\",\"effect\":\"Results reset\"}],\"alarms\":[],\"conflicts\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4385,
+  "output": 192,
+  "thinking": 3346
+ }
+}

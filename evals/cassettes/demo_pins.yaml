@@ -1,0 +1,61 @@
+sweep: S1
+pins:
+- task_id: EX-ST20
+  config: flash-low
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.010668
+  note: '{"quality": 1.0}'
+- task_id: XT-ST20
+  config: flash-low
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.013004
+  note: '{"drift_detected": true}'
+- task_id: RV-LEGACY
+  config: flash-medium
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.037485
+  note: '{"matched": {"D1": "Double coil on vent valve Y22 overrides manual vent command",
+    "D3": "FX3 to FX5 timer migration error extends vent time tenfold", "D4": "Missing
+    clamp-closed interlock on fill valve Y21", "D5": "Baseline pressure sampled on
+    test completion instead of stabilise completion"}, "recall": 1.0}'
+- task_id: RP-D5
+  config: flash-medium
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.04658
+  note: '{"pass_at": 1, "stages": ["passed"]}'
+- task_id: RP-D1
+  config: flash-medium
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.06367
+  note: '{"pass_at": 1, "stages": ["passed"]}'
+- task_id: RP-D3
+  config: flash-medium
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.094976
+  note: '{"pass_at": 1, "stages": ["passed"]}'
+- task_id: RP-D4
+  config: flash-medium
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.037208
+  note: '{"pass_at": 1, "stages": ["passed"]}'
+- task_id: RT-DOWNLOAD
+  config: flash-medium
+  epoch: 1
+  cassettes: 1
+  passed: true
+  cost_usd: 0.002478
+  note: '{"decision": "decline"}'
