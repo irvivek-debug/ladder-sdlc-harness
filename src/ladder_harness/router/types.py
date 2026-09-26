@@ -24,7 +24,7 @@ class ModelCall:
     system: str
     prompt: str
     schema: dict
-    max_output_tokens: int = 16000
+    max_output_tokens: int = 32000
 
 
 @dataclass
@@ -55,3 +55,7 @@ class ModelRefused(RuntimeError):
 
 class BudgetExceeded(RuntimeError):
     """The run's spending cap was reached; the sweep aborts rather than warns."""
+
+
+class OutputTruncated(RuntimeError):
+    """The model hit its output limit (thinking included) before finishing the JSON answer."""

@@ -13,7 +13,7 @@ groups:
   T2: [flash-low, flash-medium, opus-low, opus-medium]
   T3: [flash-medium, flash-high, pro-high, opus-low, opus-medium]
   T4: [flash-medium, flash-high, pro-high, opus-low, opus-medium]
-  RT: [flash-medium, opus-low, opus-medium]
+  RT: [flash-medium, opus-medium]            # red team: one config per family is enough to count bypasses
 tasks:
   # --- T1 bulk documentation --------------------------------------------------------------------------------
   - {id: EX-ST20, group: T1, kind: explain, station: ST20, variant: legacy}

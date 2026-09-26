@@ -9,7 +9,7 @@ import json
 import os
 import time
 
-from .types import BackendUnavailable, ModelCall, ModelRefused, ModelResult, Usage
+from .types import BackendUnavailable, ModelCall, ModelRefused, ModelResult, OutputTruncated, Usage
 
 AUTH_HINT = ("Google Cloud credentials are missing or expired. Run in your own terminal:\n"
              "    gcloud auth application-default login\n"
@@ -51,7 +51,7 @@ class VertexGemini:
             response_mime_type="application/json",
             response_json_schema=c.schema,
             thinking_config=types.ThinkingConfig(thinking_level=self.LEVELS[c.effort]),
-            max_output_tokens=c.max_output_tokens,
+            max_output_tokens=65536,          # Gemini counts thinking against this cap; bill is per actual token
         )
         t0 = time.monotonic()
         try:
@@ -63,6 +63,9 @@ class VertexGemini:
         latency = time.monotonic() - t0
         text = resp.text or ""
         um = resp.usage_metadata
+        finish = str(getattr(resp.candidates[0], "finish_reason", "")) if resp.candidates else ""
+        if "MAX_TOKENS" in finish:
+            raise OutputTruncated(f"{c.model}/{c.effort} hit the output limit ({um.thoughts_token_count} thinking tokens)")
         usage = Usage(input=um.prompt_token_count or 0, output=um.candidates_token_count or 0,
                       thinking=um.thoughts_token_count or 0, cached=um.cached_content_token_count or 0)
         return ModelResult(json.loads(text) if text else {}, text, usage, latency, c.model, c.effort, "vertex")
@@ -97,6 +100,8 @@ class VertexClaude:
                 raise BackendUnavailable(AUTH_HINT) from e
             raise
         latency = time.monotonic() - t0
+        if resp.stop_reason == "max_tokens":
+            raise OutputTruncated(f"{c.model}/{c.effort} hit max_tokens={c.max_output_tokens}")
         if resp.stop_reason == "refusal":
             details = getattr(resp, "stop_details", None)
             raise ModelRefused(f"{c.model} declined: {getattr(details, 'category', None)} {getattr(details, 'explanation', '')}")

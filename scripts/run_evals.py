@@ -29,11 +29,11 @@ from ladder_harness.router.pricing import Pricing  # noqa: E402
 from ladder_harness.router.router import BudgetGuard, Router  # noqa: E402
 
 # Rough per-call token profiles (input, output incl. thinking) by kind and effort, for the dry-run estimate.
-PROFILE = {"explain": (7000, {"low": 2500, "medium": 4000, "high": 7000}),
-           "extract": (6500, {"low": 2500, "medium": 4000, "high": 7000}),
-           "review": (10000, {"low": 3500, "medium": 6000, "high": 10000}),
-           "repair": (10000, {"low": 5000, "medium": 7000, "high": 11000}),
-           "request": (3000, {"low": 600, "medium": 900, "high": 1500})}
+PROFILE = {"explain": (7000, {"low": 4000, "medium": 8000, "high": 14000}),
+           "extract": (6500, {"low": 4000, "medium": 9000, "high": 15000}),
+           "review": (9000, {"low": 7000, "medium": 16000, "high": 26000}),
+           "repair": (10000, {"low": 8000, "medium": 14000, "high": 22000}),
+           "request": (3000, {"low": 800, "medium": 1500, "high": 3000})}
 REPAIR_ATTEMPTS = 1.8
 
 
@@ -91,6 +91,10 @@ def main() -> int:
     routing = yaml.safe_load((ROOT / "config" / "routing.yaml").read_text(encoding="utf-8"))
     ledger = Ledger(ROOT / "logs" / "ledger.jsonl")
     guard = BudgetGuard(args.budget)
+    prior = sum(float(r.get("cost_usd", 0)) for r in ledger.read()
+                if r.get("run_id") == args.sweep and r.get("backend") not in ("replay", None))
+    guard.add(prior)
+    print(f"already spent on sweep {args.sweep}: ${prior:.2f}; cap ${args.budget:.2f} applies to the total")
     routers: dict[str, Router] = {}
 
     def make_router(config: str) -> Router:
