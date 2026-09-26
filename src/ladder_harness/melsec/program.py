@@ -140,6 +140,7 @@ def _segment(items: list[tuple[Instruction, list[str]]]) -> list[Rung]:
 
 def _validate_rung(rung: Rung) -> None:
     depth, mps, outputs = 0, 0, 0
+    open_branch: Instruction | None = None      # MPS/MRD/MPP not yet followed by an output
     for ins in rung.instructions:
         k, op, line = ins.spec.kind, ins.op, ins.line
         if k == "load":
@@ -149,6 +150,7 @@ def _validate_rung(rung: Rung) -> None:
                 raise ParseError(line, f"{op} has no operation result to work on")
             if op == "MPS":
                 mps += 1
+                open_branch = ins
                 if mps > 16:
                     raise ParseError(line, "MPS nested deeper than 16")
         elif op in ("ANB", "ORB"):
@@ -160,15 +162,19 @@ def _validate_rung(rung: Rung) -> None:
                 raise ParseError(line, f"{op} without a preceding MPS")
             if op == "MPP":
                 mps -= 1
+            open_branch = ins
         elif k in OUTPUT_KINDS:
             if depth == 0:
                 raise ParseError(line, f"{ins.text()} has no operation result to work on")
             if depth > 1:
                 raise ParseError(line, f"unconsumed LD block before {ins.text()} (missing ANB/ORB)")
             outputs += 1
+            open_branch = None
     last = rung.instructions[-1]
     if mps:
         raise ParseError(last.line, "MPS without a matching MPP in this rung")
+    if open_branch is not None:
+        raise ParseError(open_branch.line, f"{open_branch.op} branch has no output after it")
     if not outputs and last.spec.kind not in STANDALONE_KINDS:
         raise ParseError(last.line, "rung has no output instruction")
 

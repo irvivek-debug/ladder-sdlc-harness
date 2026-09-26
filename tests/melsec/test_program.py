@@ -86,3 +86,8 @@ def test_timer_and_arith_operands():
     p = parse_il("LD X0\nOUTH T3 K25\n+ K1 D0\n- D1 D2 D3\nEND\n")
     ops = [i.op for i in p.instructions()]
     assert ops == ["LD", "OUTH", "+", "-", "END"]
+
+
+def test_branch_without_output_is_rejected():
+    with pytest.raises(ParseError, match="MPP branch has no output"):
+        parse_il("LD X0\nMPS\nAND X1\nOUT Y1\nMPP\nLD X2\nOUT Y2\nEND\n")
