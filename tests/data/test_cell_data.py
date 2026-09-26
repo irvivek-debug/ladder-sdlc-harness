@@ -5,6 +5,7 @@ from functools import lru_cache
 from pathlib import Path
 
 import pytest
+import yaml
 
 from ladder_harness.cell import load_cell
 from ladder_harness.lint import lint
@@ -90,3 +91,14 @@ def test_build_is_reproducible_and_committed_files_are_current(tmp_path):
     assert a == b
     committed = _digest(ROOT)
     assert {k: v for k, v in committed.items() if k in a} == a
+
+
+def test_confirmed_latent_issues_fail_on_the_reference_in_the_simulator():
+    from ladder_harness.scenarios.model import suite_from_dict
+    doc = yaml.safe_load((ROOT / "evals" / "answer_key" / "latent_scenarios.yaml").read_text())
+    failing_ids = set()
+    for sd in doc["suites"]:
+        failing_ids |= {r.id for r in run_suites(CELL.golden(sd["station"]), [suite_from_dict(sd)], stop_on_fail=False)
+                        if not r.passed}
+    for lid, issue in CELL.latent.items():
+        assert issue["scenario"] in failing_ids, f"{lid} is not reproduced on the simulator"

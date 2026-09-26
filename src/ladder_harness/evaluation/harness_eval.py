@@ -110,7 +110,7 @@ def run_one(ctx: EvalContext, spec: dict, config: str, epoch: int) -> dict:
         elif kind == "review":
             run = tasks.review(router, ctx.cell, st, "cfg", meta, program, comments)
             score = scoring.score_review(run.result.get("findings", []), program, spec.get("present", []),
-                                         ctx.cell.defects)
+                                         ctx.cell.defects, ctx.cell.latent, st)
         elif kind == "repair":
             run = tasks.repair(router, ctx.cell, st, spec["goal"], set(spec.get("targets", [])), "cfg", 3, meta,
                                program, comments)

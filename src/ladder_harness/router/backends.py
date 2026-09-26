@@ -25,7 +25,9 @@ def project_id() -> str:
 
 def _is_rate_limit(e: Exception) -> bool:
     text = f"{type(e).__name__} {e}"
-    return "429" in text or "RESOURCE_EXHAUSTED" in text or "RateLimit" in text or "overloaded" in text.lower()
+    transient = ("429", "RESOURCE_EXHAUSTED", "RateLimit", "500 INTERNAL", "503", "UNAVAILABLE", "InternalServerError",
+                 "APIConnectionError", "ServiceUnavailable")
+    return any(t in text for t in transient) or "overloaded" in text.lower()
 
 
 def with_backoff(fn, attempts: int = 6, first_delay: float = 4.0):

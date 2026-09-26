@@ -1,0 +1,68 @@
+# SEALED. Adjudication scenarios for issues that reviewers reported beyond the seeded defects (sweep S1).
+# A claimed issue is CONFIRMED only if its scenario FAILS on the reference program in the simulator.
+# These suites are not part of the station test sets, so they never affect repair gating.
+suites:
+  - station: ST20
+    plant: st20
+    scan_ms: 10
+    defaults:
+      plant: {leak_kpa_per_s: 0.005}
+      stimuli:
+        - {at_ms: 0, set: {X0: true, X2: true}}
+    scenarios:
+      - id: LAT-ST20-L1
+        title: Holding fault reset must not mask an active over-pressure
+        trace: [narrative §4.8 "Latched alarms clear with the fault reset once their cause has gone"]
+        duration_ms: 7000
+        stimuli:
+          - {at_ms: 500, plant: {inject: {fault: regulator_fail, supply_kpa: 30}}}
+          - {at_ms: 500, plant: {inject: {fault: fill_valve_stuck_open}}}
+          - {at_ms: 4000, set: {X1: true}}
+          - {at_ms: 6000, set: {X1: false}}
+        expect:
+          - {never: "P_kpa > 20.5 and not M299", after_ms: 3500}
+      - id: LAT-ST20-L2
+        title: E-stop lost during VENT must still give a FAIL result
+        trace: [narrative §4.8 "If the E-stop chain is lost during a cycle, the cycle aborts to VENT with a FAIL result"]
+        duration_ms: 30000
+        stimuli:
+          - {at_ms: 100, set: {X23: true}}
+          - {when: "M205", delay_ms: 100, set: {X0: false}}
+        expect:
+          - {eventually: "M211", by_ms: 28000}
+          - {never: "Y23"}
+      - id: LAT-ST20-L5
+        title: A pressure rise over the test window should not pass (debatable; narrative is silent)
+        trace: [reviewer claim]
+        duration_ms: 30000
+        plant: {leak_kpa_per_s: -0.05}
+        stimuli:
+          - {at_ms: 100, set: {X23: true}}
+        expect:
+          - {never: "M210"}
+  - station: ST10
+    plant: st10
+    scan_ms: 10
+    defaults:
+      stimuli:
+        - {at_ms: 0, set: {X0: true, X2: true}}
+        - {at_ms: 0, plant: {spawn_pallet: {}}}
+    scenarios:
+      - id: LAT-ST10-L3
+        title: Resetting the E-stop must not restart the conveyor by itself
+        trace: [IEC 60204-1 emergency stop reset shall not initiate a restart]
+        duration_ms: 4000
+        stimuli:
+          - {at_ms: 1000, set: {X0: false}}
+          - {at_ms: 2000, set: {X0: true}}
+        expect:
+          - {never: "Y10", after_ms: 1100}
+      - id: LAT-ST10-L4
+        title: Clearing a motor overload must not restart the conveyor by itself
+        trace: [IEC 60204-1 no unexpected start-up after an overload reset]
+        duration_ms: 4000
+        stimuli:
+          - {at_ms: 1000, plant: {inject: {fault: overload}}}
+          - {at_ms: 2000, plant: {clear: {fault: overload}}}
+        expect:
+          - {never: "Y10", after_ms: 1100}

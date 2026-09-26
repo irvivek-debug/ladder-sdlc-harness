@@ -1,0 +1,33 @@
+# SEALED. Issues found by reviewers beyond the seeded defects, adjudicated on the simulator
+# (evals/answer_key/latent_scenarios.yaml). confirmed = scenario fails on the reference AND a narrative or standard
+# requirement backs it. A finding matches only if it names a device from every `require` group ("~word" = the word appears in its title or evidence). debatable = scenario fails but no stated requirement (neither credited nor penalised).
+L1:
+  station: ST20
+  status: confirmed
+  title: Holding fault reset masks active faults (reset rung runs after the set rungs)
+  scenario: LAT-ST20-L1
+  match: {require: [[X1]], categories: [semantic_logic, safety, missing_interlock, timing, other]}
+L2:
+  station: ST20
+  status: confirmed
+  title: A fault during VENT/UNCLAMP/DONE does not turn the result into FAIL (narrative §4.8)
+  scenario: LAT-ST20-L2
+  match: {require: [[M205, M206, M207, "~vent", "~unclamp", "~late step", "~late-step"], [M210, M211, Y23, Y24]], categories: [semantic_logic, safety, missing_interlock, timing, other]}
+L3:
+  station: ST10
+  status: confirmed
+  title: Conveyor restarts automatically when the E-stop chain is restored
+  scenario: LAT-ST10-L3
+  match: {require: [[X0], [Y10, M199]], categories: [safety, missing_interlock, semantic_logic, other]}
+L4:
+  station: ST10
+  status: confirmed
+  title: Conveyor restarts automatically when a motor overload clears (non-latched alarm)
+  scenario: LAT-ST10-L4
+  match: {require: [[X13, M191]], categories: [safety, missing_interlock, semantic_logic, other]}
+L5:
+  station: ST20
+  status: debatable
+  title: A pressure rise over the test window is accepted as PASS
+  scenario: LAT-ST20-L5
+  match: {require: [[D112, D120]], categories: [semantic_logic, timing, other, safety]}

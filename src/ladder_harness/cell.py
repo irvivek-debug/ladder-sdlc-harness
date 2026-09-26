@@ -34,6 +34,7 @@ class Cell:
     iolist: IoList
     defects: dict = field(default_factory=dict)
     realism: dict = field(default_factory=dict)
+    latent: dict = field(default_factory=dict)
 
     def _station_dir(self, station: str) -> Path:
         return self.data_dir / station.lower()
@@ -74,8 +75,10 @@ class Cell:
 def load_cell(data_dir: str | Path, key_dir: str | Path | None = None) -> Cell:
     data_dir = Path(data_dir)
     key = Path(key_dir) if key_dir is not None else None
-    defects, realism = {}, {}
+    defects, realism, latent = {}, {}, {}
     if key is not None:
         defects = yaml.safe_load((key / "defects.yaml").read_text(encoding="utf-8"))
         realism = yaml.safe_load((key / "realism.yaml").read_text(encoding="utf-8"))
-    return Cell(data_dir, key, IoList.load_csv(data_dir / "io_list.csv"), defects, realism)
+        if (key / "latent.yaml").exists():
+            latent = yaml.safe_load((key / "latent.yaml").read_text(encoding="utf-8"))
+    return Cell(data_dir, key, IoList.load_csv(data_dir / "io_list.csv"), defects, realism, latent)
