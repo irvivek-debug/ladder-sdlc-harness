@@ -1,0 +1,8 @@
+{
+ "gemini-3.8-flash:high": {
+  "agreement": 1.0,
+  "cost_usd": 0.01206,
+  "disagreements": [],
+  "n": 42
+ }
+}

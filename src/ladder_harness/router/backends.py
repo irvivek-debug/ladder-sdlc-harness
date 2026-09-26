@@ -52,6 +52,7 @@ class VertexGemini:
             response_json_schema=c.schema,
             thinking_config=types.ThinkingConfig(thinking_level=self.LEVELS[c.effort]),
             max_output_tokens=65536,          # Gemini counts thinking against this cap; bill is per actual token
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
         )
         t0 = time.monotonic()
         try:
