@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "ladder-harness": {
+      "command": "ladder-mcp",
+      "args": [],
+      "env": {"LADDER_MODE": "auto"}
+    }
+  }
+}

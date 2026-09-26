@@ -1,0 +1,10 @@
+{
+  "servers": {
+    "ladder-harness": {
+      "type": "stdio",
+      "command": "ladder-mcp",
+      "args": [],
+      "env": {"LADDER_MODE": "auto", "LADDER_ROOT": "${workspaceFolder}"}
+    }
+  }
+}

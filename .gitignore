@@ -12,3 +12,8 @@ __pycache__/
 logs/
 demo/out/
 evals/results/raw/
+
+# machine-specific IDE configs written by scripts/install_ide.py (absolute paths)
+.mcp.json
+.cursor/
+.vscode/
