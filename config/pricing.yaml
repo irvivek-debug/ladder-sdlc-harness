@@ -1,0 +1,26 @@
+# USD per 1M tokens on Google Cloud (Gemini Enterprise Agent Platform, formerly Vertex AI), global endpoint.
+# Read on 2026-09-26. Re-read before any showcase — `ladder preflight` warns when this is older than 14 days.
+# Thinking tokens are billed as output. Regional / multi-region endpoints cost 10% more for these models.
+currency: USD
+read_on: 2026-09-26
+models:
+  gemini-3.8-flash:
+    provider: vertex-gemini
+    status: GA (released 2026-09-02)
+    source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+    periods:
+      - {label: intro, until: 2026-12-31, input: 0.75, output: 3.75, cached_input: 0.075}
+      - {label: list, from: 2027-01-01, input: 1.50, output: 7.50, cached_input: 0.15}
+  gemini-3.1-pro-preview:
+    provider: vertex-gemini
+    status: Public preview (Pre-GA terms)
+    source: https://cloud.google.com/gemini-enterprise-agent-platform/generative-ai/pricing
+    periods:
+      - {label: list, input: 2.00, output: 12.00, cached_input: 0.20, note: "prompts <= 200K tokens"}
+  claude-opus-5-5:
+    provider: vertex-claude
+    status: GA on Vertex (released 2026-09-22)
+    source: https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/partner-models/claude/opus-5-5
+    source_list_price: https://platform.claude.com/docs/en/about-claude/pricing
+    periods:
+      - {label: list, input: 4.00, output: 20.00, cached_input: 0.20, cache_write: 5.00}  # 5-min cache write

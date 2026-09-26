@@ -1,0 +1,15 @@
+# Which model runs which task class. The M4 ruling: lanes are an *output of the evals*
+# (evals/route_from_results.py rewrites this file); these starting lanes are the hypothesis under test.
+generated_by: hypothesis (milestone M4 starting lanes) — not yet measured
+task_classes:
+  T0: {description: "deterministic: parse, lint, simulate, render, diff", model: none}
+  T1: {description: "bulk comprehension: device comments, rung purposes", model: gemini-3.8-flash, effort: low}
+  T2: {description: "extraction: narrative -> structured spec, conflicts", model: gemini-3.8-flash, effort: medium}
+  T3: {description: "generate / repair until the scenarios pass", model: gemini-3.8-flash, effort: high}
+  T4: {description: "semantic review: code vs narrative, interlocks", model: claude-opus-5-5, effort: medium}
+  T5: {description: "SAFETY guard", model: none}
+profiles:
+  routed: lanes                       # use task_classes above
+  all-opus: {model: claude-opus-5-5, effort: medium}
+  all-opus-low: {model: claude-opus-5-5, effort: low}
+  all-flash: {model: gemini-3.8-flash, effort: medium}
