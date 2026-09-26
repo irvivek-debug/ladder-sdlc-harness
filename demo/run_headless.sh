@@ -8,8 +8,9 @@ cd "$(dirname "$0")/.."
 mkdir -p demo/out
 : "${LADDER_MODE:=auto}"; export LADDER_MODE
 
+ONLY_MCP="Use only the ladder-harness MCP tools (ladder_*, cost_ledger); do not run shell commands or read files directly."
 step() {
-  local name="$1" prompt="$2"
+  local name="$1" prompt="$2 $ONLY_MCP"
   echo "== $name"
   agy -p "$prompt" --output-format json --print-timeout 600s > "demo/out/agy_${name}.json"
   python3 - "$name" <<'PY'
