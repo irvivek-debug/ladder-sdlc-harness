@@ -67,6 +67,9 @@ def main() -> int:
     ap.add_argument("--max-tasks", type=int, default=4)
     ap.add_argument("--max-samples", type=int, default=4)
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--fill-gaps", action="store_true",
+                    help="run only (task, config, epoch) combinations that are missing or errored in this sweep")
+    ap.add_argument("--workers", type=int, default=8)
     args = ap.parse_args()
 
     bank = harness_eval.load_bank(ROOT / "evals" / "task_bank.yaml")
@@ -108,6 +111,22 @@ def main() -> int:
     harness_eval.CTX = harness_eval.EvalContext(
         cell=load_cell(ROOT / "plant_data" / "ev_pack_eol", ROOT / "evals" / "answer_key"), bank=bank,
         make_router=make_router, sink=ROOT / "evals" / "results" / "runs" / f"{args.sweep}.jsonl")
+    if args.fill_gaps:
+        from concurrent.futures import ThreadPoolExecutor
+        from ladder_harness.evaluation.aggregate import load_records
+        sink = harness_eval.CTX.sink
+        have = {(r["task_id"], r["config"], r["epoch"]) for r in (load_records([sink]) if sink.exists() else [])
+                if not r.get("error")}
+        todo = [(t, c, e) for g, cs in plan.items() for c in cs for t in bank["tasks"]
+                if t["group"] == g and (not ids or t["id"] in ids) for e in range(1, args.epochs + 1)
+                if (t["id"], c, e) not in have]
+        print(f"filling {len(todo)} gaps")
+        with ThreadPoolExecutor(max_workers=args.workers) as pool:
+            for rec in pool.map(lambda x: harness_eval.run_one(harness_eval.CTX, x[0], x[1], x[2]), todo):
+                print(f"  {rec['task_id']} {rec['config']} e{rec['epoch']}: "
+                      f"{'ERROR ' + rec['error'][:80] if rec.get('error') else ('pass' if rec['passed'] else 'fail')}")
+        print(f"spent ${guard.spent_usd:.2f} live (sweep total)")
+        return 0
     tasks = [harness_eval.build_task(g, c, bank, args.epochs, ids) for g, cs in plan.items() for c in cs]
     tasks = [t for t in tasks if len(t.dataset)]
     inspect_eval(tasks, model="mockllm/model", log_dir=str(ROOT / "logs" / "inspect"), display="plain",

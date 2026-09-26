@@ -23,6 +23,24 @@ def project_id() -> str:
     return pid
 
 
+def _is_rate_limit(e: Exception) -> bool:
+    text = f"{type(e).__name__} {e}"
+    return "429" in text or "RESOURCE_EXHAUSTED" in text or "RateLimit" in text or "overloaded" in text.lower()
+
+
+def with_backoff(fn, attempts: int = 6, first_delay: float = 4.0):
+    """Retry rate-limit errors with exponential backoff; everything else propagates at once."""
+    delay = first_delay
+    for i in range(attempts):
+        try:
+            return fn()
+        except Exception as e:  # noqa: BLE001
+            if not _is_rate_limit(e) or i == attempts - 1:
+                raise
+            time.sleep(delay)
+            delay = min(delay * 2, 60.0)
+
+
 def _is_auth_error(e: Exception) -> bool:
     text = f"{type(e).__name__} {e}".lower()
     return any(s in text for s in ("defaultcredentialserror", "reauth", "refresh", "invalid_grant",
@@ -56,7 +74,8 @@ class VertexGemini:
         )
         t0 = time.monotonic()
         try:
-            resp = self._get().models.generate_content(model=c.model, contents=c.prompt, config=config)
+            resp = with_backoff(lambda: self._get().models.generate_content(model=c.model, contents=c.prompt,
+                                                                            config=config))
         except Exception as e:  # noqa: BLE001 — classify, then re-raise with a precise message
             if _is_auth_error(e):
                 raise BackendUnavailable(AUTH_HINT) from e
@@ -88,14 +107,16 @@ class VertexClaude:
     def call(self, c: ModelCall) -> ModelResult:
         t0 = time.monotonic()
         try:
-            with self._get().messages.stream(
-                model=c.model,
-                max_tokens=c.max_output_tokens,
-                system=[{"type": "text", "text": c.system, "cache_control": {"type": "ephemeral"}}],
-                messages=[{"role": "user", "content": c.prompt}],
-                output_config={"effort": c.effort, "format": {"type": "json_schema", "schema": c.schema}},
-            ) as stream:
-                resp = stream.get_final_message()
+            def once():
+                with self._get().messages.stream(
+                    model=c.model,
+                    max_tokens=c.max_output_tokens,
+                    system=[{"type": "text", "text": c.system, "cache_control": {"type": "ephemeral"}}],
+                    messages=[{"role": "user", "content": c.prompt}],
+                    output_config={"effort": c.effort, "format": {"type": "json_schema", "schema": c.schema}},
+                ) as stream:
+                    return stream.get_final_message()
+            resp = with_backoff(once)
         except Exception as e:  # noqa: BLE001
             if _is_auth_error(e):
                 raise BackendUnavailable(AUTH_HINT) from e
