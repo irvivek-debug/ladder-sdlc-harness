@@ -1,0 +1,24 @@
+{
+ "data": {
+  "change_summary": "Added entry photo-eye jam detection per narrative section 3 and cause-effect CE-ST10-03: timer T10 (5.0 s, K50) runs when conveyor motor Y10 is running and entry eye X11 is blocked. Upon timer done (T10), jam alarm M190 is latched via SET. M190 trips fault interlock M199 to stop Y10 and clears via reset PB X1.",
+  "changed_rungs": [
+   4,
+   5
+  ],
+  "program_il": "; ST10_CONVEYOR (FX5U) - converted from FX3U project CV_ST1_V2, 2019\n\n# R0\nLDI    X13\nOUT    M191             ; ST10 motor overload alarm\n\n# R1\nLD     X1\nRST    M190\n\n# R2\nLD     M190\nOR     M191             ; ST10 motor overload alarm\nORI    X0               ; ES-0001 E-stop chain healthy\nOUT    M199\n\n# R3\nLD     X2               ; SS-0003 auto mode\nANI    M199\nOUT    Y10\n\n# R4\nLD     Y10\nAND    X11              ; PE-1002 conveyor entry photo-eye\nOUT    T10 K50          ; jam_time 5.0 s\n\n# R5\nLD     T10\nSET    M190             ; ST10 jam alarm\n\n# R6\nLD     X10\nOUT    M100             ; ST10 pallet in position\n\n# R7\nLDP    X14              ; RQ-1005 release request\nSET    Y11              ; XY-1004 stopper release\n\n# R8\nLD     Y11              ; XY-1004 stopper release\nOUT    T11 K20\n\n# R9\nLD     T11\nRST    Y11              ; XY-1004 stopper release\n\nEND"
+ },
+ "effort": "medium",
+ "key": "5d86f4cc21fc9c826dda5b7a.e3",
+ "latency_s": 62.841,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T3",
+ "text": "{\n  \"program_il\": \"; ST10_CONVEYOR (FX5U) - converted from FX3U project CV_ST1_V2, 2019\\n\\n# R0\\nLDI    X13\\nOUT    M191             ; ST10 motor overload alarm\\n\\n# R1\\nLD     X1\\nRST    M190\\n\\n# R2\\nLD     M190\\nOR     M191             ; ST10 motor overload alarm\\nORI    X0               ; ES-0001 E-stop chain healthy\\nOUT    M199\\n\\n# R3\\nLD     X2               ; SS-0003 auto mode\\nANI    M199\\nOUT    Y10\\n\\n# R4\\nLD     Y10\\nAND    X11              ; PE-1002 conveyor entry photo-eye\\nOUT    T10 K50          ; jam_time 5.0 s\\n\\n# R5\\nLD     T10\\nSET    M190             ; ST10 jam alarm\\n\\n# R6\\nLD     X10\\nOUT    M100             ; ST10 pallet in position\\n\\n# R7\\nLDP    X14              ; RQ-1005 release request\\nSET    Y11              ; XY-1004 stopper release\\n\\n# R8\\nLD     Y11              ; XY-1004 stopper release\\nOUT    T11 K20\\n\\n# R9\\nLD     T11\\nRST    Y11              ; XY-1004 stopper release\\n\\nEND\",\n  \"change_summary\": \"Added entry photo-eye jam detection per narrative section 3 and cause-effect CE-ST10-03: timer T10 (5.0 s, K50) runs when conveyor motor Y10 is running and entry eye X11 is blocked. Upon timer done (T10), jam alarm M190 is latched via SET. M190 trips fault interlock M199 to stop Y10 and clears via reset PB X1.\",\n  \"changed_rungs\": [4, 5]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4523,
+  "output": 541,
+  "thinking": 7764
+ }
+}

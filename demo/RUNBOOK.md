@@ -119,10 +119,24 @@ ladder export ST20
 | Login expired | The presenter runs `gcloud auth application-default login` (never a workaround). |
 | Stale state | `demo/reset.sh` |
 
-## Verification status
+## Verification status (2026-09-26)
 
 | Surface | Status |
 |---|---|
-| CLI and MCP server | Automated tests |
-| `agy` headless in Cloud Shell | See `demo/run_headless.sh`. Results are recorded below once run. |
+| CLI and MCP server | Automated tests (stdio handshake, nine tools, no PLC tool) |
+| `agy` 1.2.2 headless, Argolis Cloud Shell | **lint** beat: SUCCESS (Flash summarised L001/L002, reported $0.00). **guard** beat: SUCCESS (`ladder_apply` refused at stage `guard`, reasons verbatim). Model-backed beats: after the Opus half of the sweep and demo pinning. |
 | Antigravity IDE (Jetski) | To be verified by the presenter on the showcase machine |
+
+### Setting up `agy` (one time, done in Cloud Shell with the owner's approval)
+
+```bash
+H=$HOME/ladder-sdlc-harness
+agy mcp add -e LADDER_ROOT=$H -e PYTHONPATH=$H/src -e LADDER_MODE=auto -e LADDER_GCP_PROJECT=<project> \
+    ladder-harness $H/.venv/bin/python -m ladder_harness.mcp_server
+# ~/.gemini/antigravity-cli/settings.json → "permissions": {"allow": ["mcp(ladder-harness/*)"]}
+```
+
+- The `agy` CLI does not read the workspace `.agents/mcp_config.json`; register the server with `agy mcp add`.
+- Headless mode auto-denies anything that needs a prompt. The allow-rule covers only the harness tools; shell
+  commands stay denied.
+- Undo with `agy mcp remove ladder-harness` and by removing the allow rule.

@@ -1,0 +1,40 @@
+{
+ "data": {
+  "findings": [
+   {
+    "category": "missing_interlock",
+    "confidence": "high",
+    "consequence": "If a pallet jams at the entry photo-eye, the PLC will not detect it. The conveyor motor will continue to run against the jammed pallet indefinitely, which could cause mechanical damage or a hazard.",
+    "devices": [
+     "X11",
+     "T10",
+     "M190",
+     "Y10"
+    ],
+    "evidence": "X11 (PE-1002, conveyor entry photo-eye) is in the I/O list but never used in the program (confirmed by lint). The narrative and cause-and-effect matrix dictate that if X11 is blocked for more than 5.0 s while the conveyor is running, a jam alarm must be raised. Although the program provides an unlatched fault bit (M190) that is cleared by the reset pushbutton (R2) and stops the motor via M199 (R3, R4), there is no logic to actually set M190.",
+    "proposed_fix": "Add a new rung to evaluate the jam condition: `LD X11`, `AND Y10`, `OUT T10 K50`. Add a subsequent rung to latch the alarm: `LD T10`, `SET M190`.",
+    "rungs": [
+     2,
+     3
+    ],
+    "severity": "high",
+    "title": "Missing Conveyor Jam Detection Logic"
+   }
+  ],
+  "summary": "The ST10 program correctly controls the conveyor motor in auto mode and handles the pallet release mechanism, including the required 2.0-second timer. It also safely stops the conveyor during an E-stop or motor overload. However, the logic for conveyor jam detection is completely omitted. The entry photo-eye (X11) is never evaluated, meaning a jammed pallet will fail to trigger the 5.0s jam timer (T10) or set the corresponding jam alarm (M190)."
+ },
+ "effort": "high",
+ "key": "44c4ce9b4829e5ced07e8171.e1",
+ "latency_s": 61.35,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T4",
+ "text": "{\n  \"findings\": [\n    {\n      \"title\": \"Missing Conveyor Jam Detection Logic\",\n      \"category\": \"missing_interlock\",\n      \"severity\": \"high\",\n      \"rungs\": [\n        2,\n        3\n      ],\n      \"devices\": [\n        \"X11\",\n        \"T10\",\n        \"M190\",\n        \"Y10\"\n      ],\n      \"evidence\": \"X11 (PE-1002, conveyor entry photo-eye) is in the I/O list but never used in the program (confirmed by lint). The narrative and cause-and-effect matrix dictate that if X11 is blocked for more than 5.0 s while the conveyor is running, a jam alarm must be raised. Although the program provides an unlatched fault bit (M190) that is cleared by the reset pushbutton (R2) and stops the motor via M199 (R3, R4), there is no logic to actually set M190.\",\n      \"consequence\": \"If a pallet jams at the entry photo-eye, the PLC will not detect it. The conveyor motor will continue to run against the jammed pallet indefinitely, which could cause mechanical damage or a hazard.\",\n      \"proposed_fix\": \"Add a new rung to evaluate the jam condition: `LD X11`, `AND Y10`, `OUT T10 K50`. Add a subsequent rung to latch the alarm: `LD T10`, `SET M190`.\",\n      \"confidence\": \"high\"\n    }\n  ],\n  \"summary\": \"The ST10 program correctly controls the conveyor motor in auto mode and handles the pallet release mechanism, including the required 2.0-second timer. It also safely stops the conveyor during an E-stop or motor overload. However, the logic for conveyor jam detection is completely omitted. The entry photo-eye (X11) is never evaluated, meaning a jammed pallet will fail to trigger the 5.0s jam timer (T10) or set the corresponding jam alarm (M190).\"\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 5566,
+  "output": 467,
+  "thinking": 6246
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "data": {
+  "alarms": [],
+  "conflicts": [],
+  "interlocks": [
+   {
+    "cause": "Guard door open (NOT X32) or E-stop chain lost (NOT X0)",
+    "effect": "De-energise HiPot start/HV enable (Y30) and HV beacon (Y31) immediately"
+   },
+   {
+    "cause": "HiPot result latched (M310 or M311 ON)",
+    "effect": "De-energise HiPot start/HV enable (Y30) and HV beacon (Y31)"
+   },
+   {
+    "cause": "Pallet leaves ST30 (falling edge of X33)",
+    "effect": "Reset HiPot PASS (M310) and HiPot FAIL (M311)"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "hipot_test_time",
+    "narrative_section": "6. ST30 — HV insulation (HiPot) test",
+    "units": "s",
+    "value": "3.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Pallet leaves ST30 (X33 falling edge resets M310, M311) or initial state",
+    "exit": "Pallet in ST30 (X33), guard door closed (X32), E-stop healthy (X0), and no latched result (ANI M310, ANI M311)",
+    "name": "IDLE"
+   },
+   {
+    "entry": "X33 AND X32 AND X0 AND NOT M310 AND NOT M311 (turns on Y30 and Y31)",
+    "exit": "Tester reports PASS (X30) or FAIL (X31), or interlock lost (X32 or X0 opens)",
+    "name": "TESTING (HV ENABLED)"
+   },
+   {
+    "entry": "PASS signal received (X30 sets M310) or FAIL signal received (X31 sets M311)",
+    "exit": "Pallet leaves ST30 (X33 falling edge resets M310 and M311)",
+    "name": "RESULT LATCHED"
+   }
+  ]
+ },
+ "effort": "low",
+ "key": "586a7b7a6c3d429565524eaf.e4",
+ "latency_s": 6.695,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"hipot_test_time\",\n      \"value\": \"3.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"6. ST30 — HV insulation (HiPot) test\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"IDLE\",\n      \"entry\": \"Pallet leaves ST30 (X33 falling edge resets M310, M311) or initial state\",\n      \"exit\": \"Pallet in ST30 (X33), guard door closed (X32), E-stop healthy (X0), and no latched result (ANI M310, ANI M311)\"\n    },\n    {\n      \"name\": \"TESTING (HV ENABLED)\",\n      \"entry\": \"X33 AND X32 AND X0 AND NOT M310 AND NOT M311 (turns on Y30 and Y31)\",\n      \"exit\": \"Tester reports PASS (X30) or FAIL (X31), or interlock lost (X32 or X0 opens)\"\n    },\n    {\n      \"name\": \"RESULT LATCHED\",\n      \"entry\": \"PASS signal received (X30 sets M310) or FAIL signal received (X31 sets M311)\",\n      \"exit\": \"Pallet leaves ST30 (X33 falling edge resets M310 and M311)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Guard door open (NOT X32) or E-stop chain lost (NOT X0)\",\n      \"effect\": \"De-energise HiPot start/HV enable (Y30) and HV beacon (Y31) immediately\"\n    },\n    {\n      \"cause\": \"HiPot result latched (M310 or M311 ON)\",\n      \"effect\": \"De-energise HiPot start/HV enable (Y30) and HV beacon (Y31)\"\n    },\n    {\n      \"cause\": \"Pallet leaves ST30 (falling edge of X33)\",\n      \"effect\": \"Reset HiPot PASS (M310) and HiPot FAIL (M311)\"\n    }\n  ],\n  \"alarms\": [],\n  \"conflicts\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4385,
+  "output": 548,
+  "thinking": 0
+ }
+}

@@ -1,0 +1,111 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ES-0001 E-stop circuit healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "PB-0002 Fault reset PB",
+    "device": "X1"
+   },
+   {
+    "comment": "SS-0003 Auto mode selector",
+    "device": "X2"
+   },
+   {
+    "comment": "PE-1001 Pallet at stop PE",
+    "device": "X10"
+   },
+   {
+    "comment": "MOL-1001 Motor OL healthy",
+    "device": "X13"
+   },
+   {
+    "comment": "RQ-1005 Pallet release req",
+    "device": "X14"
+   },
+   {
+    "comment": "M-1001 Conveyor motor",
+    "device": "Y10"
+   },
+   {
+    "comment": "XY-1004 Stopper release",
+    "device": "Y11"
+   },
+   {
+    "comment": "ST10 pallet in position",
+    "device": "M100"
+   },
+   {
+    "comment": "ST10 fault latch",
+    "device": "M190"
+   },
+   {
+    "comment": "ST10 motor overload alarm",
+    "device": "M191"
+   },
+   {
+    "comment": "ST10 common fault interlock",
+    "device": "M199"
+   },
+   {
+    "comment": "Stopper release pulse timer",
+    "device": "T11"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "R1: Detect conveyor motor overload trip (X13 open) and set alarm M191.",
+    "rung": 1
+   },
+   {
+    "purpose": "R2: Reset ST10 fault latch M190 when reset pushbutton X1 is pressed.",
+    "rung": 2
+   },
+   {
+    "purpose": "R3: Evaluate common fault M199 from fault latch M190, motor overload M191, or E-stop loss.",
+    "rung": 3
+   },
+   {
+    "purpose": "R4: Energize conveyor motor contactor Y10 when auto mode is selected and no fault is active.",
+    "rung": 4
+   },
+   {
+    "purpose": "R5: Indicate pallet in position (M100) from pallet stop photo-eye X10.",
+    "rung": 5
+   },
+   {
+    "purpose": "R6: Latch stopper release solenoid Y11 on rising edge of line controller request X14.",
+    "rung": 6
+   },
+   {
+    "purpose": "R7: Run 2.0 s pulse timer T11 while stopper release solenoid Y11 is active.",
+    "rung": 7
+   },
+   {
+    "purpose": "R8: Unlatch stopper release solenoid Y11 once timer T11 completes.",
+    "rung": 8
+   },
+   {
+    "purpose": "R9: End of program scan.",
+    "rung": 9
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "medium",
+ "key": "354e8d3c613296f7dc0e575e.e2",
+ "latency_s": 128.498,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\n  \"device_comments\": [\n    {\n      \"device\": \"X0\",\n      \"comment\": \"ES-0001 E-stop circuit healthy\"\n    },\n    {\n      \"device\": \"X1\",\n      \"comment\": \"PB-0002 Fault reset PB\"\n    },\n    {\n      \"device\": \"X2\",\n      \"comment\": \"SS-0003 Auto mode selector\"\n    },\n    {\n      \"device\": \"X10\",\n      \"comment\": \"PE-1001 Pallet at stop PE\"\n    },\n    {\n      \"device\": \"X13\",\n      \"comment\": \"MOL-1001 Motor OL healthy\"\n    },\n    {\n      \"device\": \"X14\",\n      \"comment\": \"RQ-1005 Pallet release req\"\n    },\n    {\n      \"device\": \"Y10\",\n      \"comment\": \"M-1001 Conveyor motor\"\n    },\n    {\n      \"device\": \"Y11\",\n      \"comment\": \"XY-1004 Stopper release\"\n    },\n    {\n      \"device\": \"M100\",\n      \"comment\": \"ST10 pallet in position\"\n    },\n    {\n      \"device\": \"M190\",\n      \"comment\": \"ST10 fault latch\"\n    },\n    {\n      \"device\": \"M191\",\n      \"comment\": \"ST10 motor overload alarm\"\n    },\n    {\n      \"device\": \"M199\",\n      \"comment\": \"ST10 common fault interlock\"\n    },\n    {\n      \"device\": \"T11\",\n      \"comment\": \"Stopper release pulse timer\"\n    }\n  ],\n  \"rung_purposes\": [\n    {\n      \"rung\": 1,\n      \"purpose\": \"R1: Detect conveyor motor overload trip (X13 open) and set alarm M191.\"\n    },\n    {\n      \"rung\": 2,\n      \"purpose\": \"R2: Reset ST10 fault latch M190 when reset pushbutton X1 is pressed.\"\n    },\n    {\n      \"rung\": 3,\n      \"purpose\": \"R3: Evaluate common fault M199 from fault latch M190, motor overload M191, or E-stop loss.\"\n    },\n    {\n      \"rung\": 4,\n      \"purpose\": \"R4: Energize conveyor motor contactor Y10 when auto mode is selected and no fault is active.\"\n    },\n    {\n      \"rung\": 5,\n      \"purpose\": \"R5: Indicate pallet in position (M100) from pallet stop photo-eye X10.\"\n    },\n    {\n      \"rung\": 6,\n      \"purpose\": \"R6: Latch stopper release solenoid Y11 on rising edge of line controller request X14.\"\n    },\n    {\n      \"rung\": 7,\n      \"purpose\": \"R7: Run 2.0 s pulse timer T11 while stopper release solenoid Y11 is active.\"\n    },\n    {\n      \"rung\": 8,\n      \"purpose\": \"R8: Unlatch stopper release solenoid Y11 once timer T11 completes.\"\n    },\n    {\n      \"rung\": 9,\n      \"purpose\": \"R9: End of program scan.\"\n    }\n  ],\n  \"suspicious\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2607,
+  "output": 813,
+  "thinking": 2229
+ }
+}

@@ -1,0 +1,82 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Sets M191 overload alarm, raises M199 stop condition to shut down conveyor Y10",
+    "condition": "Motor overload MOL-1001 contact open/lost (LDI X13)",
+    "name": "Motor Overload"
+   },
+   {
+    "action": "Stops conveyor motor Y10 and raises jam alarm M190 until reset (X1)",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs",
+    "name": "Pallet Jam"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "parameter_sheet",
+    "item": "jam_detection_logic",
+    "narrative_says": "If entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs, conveyor stops and jam alarm is raised until reset",
+    "parameter_sheet_says": "jam_time = 5.0 s, assigned to T10 (ST10)",
+    "program_says": "R2 resets M190 and R3 reads M190, but there are no rungs implementing T10 timing or detecting PE-1002 blockage to SET M190"
+   },
+   {
+    "authoritative": "narrative",
+    "item": "e_stop_interlock_logic_R3",
+    "narrative_says": "A motor overload or the E-stop chain stops the conveyor immediately (stopping conveyor when X0 is lost)",
+    "parameter_sheet_says": "Not specified directly (X0 is defined as ES-0001 E-stop chain healthy)",
+    "program_says": "R3 evaluates ORI X0 into M199, causing M199 to be ON (conveyor stopped) when E-stop is healthy (X0=1), and allowing M199 to clear when E-stop is dropped (X0=0)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Motor overload MOL-1001 (X13 lost) or E-stop chain (X0 lost)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately via ST10 stop condition (M199)"
+   },
+   {
+    "cause": "Auto mode SS-0003 (X2) OFF or ST10 common fault (M199) ON",
+    "effect": "Conveyor motor M-1001 (Y10) is de-energised"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "release_pulse",
+    "narrative_section": "3. ST10 — Pallet conveyor",
+    "units": "s",
+    "value": "2.0"
+   },
+   {
+    "name": "jam_time",
+    "narrative_section": "3. ST10 — Pallet conveyor",
+    "units": "s",
+    "value": "5.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Auto mode SS-0003 (X2) active, no ST10 fault (M199 inactive), and E-stop healthy (X0)",
+    "exit": "Auto mode lost, ST10 fault/overload occurs, or E-stop lost",
+    "name": "Running Conveyor"
+   },
+   {
+    "entry": "Release request RQ-1005 (X14) rising edge sets stopper solenoid XY-1004 (Y11)",
+    "exit": "Release timer T11 reaches 2.0 s preset (resets Y11)",
+    "name": "Pallet Release"
+   }
+  ]
+ },
+ "effort": "low",
+ "key": "c7e0a7b63dd8de98fef4ae00.e4",
+ "latency_s": 9.346,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3. ST10 — Pallet conveyor\"\n    },\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3. ST10 — Pallet conveyor\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Running Conveyor\",\n      \"entry\": \"Auto mode SS-0003 (X2) active, no ST10 fault (M199 inactive), and E-stop healthy (X0)\",\n      \"exit\": \"Auto mode lost, ST10 fault/overload occurs, or E-stop lost\"\n    },\n    {\n      \"name\": \"Pallet Release\",\n      \"entry\": \"Release request RQ-1005 (X14) rising edge sets stopper solenoid XY-1004 (Y11)\",\n      \"exit\": \"Release timer T11 reaches 2.0 s preset (resets Y11)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Motor overload MOL-1001 (X13 lost) or E-stop chain (X0 lost)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops immediately via ST10 stop condition (M199)\"\n    },\n    {\n      \"cause\": \"Auto mode SS-0003 (X2) OFF or ST10 common fault (M199) ON\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) is de-energised\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Motor Overload\",\n      \"condition\": \"Motor overload MOL-1001 contact open/lost (LDI X13)\",\n      \"action\": \"Sets M191 overload alarm, raises M199 stop condition to shut down conveyor Y10\"\n    },\n    {\n      \"name\": \"Pallet Jam\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs\",\n      \"action\": \"Stops conveyor motor Y10 and raises jam alarm M190 until reset (X1)\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"jam_detection_logic\",\n      \"narrative_says\": \"If entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs, conveyor stops and jam alarm is raised until reset\",\n      \"parameter_sheet_says\": \"jam_time = 5.0 s, assigned to T10 (ST10)\",\n      \"program_says\": \"R2 resets M190 and R3 reads M190, but there are no rungs implementing T10 timing or detecting PE-1002 blockage to SET M190\",\n      \"authoritative\": \"parameter_sheet\"\n    },\n    {\n      \"item\": \"e_stop_interlock_logic_R3\",\n      \"narrative_says\": \"A motor overload or the E-stop chain stops the conveyor immediately (stopping conveyor when X0 is lost)\",\n      \"parameter_sheet_says\": \"Not specified directly (X0 is defined as ES-0001 E-stop chain healthy)\",\n      \"program_says\": \"R3 evaluates ORI X0 into M199, causing M199 to be ON (conveyor stopped) when E-stop is healthy (X0=1), and allowing M199 to clear when E-stop is dropped (X0=0)\",\n      \"authoritative\": \"narrative\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 908,
+  "thinking": 0
+ }
+}

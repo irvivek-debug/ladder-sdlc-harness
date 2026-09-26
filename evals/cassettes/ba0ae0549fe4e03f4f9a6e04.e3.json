@@ -1,0 +1,79 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ST30 HiPot test PASS",
+    "device": "M310"
+   },
+   {
+    "comment": "ST30 HiPot test FAIL",
+    "device": "M311"
+   },
+   {
+    "comment": "ES-0001 E-stop circuit healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "HP-3003 HiPot tester PASS",
+    "device": "X30"
+   },
+   {
+    "comment": "HP-3004 HiPot tester FAIL",
+    "device": "X31"
+   },
+   {
+    "comment": "ZS-3002 Guard door closed",
+    "device": "X32"
+   },
+   {
+    "comment": "ZS-3001 Pallet in ST30",
+    "device": "X33"
+   },
+   {
+    "comment": "HP-3005 HiPot start HV enable",
+    "device": "Y30"
+   },
+   {
+    "comment": "HL-3006 HV-on warning beacon",
+    "device": "Y31"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Enable HiPot start and HV beacon when pallet is present, guard closed, safety OK, and test unlatched",
+    "rung": 1
+   },
+   {
+    "purpose": "Latch HiPot PASS test result",
+    "rung": 2
+   },
+   {
+    "purpose": "Latch HiPot FAIL test result",
+    "rung": 3
+   },
+   {
+    "purpose": "Reset test result flags on pallet departure from ST30",
+    "rung": 4
+   },
+   {
+    "purpose": "End of program scan",
+    "rung": 5
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "medium",
+ "key": "ba0ae0549fe4e03f4f9a6e04.e3",
+ "latency_s": 16.789,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\n  \"device_comments\": [\n    {\n      \"device\": \"M310\",\n      \"comment\": \"ST30 HiPot test PASS\"\n    },\n    {\n      \"device\": \"M311\",\n      \"comment\": \"ST30 HiPot test FAIL\"\n    },\n    {\n      \"device\": \"X0\",\n      \"comment\": \"ES-0001 E-stop circuit healthy\"\n    },\n    {\n      \"device\": \"X30\",\n      \"comment\": \"HP-3003 HiPot tester PASS\"\n    },\n    {\n      \"device\": \"X31\",\n      \"comment\": \"HP-3004 HiPot tester FAIL\"\n    },\n    {\n      \"device\": \"X32\",\n      \"comment\": \"ZS-3002 Guard door closed\"\n    },\n    {\n      \"device\": \"X33\",\n      \"comment\": \"ZS-3001 Pallet in ST30\"\n    },\n    {\n      \"device\": \"Y30\",\n      \"comment\": \"HP-3005 HiPot start HV enable\"\n    },\n    {\n      \"device\": \"Y31\",\n      \"comment\": \"HL-3006 HV-on warning beacon\"\n    }\n  ],\n  \"rung_purposes\": [\n    {\n      \"rung\": 1,\n      \"purpose\": \"Enable HiPot start and HV beacon when pallet is present, guard closed, safety OK, and test unlatched\"\n    },\n    {\n      \"rung\": 2,\n      \"purpose\": \"Latch HiPot PASS test result\"\n    },\n    {\n      \"rung\": 3,\n      \"purpose\": \"Latch HiPot FAIL test result\"\n    },\n    {\n      \"rung\": 4,\n      \"purpose\": \"Reset test result flags on pallet departure from ST30\"\n    },\n    {\n      \"rung\": 5,\n      \"purpose\": \"End of program scan\"\n    }\n  ],\n  \"suspicious\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2663,
+  "output": 484,
+  "thinking": 1858
+ }
+}

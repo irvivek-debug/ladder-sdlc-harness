@@ -1,0 +1,77 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Stops conveyor motor M-1001 (Y10) immediately and raises ST10 motor overload alarm (M191)",
+    "condition": "Motor overload trip MOL-1001 opens (X13 low)",
+    "name": "Motor overload"
+   },
+   {
+    "action": "Conveyor stops and jam alarm (M190) is raised until reset",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs",
+    "name": "Jam alarm"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "parameter sheet",
+    "item": "Jam detection logic / timer",
+    "narrative_says": "Entry photo-eye PE-1002 blocked > 5.0 s while conveyor runs stops conveyor and sets jam alarm",
+    "parameter_sheet_says": "jam_time = 5.0 s (T10)",
+    "program_says": "Missing / unprogrammed (no logic for PE-1002 or T10 in program; M190 reset exists on R2, but no rung sets M190)"
+   },
+   {
+    "authoritative": "parameter sheet",
+    "item": "E-stop healthy contact polarity in trip rung R3",
+    "narrative_says": "E-stop chain stops conveyor immediately (healthy when X0 is made)",
+    "parameter_sheet_says": "N/A",
+    "program_says": "R3 uses ORI X0 (causes fault trip M199 when E-stop X0 is healthy/closed instead of when lost)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Motor overload (MOL-1001, X13 lost) or E-stop chain lost (ES-0001, X0 lost) or not in auto mode (SS-0003, X2 low)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately"
+   },
+   {
+    "cause": "ST10 fault present (M190 or M191 active)",
+    "effect": "Inhibits conveyor motor M-1001 (Y10)"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "release_pulse",
+    "narrative_section": "3. ST10 — Pallet conveyor",
+    "units": "s",
+    "value": "2.0"
+   },
+   {
+    "name": "jam_time",
+    "narrative_section": "3. ST10 — Pallet conveyor",
+    "units": "s",
+    "value": "5.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Line controller requests a release (RQ-1005, rising edge / X14)",
+    "exit": "Timer T11 reaches 2.0 s preset",
+    "name": "Stopper drop/release"
+   }
+  ]
+ },
+ "effort": "low",
+ "key": "c7e0a7b63dd8de98fef4ae00.e5",
+ "latency_s": 6.853,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3. ST10 — Pallet conveyor\"\n    },\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3. ST10 — Pallet conveyor\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Stopper drop/release\",\n      \"entry\": \"Line controller requests a release (RQ-1005, rising edge / X14)\",\n      \"exit\": \"Timer T11 reaches 2.0 s preset\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Motor overload (MOL-1001, X13 lost) or E-stop chain lost (ES-0001, X0 lost) or not in auto mode (SS-0003, X2 low)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops immediately\"\n    },\n    {\n      \"cause\": \"ST10 fault present (M190 or M191 active)\",\n      \"effect\": \"Inhibits conveyor motor M-1001 (Y10)\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Motor overload\",\n      \"condition\": \"Motor overload trip MOL-1001 opens (X13 low)\",\n      \"action\": \"Stops conveyor motor M-1001 (Y10) immediately and raises ST10 motor overload alarm (M191)\"\n    },\n    {\n      \"name\": \"Jam alarm\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs\",\n      \"action\": \"Conveyor stops and jam alarm (M190) is raised until reset\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"Jam detection logic / timer\",\n      \"narrative_says\": \"Entry photo-eye PE-1002 blocked > 5.0 s while conveyor runs stops conveyor and sets jam alarm\",\n      \"parameter_sheet_says\": \"jam_time = 5.0 s (T10)\",\n      \"program_says\": \"Missing / unprogrammed (no logic for PE-1002 or T10 in program; M190 reset exists on R2, but no rung sets M190)\",\n      \"authoritative\": \"parameter sheet\"\n    },\n    {\n      \"item\": \"E-stop healthy contact polarity in trip rung R3\",\n      \"narrative_says\": \"E-stop chain stops conveyor immediately (healthy when X0 is made)\",\n      \"parameter_sheet_says\": \"N/A\",\n      \"program_says\": \"R3 uses ORI X0 (causes fault trip M199 when E-stop X0 is healthy/closed instead of when lost)\",\n      \"authoritative\": \"parameter sheet\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 742,
+  "thinking": 0
+ }
+}

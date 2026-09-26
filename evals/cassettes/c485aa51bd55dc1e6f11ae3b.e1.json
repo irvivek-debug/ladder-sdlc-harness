@@ -1,0 +1,63 @@
+{
+ "data": {
+  "alarms": [],
+  "conflicts": [],
+  "interlocks": [
+   {
+    "cause": "Guard door opened (ZS-3002 / X32 is OFF)",
+    "effect": "Immediately removes HV enable (HP-3005 / Y30) and de-energizes HV beacon (HL-3006 / Y31)"
+   },
+   {
+    "cause": "E-stop chain open/unhealthy (ES-0001 / X0 is OFF)",
+    "effect": "Immediately removes HV enable (HP-3005 / Y30) and de-energizes HV beacon (HL-3006 / Y31)"
+   },
+   {
+    "cause": "Pallet not detected in ST30 (ZS-3001 / X33 is OFF)",
+    "effect": "Inhibits HV enable (HP-3005 / Y30) and turns off HV beacon (HL-3006 / Y31)"
+   },
+   {
+    "cause": "Test result latched (PASS M310 or FAIL M311 is ON)",
+    "effect": "Removes HV enable (HP-3005 / Y30) and turns off HV beacon (HL-3006 / Y31)"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "hipot_test_time",
+    "narrative_section": "6",
+    "units": "s",
+    "value": "3.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Pallet leaves ST30 (falling edge of ZS-3001) or system startup with results clear",
+    "exit": "Pallet arrives in ST30 (ZS-3001), guard door closed (ZS-3002), E-stop healthy (ES-0001), and results clear",
+    "name": "Idle"
+   },
+   {
+    "entry": "Pallet in ST30 (ZS-3001), guard door closed (ZS-3002), E-stop chain healthy (ES-0001), and neither PASS (M310) nor FAIL (M311) latched",
+    "exit": "Tester reports PASS (HP-3003) or FAIL (HP-3004), guard door opens, or E-stop chain lost",
+    "name": "Testing"
+   },
+   {
+    "entry": "Tester reports PASS (HP-3003 / M310 latched) or FAIL (HP-3004 / M311 latched)",
+    "exit": "Pallet leaves ST30 (falling edge of ZS-3001 / X33)",
+    "name": "Result Latched"
+   }
+  ]
+ },
+ "effort": "medium",
+ "key": "c485aa51bd55dc1e6f11ae3b.e1",
+ "latency_s": 23.515,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\"parameters\":[{\"name\":\"hipot_test_time\",\"value\":\"3.0\",\"units\":\"s\",\"narrative_section\":\"6\"}],\"steps\":[{\"name\":\"Idle\",\"entry\":\"Pallet leaves ST30 (falling edge of ZS-3001) or system startup with results clear\",\"exit\":\"Pallet arrives in ST30 (ZS-3001), guard door closed (ZS-3002), E-stop healthy (ES-0001), and results clear\"},{\"name\":\"Testing\",\"entry\":\"Pallet in ST30 (ZS-3001), guard door closed (ZS-3002), E-stop chain healthy (ES-0001), and neither PASS (M310) nor FAIL (M311) latched\",\"exit\":\"Tester reports PASS (HP-3003) or FAIL (HP-3004), guard door opens, or E-stop chain lost\"},{\"name\":\"Result Latched\",\"entry\":\"Tester reports PASS (HP-3003 / M310 latched) or FAIL (HP-3004 / M311 latched)\",\"exit\":\"Pallet leaves ST30 (falling edge of ZS-3001 / X33)\"}],\"interlocks\":[{\"cause\":\"Guard door opened (ZS-3002 / X32 is OFF)\",\"effect\":\"Immediately removes HV enable (HP-3005 / Y30) and de-energizes HV beacon (HL-3006 / Y31)\"},{\"cause\":\"E-stop chain open/unhealthy (ES-0001 / X0 is OFF)\",\"effect\":\"Immediately removes HV enable (HP-3005 / Y30) and de-energizes HV beacon (HL-3006 / Y31)\"},{\"cause\":\"Pallet not detected in ST30 (ZS-3001 / X33 is OFF)\",\"effect\":\"Inhibits HV enable (HP-3005 / Y30) and turns off HV beacon (HL-3006 / Y31)\"},{\"cause\":\"Test result latched (PASS M310 or FAIL M311 is ON)\",\"effect\":\"Removes HV enable (HP-3005 / Y30) and turns off HV beacon (HL-3006 / Y31)\"}],\"alarms\":[],\"conflicts\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4385,
+  "output": 527,
+  "thinking": 2773
+ }
+}

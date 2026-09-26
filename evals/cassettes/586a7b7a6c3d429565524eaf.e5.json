@@ -1,0 +1,59 @@
+{
+ "data": {
+  "alarms": [],
+  "conflicts": [],
+  "interlocks": [
+   {
+    "cause": "Guard door open (ZS-3002 / X32 open) or E-stop chain lost (ES-0001 / X0 lost)",
+    "effect": "HV enable (HP-3005 / Y30) and HV beacon (HL-3006 / Y31) immediately disabled/de-energised"
+   },
+   {
+    "cause": "HiPot PASS latched (M310) or HiPot FAIL latched (M311)",
+    "effect": "HV enable (HP-3005 / Y30) and HV beacon (HL-3006 / Y31) de-energised"
+   },
+   {
+    "cause": "Pallet leaves ST30 (falling edge of ZS-3001 / X33)",
+    "effect": "Reset HiPot PASS (M310) and HiPot FAIL (M311) latches"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "hipot_test_time",
+    "narrative_section": "6. ST30 — HV insulation (HiPot) test",
+    "units": "s",
+    "value": "3.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Initial state or pallet leaves ST30 (falling edge of ZS-3001 / X33)",
+    "exit": "Pallet in ST30 (ZS-3001 / X33), guard door closed (ZS-3002 / X32), E-stop healthy (ES-0001 / X0), and no result latched (not M310 and not M311)",
+    "name": "IDLE"
+   },
+   {
+    "entry": "Pallet present (X33), guard closed (X32), E-stop healthy (X0), and neither PASS (M310) nor FAIL (M311) latched",
+    "exit": "Tester reports PASS (HP-3003 / X30), tester reports FAIL (HP-3004 / X31), guard door opens (not X32), or E-stop lost (not X0)",
+    "name": "TESTING (HV ENABLED)"
+   },
+   {
+    "entry": "Tester PASS received (X30 -> SET M310) or tester FAIL received (X31 -> SET M311)",
+    "exit": "Pallet leaves ST30 (falling edge of ZS-3001 / X33 resets M310 and M311)",
+    "name": "RESULT LATCHED (HV REMOVED)"
+   }
+  ]
+ },
+ "effort": "low",
+ "key": "586a7b7a6c3d429565524eaf.e5",
+ "latency_s": 6.751,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"hipot_test_time\",\n      \"value\": \"3.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"6. ST30 — HV insulation (HiPot) test\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"IDLE\",\n      \"entry\": \"Initial state or pallet leaves ST30 (falling edge of ZS-3001 / X33)\",\n      \"exit\": \"Pallet in ST30 (ZS-3001 / X33), guard door closed (ZS-3002 / X32), E-stop healthy (ES-0001 / X0), and no result latched (not M310 and not M311)\"\n    },\n    {\n      \"name\": \"TESTING (HV ENABLED)\",\n      \"entry\": \"Pallet present (X33), guard closed (X32), E-stop healthy (X0), and neither PASS (M310) nor FAIL (M311) latched\",\n      \"exit\": \"Tester reports PASS (HP-3003 / X30), tester reports FAIL (HP-3004 / X31), guard door opens (not X32), or E-stop lost (not X0)\"\n    },\n    {\n      \"name\": \"RESULT LATCHED (HV REMOVED)\",\n      \"entry\": \"Tester PASS received (X30 -> SET M310) or tester FAIL received (X31 -> SET M311)\",\n      \"exit\": \"Pallet leaves ST30 (falling edge of ZS-3001 / X33 resets M310 and M311)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Guard door open (ZS-3002 / X32 open) or E-stop chain lost (ES-0001 / X0 lost)\",\n      \"effect\": \"HV enable (HP-3005 / Y30) and HV beacon (HL-3006 / Y31) immediately disabled/de-energised\"\n    },\n    {\n      \"cause\": \"HiPot PASS latched (M310) or HiPot FAIL latched (M311)\",\n      \"effect\": \"HV enable (HP-3005 / Y30) and HV beacon (HL-3006 / Y31) de-energised\"\n    },\n    {\n      \"cause\": \"Pallet leaves ST30 (falling edge of ZS-3001 / X33)\",\n      \"effect\": \"Reset HiPot PASS (M310) and HiPot FAIL (M311) latches\"\n    }\n  ],\n  \"alarms\": [],\n  \"conflicts\": []\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4385,
+  "output": 667,
+  "thinking": 0
+ }
+}

@@ -1,0 +1,24 @@
+{
+ "data": {
+  "change_summary": "Added jam detection logic per narrative §3 and CE-ST10-03 in rungs R8 and R9: timer T10 (5.0 s, K50) times while conveyor motor M-1001 (Y10) runs and entry photo-eye PE-1002 (X11) is blocked. When T10 completes, it latches jam alarm M190 (SET M190). Active M190 drives ST10 fault summary M199, which stops conveyor motor Y10 via ANI M199 until cleared by fault reset PB-0002 (X1).",
+  "changed_rungs": [
+   8,
+   9
+  ],
+  "program_il": "; ST10_CONVEYOR (FX5U) - converted from FX3U project CV_ST1_V2, 2019\n\nLDI    X13\nOUT    M191             ; ST10 motor overload alarm\n\nLD     X1\nRST    M190\n\nLD     M190\nOR     M191             ; ST10 motor overload alarm\nORI    X0               ; ES-0001 E-stop chain healthy\nOUT    M199\n\nLD     X2               ; SS-0003 auto mode\nANI    M199\nOUT    Y10\n\nLD     X10\nOUT    M100             ; ST10 pallet in position\n\nLDP    X14              ; RQ-1005 release request\nSET    Y11              ; XY-1004 stopper release\n\nLD     Y11              ; XY-1004 stopper release\nOUT    T11 K20\n\nLD     T11\nRST    Y11              ; XY-1004 stopper release\n\nLD     Y10\nAND    X11\nOUT    T10 K50\n\nLD     T10\nSET    M190             ; ST10 jam alarm\n\nEND"
+ },
+ "effort": "high",
+ "key": "ae8b518067af1e290fd43b67.e4",
+ "latency_s": 359.413,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T3",
+ "text": "{\n  \"program_il\": \"; ST10_CONVEYOR (FX5U) - converted from FX3U project CV_ST1_V2, 2019\\n\\nLDI    X13\\nOUT    M191             ; ST10 motor overload alarm\\n\\nLD     X1\\nRST    M190\\n\\nLD     M190\\nOR     M191             ; ST10 motor overload alarm\\nORI    X0               ; ES-0001 E-stop chain healthy\\nOUT    M199\\n\\nLD     X2               ; SS-0003 auto mode\\nANI    M199\\nOUT    Y10\\n\\nLD     X10\\nOUT    M100             ; ST10 pallet in position\\n\\nLDP    X14              ; RQ-1005 release request\\nSET    Y11              ; XY-1004 stopper release\\n\\nLD     Y11              ; XY-1004 stopper release\\nOUT    T11 K20\\n\\nLD     T11\\nRST    Y11              ; XY-1004 stopper release\\n\\nLD     Y10\\nAND    X11\\nOUT    T10 K50\\n\\nLD     T10\\nSET    M190             ; ST10 jam alarm\\n\\nEND\",\n  \"change_summary\": \"Added jam detection logic per narrative §3 and CE-ST10-03 in rungs R8 and R9: timer T10 (5.0 s, K50) times while conveyor motor M-1001 (Y10) runs and entry photo-eye PE-1002 (X11) is blocked. When T10 completes, it latches jam alarm M190 (SET M190). Active M190 drives ST10 fault summary M199, which stops conveyor motor Y10 via ANI M199 until cleared by fault reset PB-0002 (X1).\",\n  \"changed_rungs\": [8, 9]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4523,
+  "output": 508,
+  "thinking": 55918
+ }
+}

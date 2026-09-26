@@ -1,0 +1,190 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Set M290, abort to VENT, FAIL",
+    "condition": "Test pressure not reached within fill timeout timer (T21 / 8.0 s)",
+    "name": "Fill timeout"
+   },
+   {
+    "action": "Set M291 (latched), fill valve closed, vent valve held open, abort to VENT, FAIL",
+    "condition": "PT-2001 reading above overpressure threshold (D100 > D123 / 20.00 kPa)",
+    "name": "Over-pressure"
+   },
+   {
+    "action": "Set M292, inhibit cycle start, hold station in VENT / inhibit unclamp",
+    "condition": "PT-2001 reading below -5.00 kPa (D100 < K-500)",
+    "name": "PT-2001 signal fault"
+   },
+   {
+    "action": "Set M293 (latched), abort to VENT, FAIL",
+    "condition": "PS-2009 (X22) lost while ST20 is busy (M200)",
+    "name": "Supply air low"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "parameter sheet",
+    "item": "stabilise_time",
+    "narrative_says": "3 s",
+    "parameter_sheet_says": "5.0 s (T22)",
+    "program_says": "5.0 s (OUT T22 K50)"
+   },
+   {
+    "authoritative": "parameter sheet",
+    "item": "test_pressure",
+    "narrative_says": "15.2 kPa",
+    "parameter_sheet_says": "15.00 kPa(g) (regulator PR-2012 mechanical, note mentions 15.2 kPa)",
+    "program_says": "N/A (regulated mechanically)"
+   },
+   {
+    "authoritative": "parameter sheet",
+    "item": "vent_time",
+    "narrative_says": "0.5 s",
+    "parameter_sheet_says": "0.5 s (T24)",
+    "program_says": "5.0 s on FX5U (R21 uses OUT T200 K50, which is a 100 ms timer base = 5.0 s instead of 0.5 s)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Pallet arrives when not in auto, fault active, or station busy",
+    "effect": "Cycle start inhibited"
+   },
+   {
+    "cause": "Clamp closed confirmation lost during fill",
+    "effect": "Fill valve closes immediately"
+   },
+   {
+    "cause": "Pack pressure not below 1.00 kPa or PT-2001 signal fault during vent",
+    "effect": "Station holds in VENT step with vent open, unclamp inhibited"
+   },
+   {
+    "cause": "ST20 fault active (M299) while cycle busy",
+    "effect": "Cycle aborts directly to VENT step with latched FAIL result"
+   },
+   {
+    "cause": "Manual vent PB-2010 (X25) pressed while not in auto mode (X2)",
+    "effect": "Vent valve (Y22) opens manually"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "test_pressure",
+    "narrative_section": "4.3",
+    "units": "kPa",
+    "value": "15.2"
+   },
+   {
+    "name": "fill_complete",
+    "narrative_section": "4.3",
+    "units": "kPa",
+    "value": "14.50"
+   },
+   {
+    "name": "fill_timeout",
+    "narrative_section": "4.3",
+    "units": "s",
+    "value": "8.0"
+   },
+   {
+    "name": "stabilise_time",
+    "narrative_section": "4.4",
+    "units": "s",
+    "value": "3"
+   },
+   {
+    "name": "test_window",
+    "narrative_section": "4.5",
+    "units": "s",
+    "value": "10.0"
+   },
+   {
+    "name": "dp_limit",
+    "narrative_section": "4.6",
+    "units": "kPa",
+    "value": "0.30"
+   },
+   {
+    "name": "vent_time",
+    "narrative_section": "4.7",
+    "units": "s",
+    "value": "0.5"
+   },
+   {
+    "name": "vent_complete_pressure",
+    "narrative_section": "4.7",
+    "units": "kPa",
+    "value": "1.00"
+   },
+   {
+    "name": "overpressure_trip",
+    "narrative_section": "4.8",
+    "units": "kPa",
+    "value": "20.00"
+   },
+   {
+    "name": "pt_fault_below",
+    "narrative_section": "4.8",
+    "units": "kPa",
+    "value": "-5.00"
+   },
+   {
+    "name": "cycle_time_budget",
+    "narrative_section": "4.8",
+    "units": "s",
+    "value": "23.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Pallet arrives in test position (ZS-2008 / X23 rising edge) while auto mode active (SS-0003 / X2), no ST20 fault (M299), and station idle (not M200)",
+    "exit": "Clamp confirmed closed (ZS-2002A / X20 made) and clamp open clear (ZS-2002B / X21 clear)",
+    "name": "CLAMP (M201)"
+   },
+   {
+    "entry": "Clamp closed confirmation satisfied from CLAMP step",
+    "exit": "PT-2001 reaches fill threshold (D100 >= D122 / 14.50 kPa) or aborts on fault/timeout",
+    "name": "FILL (M202)"
+   },
+   {
+    "entry": "Fill complete condition met (D100 >= D122)",
+    "exit": "Stabilisation timer done (T22)",
+    "name": "STABILISE (M203)"
+   },
+   {
+    "entry": "Stabilisation timer elapsed (T22)",
+    "exit": "Test window timer done (T23)",
+    "name": "TEST (M204)"
+   },
+   {
+    "entry": "Test window timer elapsed (T23) or abort condition triggered by active fault (M299)",
+    "exit": "Vent timer elapsed (T200), pack pressure vented below 1.00 kPa (D100 < K100), and PT-2001 healthy (not M292)",
+    "name": "VENT (M205)"
+   },
+   {
+    "entry": "Vent conditions satisfied",
+    "exit": "Clamp confirmed open (ZS-2002B / X21 made) and clamp closed clear (ZS-2002A / X20 clear)",
+    "name": "UNCLAMP (M206)"
+   },
+   {
+    "entry": "Unclamp confirmed open satisfied",
+    "exit": "Pallet leaves test position (ZS-2008 / X23 lost)",
+    "name": "DONE (M207)"
+   }
+  ]
+ },
+ "effort": "low",
+ "key": "e5b0128b26a056bc7744ad25.e3",
+ "latency_s": 110.25,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"test_pressure\",\n      \"value\": \"15.2\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.3\"\n    },\n    {\n      \"name\": \"fill_complete\",\n      \"value\": \"14.50\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.3\"\n    },\n    {\n      \"name\": \"fill_timeout\",\n      \"value\": \"8.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.3\"\n    },\n    {\n      \"name\": \"stabilise_time\",\n      \"value\": \"3\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.4\"\n    },\n    {\n      \"name\": \"test_window\",\n      \"value\": \"10.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.5\"\n    },\n    {\n      \"name\": \"dp_limit\",\n      \"value\": \"0.30\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.6\"\n    },\n    {\n      \"name\": \"vent_time\",\n      \"value\": \"0.5\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.7\"\n    },\n    {\n      \"name\": \"vent_complete_pressure\",\n      \"value\": \"1.00\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.7\"\n    },\n    {\n      \"name\": \"overpressure_trip\",\n      \"value\": \"20.00\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.8\"\n    },\n    {\n      \"name\": \"pt_fault_below\",\n      \"value\": \"-5.00\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.8\"\n    },\n    {\n      \"name\": \"cycle_time_budget\",\n      \"value\": \"23.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.8\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"CLAMP (M201)\",\n      \"entry\": \"Pallet arrives in test position (ZS-2008 / X23 rising edge) while auto mode active (SS-0003 / X2), no ST20 fault (M299), and station idle (not M200)\",\n      \"exit\": \"Clamp confirmed closed (ZS-2002A / X20 made) and clamp open clear (ZS-2002B / X21 clear)\"\n    },\n    {\n      \"name\": \"FILL (M202)\",\n      \"entry\": \"Clamp closed confirmation satisfied from CLAMP step\",\n      \"exit\": \"PT-2001 reaches fill threshold (D100 >= D122 / 14.50 kPa) or aborts on fault/timeout\"\n    },\n    {\n      \"name\": \"STABILISE (M203)\",\n      \"entry\": \"Fill complete condition met (D100 >= D122)\",\n      \"exit\": \"Stabilisation timer done (T22)\"\n    },\n    {\n      \"name\": \"TEST (M204)\",\n      \"entry\": \"Stabilisation timer elapsed (T22)\",\n      \"exit\": \"Test window timer done (T23)\"\n    },\n    {\n      \"name\": \"VENT (M205)\",\n      \"entry\": \"Test window timer elapsed (T23) or abort condition triggered by active fault (M299)\",\n      \"exit\": \"Vent timer elapsed (T200), pack pressure vented below 1.00 kPa (D100 < K100), and PT-2001 healthy (not M292)\"\n    },\n    {\n      \"name\": \"UNCLAMP (M206)\",\n      \"entry\": \"Vent conditions satisfied\",\n      \"exit\": \"Clamp confirmed open (ZS-2002B / X21 made) and clamp closed clear (ZS-2002A / X20 clear)\"\n    },\n    {\n      \"name\": \"DONE (M207)\",\n      \"entry\": \"Unclamp confirmed open satisfied\",\n      \"exit\": \"Pallet leaves test position (ZS-2008 / X23 lost)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Pallet arrives when not in auto, fault active, or station busy\",\n      \"effect\": \"Cycle start inhibited\"\n    },\n    {\n      \"cause\": \"Clamp closed confirmation lost during fill\",\n      \"effect\": \"Fill valve closes immediately\"\n    },\n    {\n      \"cause\": \"Pack pressure not below 1.00 kPa or PT-2001 signal fault during vent\",\n      \"effect\": \"Station holds in VENT step with vent open, unclamp inhibited\"\n    },\n    {\n      \"cause\": \"ST20 fault active (M299) while cycle busy\",\n      \"effect\": \"Cycle aborts directly to VENT step with latched FAIL result\"\n    },\n    {\n      \"cause\": \"Manual vent PB-2010 (X25) pressed while not in auto mode (X2)\",\n      \"effect\": \"Vent valve (Y22) opens manually\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Fill timeout\",\n      \"condition\": \"Test pressure not reached within fill timeout timer (T21 / 8.0 s)\",\n      \"action\": \"Set M290, abort to VENT, FAIL\"\n    },\n    {\n      \"name\": \"Over-pressure\",\n      \"condition\": \"PT-2001 reading above overpressure threshold (D100 > D123 / 20.00 kPa)\",\n      \"action\": \"Set M291 (latched), fill valve closed, vent valve held open, abort to VENT, FAIL\"\n    },\n    {\n      \"name\": \"PT-2001 signal fault\",\n      \"condition\": \"PT-2001 reading below -5.00 kPa (D100 < K-500)\",\n      \"action\": \"Set M292, inhibit cycle start, hold station in VENT / inhibit unclamp\"\n    },\n    {\n      \"name\": \"Supply air low\",\n      \"condition\": \"PS-2009 (X22) lost while ST20 is busy (M200)\",\n      \"action\": \"Set M293 (latched), abort to VENT, FAIL\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"stabilise_time\",\n      \"narrative_says\": \"3 s\",\n      \"parameter_sheet_says\": \"5.0 s (T22)\",\n      \"program_says\": \"5.0 s (OUT T22 K50)\",\n      \"authoritative\": \"parameter sheet\"\n    },\n    {\n      \"item\": \"test_pressure\",\n      \"narrative_says\": \"15.2 kPa\",\n      \"parameter_sheet_says\": \"15.00 kPa(g) (regulator PR-2012 mechanical, note mentions 15.2 kPa)\",\n      \"program_says\": \"N/A (regulated mechanically)\",\n      \"authoritative\": \"parameter sheet\"\n    },\n    {\n      \"item\": \"vent_time\",\n      \"narrative_says\": \"0.5 s\",\n      \"parameter_sheet_says\": \"0.5 s (T24)\",\n      \"program_says\": \"5.0 s on FX5U (R21 uses OUT T200 K50, which is a 100 ms timer base = 5.0 s instead of 0.5 s)\",\n      \"authoritative\": \"parameter sheet\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 6034,
+  "output": 1901,
+  "thinking": 0
+ }
+}

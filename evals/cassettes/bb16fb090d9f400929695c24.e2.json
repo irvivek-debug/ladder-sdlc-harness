@@ -1,0 +1,20 @@
+{
+ "data": {
+  "findings": [],
+  "summary": ""
+ },
+ "effort": "high",
+ "key": "bb16fb090d9f400929695c24.e2",
+ "latency_s": 382.589,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T4",
+ "text": "{\n  \"findings\": []\n  ,\n  \"summary\": \"\"\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 7785,
+  "output": 18,
+  "thinking": 62912
+ }
+}

@@ -44,7 +44,7 @@ def main() -> int:
     routing = yaml.safe_load((ROOT / "config" / "routing.yaml").read_text())
     bank = yaml.safe_load((ROOT / "evals" / "task_bank.yaml").read_text())
     records = [r for r in load_records([ROOT / "evals" / "results" / "runs" / f"{args.sweep}.jsonl"]) if usable(r)]
-    ledger = Ledger(ROOT / "logs" / "ledger.jsonl").read()
+    ledger = Ledger(ROOT / "logs" / "ledger.jsonl").read() or Ledger(ROOT / "evals" / "results" / f"ledger_{args.sweep}.jsonl").read()
     cdir = ROOT / "evals" / "cassettes"
     pins = []
     for task_id in DEMO:

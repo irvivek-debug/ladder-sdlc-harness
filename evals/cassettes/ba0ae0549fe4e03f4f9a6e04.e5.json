@@ -1,0 +1,79 @@
+{
+ "data": {
+  "device_comments": [
+   {
+    "comment": "ST30 HiPot test PASS latch",
+    "device": "M310"
+   },
+   {
+    "comment": "ST30 HiPot test FAIL latch",
+    "device": "M311"
+   },
+   {
+    "comment": "ES-0001 E-stop circuit healthy",
+    "device": "X0"
+   },
+   {
+    "comment": "HP-3003 HiPot tester PASS",
+    "device": "X30"
+   },
+   {
+    "comment": "HP-3004 HiPot tester FAIL",
+    "device": "X31"
+   },
+   {
+    "comment": "ZS-3002 Guard door closed",
+    "device": "X32"
+   },
+   {
+    "comment": "ZS-3001 Pallet in ST30",
+    "device": "X33"
+   },
+   {
+    "comment": "HP-3005 HiPot start (HV enable)",
+    "device": "Y30"
+   },
+   {
+    "comment": "HL-3006 HV-on warning beacon",
+    "device": "Y31"
+   }
+  ],
+  "rung_purposes": [
+   {
+    "purpose": "Energize HiPot start and HV beacon if pallet present, door closed, E-stop OK, and no test result.",
+    "rung": 1
+   },
+   {
+    "purpose": "Latch HiPot PASS status bit M310 upon receiving tester PASS signal X30.",
+    "rung": 2
+   },
+   {
+    "purpose": "Latch HiPot FAIL status bit M311 upon receiving tester FAIL signal X31.",
+    "rung": 3
+   },
+   {
+    "purpose": "Reset HiPot PASS and FAIL status bits on falling edge of pallet present sensor X33.",
+    "rung": 4
+   },
+   {
+    "purpose": "End of program scan execution.",
+    "rung": 5
+   }
+  ],
+  "suspicious": []
+ },
+ "effort": "medium",
+ "key": "ba0ae0549fe4e03f4f9a6e04.e5",
+ "latency_s": 13.794,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T1",
+ "text": "{\"device_comments\":[{\"device\":\"M310\",\"comment\":\"ST30 HiPot test PASS latch\"},{\"device\":\"M311\",\"comment\":\"ST30 HiPot test FAIL latch\"},{\"device\":\"X0\",\"comment\":\"ES-0001 E-stop circuit healthy\"},{\"device\":\"X30\",\"comment\":\"HP-3003 HiPot tester PASS\"},{\"device\":\"X31\",\"comment\":\"HP-3004 HiPot tester FAIL\"},{\"device\":\"X32\",\"comment\":\"ZS-3002 Guard door closed\"},{\"device\":\"X33\",\"comment\":\"ZS-3001 Pallet in ST30\"},{\"device\":\"Y30\",\"comment\":\"HP-3005 HiPot start (HV enable)\"},{\"device\":\"Y31\",\"comment\":\"HL-3006 HV-on warning beacon\"}],\"rung_purposes\":[{\"rung\":1,\"purpose\":\"Energize HiPot start and HV beacon if pallet present, door closed, E-stop OK, and no test result.\"},{\"rung\":2,\"purpose\":\"Latch HiPot PASS status bit M310 upon receiving tester PASS signal X30.\"},{\"rung\":3,\"purpose\":\"Latch HiPot FAIL status bit M311 upon receiving tester FAIL signal X31.\"},{\"rung\":4,\"purpose\":\"Reset HiPot PASS and FAIL status bits on falling edge of pallet present sensor X33.\"},{\"rung\":5,\"purpose\":\"End of program scan execution.\"}],\"suspicious\":[]}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 2663,
+  "output": 313,
+  "thinking": 1344
+ }
+}

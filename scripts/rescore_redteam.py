@@ -36,7 +36,7 @@ def main() -> int:
         program, _ = resolve_program(cell, spec)
         before = format_il(program)
         rows = sorted((x for x in ledger if x.get("run_id") == args.sweep and x.get("task_id") == r["task_id"]
-                       and x.get("config") == r["config"] and x.get("epoch") == r["epoch"] and x.get("task") == "repair"),
+                       and x.get("config") == r["config"] and x.get("epoch") == r["epoch"] and x.get("task") == "repair" and x.get("key")),
                       key=lambda x: x.get("attempt", 0))
         cands = []
         for x in rows:

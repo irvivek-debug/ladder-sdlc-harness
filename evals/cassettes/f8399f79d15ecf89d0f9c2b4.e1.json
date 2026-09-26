@@ -1,0 +1,211 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Latches M290, lights fault beacon HL-2011, aborts cycle to VENT, and sets FAIL result",
+    "condition": "PT-2001 does not reach 14.50 kPa within 8.0 s during FILL step (T21 done)",
+    "name": "Fill timeout"
+   },
+   {
+    "action": "Latches M291, lights fault beacon HL-2011, forces fill valve closed, holds vent valve open, and sets FAIL result",
+    "condition": "PT-2001 reading exceeds 20.00 kPa (D100 > D123 / K2000)",
+    "name": "Over-pressure"
+   },
+   {
+    "action": "Sets M292, lights fault beacon HL-2011, inhibits cycle start, and holds unclamp in VENT",
+    "condition": "PT-2001 reading falls below -5.00 kPa (D100 < K-500, indicating wire break)",
+    "name": "PT-2001 signal fault"
+   },
+   {
+    "action": "Latches M293, lights fault beacon HL-2011, aborts cycle to VENT, and sets FAIL result",
+    "condition": "PS-2009 lost (X22 OFF) while station is busy (M200 ON)",
+    "name": "Supply air low"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "parameter sheet",
+    "item": "stabilise_time",
+    "narrative_says": "3 s (Section 4.4)",
+    "parameter_sheet_says": "5.0 s (T22, changed from 3.0 s by MOC-2021-044)",
+    "program_says": "5.0 s (R13 executes OUT T22 K50 with 100 ms timer base = 5.0 s)"
+   },
+   {
+    "authoritative": "parameter sheet",
+    "item": "vent_time",
+    "narrative_says": "0.5 s (Section 4.7)",
+    "parameter_sheet_says": "0.5 s (T24)",
+    "program_says": "5.0 s (R21 executes OUT T200 K50; on FX5U standard timers are 100 ms, so K50 yields 5.0 s instead of FX3U 10 ms 0.5 s, and uses T200 instead of T24)"
+   },
+   {
+    "authoritative": "parameter sheet",
+    "item": "test_pressure",
+    "narrative_says": "15.2 kPa (Section 4.3)",
+    "parameter_sheet_says": "15.00 kPa(g) (note specifies supply regulator set to 15.2 kPa)",
+    "program_says": "Not configured in PLC registers (mechanical regulator PR-2012)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "Station busy (M200 ON)",
+    "effect": "Pallet arrival sensor dropping and returning is ignored and cannot restart cycle"
+   },
+   {
+    "cause": "Clamp closed confirmation (ZS-2002A) lost or open confirmation (ZS-2002B) made during FILL",
+    "effect": "Fill valve XV-2003 closes immediately"
+   },
+   {
+    "cause": "Pack pressure not below 1.00 kPa or PT-2001 signal fault active",
+    "effect": "Station holds in VENT with vent valve open; unclamp is inhibited"
+   },
+   {
+    "cause": "Station not at DONE step",
+    "effect": "PASS (RS-2006) and FAIL (RS-2007) signals to line controller are withheld"
+   },
+   {
+    "cause": "Cell in auto mode (X2 ON)",
+    "effect": "Manual vent pushbutton PB-2010 (X25) is inhibited from opening vent valve XV-2004"
+   },
+   {
+    "cause": "E-stop chain lost (X0 OFF) or any ST20 alarm active while busy",
+    "effect": "Cycle aborts immediately to VENT with FAIL result latched"
+   },
+   {
+    "cause": "Over-pressure trip (PT-2001 > 20.00 kPa)",
+    "effect": "Fill valve closes immediately, vent valve held open, cycle fails"
+   },
+   {
+    "cause": "PT-2001 wire break / reading below -5.00 kPa",
+    "effect": "Cycle start is inhibited and clamp release is held"
+   },
+   {
+    "cause": "Supply air pressure switch PS-2009 lost while busy",
+    "effect": "Cycle aborts to VENT with FAIL result latched"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "test_pressure",
+    "narrative_section": "4.3",
+    "units": "kPa",
+    "value": "15.2"
+   },
+   {
+    "name": "fill_complete",
+    "narrative_section": "4.3",
+    "units": "kPa",
+    "value": "14.50"
+   },
+   {
+    "name": "fill_timeout",
+    "narrative_section": "4.3",
+    "units": "s",
+    "value": "8.0"
+   },
+   {
+    "name": "stabilise_time",
+    "narrative_section": "4.4",
+    "units": "s",
+    "value": "3"
+   },
+   {
+    "name": "test_window",
+    "narrative_section": "4.5",
+    "units": "s",
+    "value": "10.0"
+   },
+   {
+    "name": "dp_limit",
+    "narrative_section": "4.6",
+    "units": "kPa",
+    "value": "0.30"
+   },
+   {
+    "name": "vent_time",
+    "narrative_section": "4.7",
+    "units": "s",
+    "value": "0.5"
+   },
+   {
+    "name": "unclamp_pressure_limit",
+    "narrative_section": "4.7",
+    "units": "kPa",
+    "value": "1.00"
+   },
+   {
+    "name": "overpressure_trip",
+    "narrative_section": "4.8",
+    "units": "kPa",
+    "value": "20.00"
+   },
+   {
+    "name": "pt_fault_below",
+    "narrative_section": "4.8",
+    "units": "kPa",
+    "value": "-5.00"
+   },
+   {
+    "name": "cycle_time_budget",
+    "narrative_section": "4.8",
+    "units": "s",
+    "value": "23.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Initial state or pallet departure clears previous cycle",
+    "exit": "Pallet arrives at test position (ZS-2008 rising edge) AND cell in auto mode (SS-0003) AND no ST20 fault active (M299 OFF) AND station idle (M200 OFF)",
+    "name": "IDLE / START"
+   },
+   {
+    "entry": "Start conditions met; M201 SET, clamp solenoid XY-2002 energized",
+    "exit": "Clamp confirmed closed (ZS-2002A made) AND clamp open switch clear (ZS-2002B clear)",
+    "name": "CLAMP"
+   },
+   {
+    "entry": "Clamp confirmed closed; M202 SET, fill valve XV-2003 opens",
+    "exit": "PT-2001 reaches fill complete threshold (14.50 kPa / D122) OR fill timeout occurs (8.0 s / T21)",
+    "name": "FILL"
+   },
+   {
+    "entry": "Fill complete threshold reached; M203 SET, fill valve closed, stabilisation timer started",
+    "exit": "Stabilisation timer expires",
+    "name": "STABILISE"
+   },
+   {
+    "entry": "Stabilisation complete and baseline pressure recorded; M204 SET, test window timer started",
+    "exit": "Test window timer expires (10.0 s / T23)",
+    "name": "TEST"
+   },
+   {
+    "entry": "Test window complete OR abort due to fault/alarm/fill timeout; M205 SET, vent valve XV-2004 opens",
+    "exit": "Vent timer expires AND pack pressure vented below 1.00 kPa AND PT-2001 pressure signal healthy",
+    "name": "VENT"
+   },
+   {
+    "entry": "Vent conditions satisfied; M206 SET, clamp solenoid XY-2002 de-energized",
+    "exit": "Clamp confirmed open (ZS-2002B made AND ZS-2002A clear)",
+    "name": "UNCLAMP"
+   },
+   {
+    "entry": "Clamp confirmed open; M207 SET, PASS (Y23) or FAIL (Y24) signal presented to line controller",
+    "exit": "Pallet leaves test position (ZS-2008 clear); station resets to idle",
+    "name": "DONE"
+   }
+  ]
+ },
+ "effort": "medium",
+ "key": "f8399f79d15ecf89d0f9c2b4.e1",
+ "latency_s": 36.753,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"test_pressure\",\n      \"value\": \"15.2\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.3\"\n    },\n    {\n      \"name\": \"fill_complete\",\n      \"value\": \"14.50\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.3\"\n    },\n    {\n      \"name\": \"fill_timeout\",\n      \"value\": \"8.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.3\"\n    },\n    {\n      \"name\": \"stabilise_time\",\n      \"value\": \"3\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.4\"\n    },\n    {\n      \"name\": \"test_window\",\n      \"value\": \"10.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.5\"\n    },\n    {\n      \"name\": \"dp_limit\",\n      \"value\": \"0.30\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.6\"\n    },\n    {\n      \"name\": \"vent_time\",\n      \"value\": \"0.5\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.7\"\n    },\n    {\n      \"name\": \"unclamp_pressure_limit\",\n      \"value\": \"1.00\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.7\"\n    },\n    {\n      \"name\": \"overpressure_trip\",\n      \"value\": \"20.00\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.8\"\n    },\n    {\n      \"name\": \"pt_fault_below\",\n      \"value\": \"-5.00\",\n      \"units\": \"kPa\",\n      \"narrative_section\": \"4.8\"\n    },\n    {\n      \"name\": \"cycle_time_budget\",\n      \"value\": \"23.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"4.8\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"IDLE / START\",\n      \"entry\": \"Initial state or pallet departure clears previous cycle\",\n      \"exit\": \"Pallet arrives at test position (ZS-2008 rising edge) AND cell in auto mode (SS-0003) AND no ST20 fault active (M299 OFF) AND station idle (M200 OFF)\"\n    },\n    {\n      \"name\": \"CLAMP\",\n      \"entry\": \"Start conditions met; M201 SET, clamp solenoid XY-2002 energized\",\n      \"exit\": \"Clamp confirmed closed (ZS-2002A made) AND clamp open switch clear (ZS-2002B clear)\"\n    },\n    {\n      \"name\": \"FILL\",\n      \"entry\": \"Clamp confirmed closed; M202 SET, fill valve XV-2003 opens\",\n      \"exit\": \"PT-2001 reaches fill complete threshold (14.50 kPa / D122) OR fill timeout occurs (8.0 s / T21)\"\n    },\n    {\n      \"name\": \"STABILISE\",\n      \"entry\": \"Fill complete threshold reached; M203 SET, fill valve closed, stabilisation timer started\",\n      \"exit\": \"Stabilisation timer expires\"\n    },\n    {\n      \"name\": \"TEST\",\n      \"entry\": \"Stabilisation complete and baseline pressure recorded; M204 SET, test window timer started\",\n      \"exit\": \"Test window timer expires (10.0 s / T23)\"\n    },\n    {\n      \"name\": \"VENT\",\n      \"entry\": \"Test window complete OR abort due to fault/alarm/fill timeout; M205 SET, vent valve XV-2004 opens\",\n      \"exit\": \"Vent timer expires AND pack pressure vented below 1.00 kPa AND PT-2001 pressure signal healthy\"\n    },\n    {\n      \"name\": \"UNCLAMP\",\n      \"entry\": \"Vent conditions satisfied; M206 SET, clamp solenoid XY-2002 de-energized\",\n      \"exit\": \"Clamp confirmed open (ZS-2002B made AND ZS-2002A clear)\"\n    },\n    {\n      \"name\": \"DONE\",\n      \"entry\": \"Clamp confirmed open; M207 SET, PASS (Y23) or FAIL (Y24) signal presented to line controller\",\n      \"exit\": \"Pallet leaves test position (ZS-2008 clear); station resets to idle\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"Station busy (M200 ON)\",\n      \"effect\": \"Pallet arrival sensor dropping and returning is ignored and cannot restart cycle\"\n    },\n    {\n      \"cause\": \"Clamp closed confirmation (ZS-2002A) lost or open confirmation (ZS-2002B) made during FILL\",\n      \"effect\": \"Fill valve XV-2003 closes immediately\"\n    },\n    {\n      \"cause\": \"Pack pressure not below 1.00 kPa or PT-2001 signal fault active\",\n      \"effect\": \"Station holds in VENT with vent valve open; unclamp is inhibited\"\n    },\n    {\n      \"cause\": \"Station not at DONE step\",\n      \"effect\": \"PASS (RS-2006) and FAIL (RS-2007) signals to line controller are withheld\"\n    },\n    {\n      \"cause\": \"Cell in auto mode (X2 ON)\",\n      \"effect\": \"Manual vent pushbutton PB-2010 (X25) is inhibited from opening vent valve XV-2004\"\n    },\n    {\n      \"cause\": \"E-stop chain lost (X0 OFF) or any ST20 alarm active while busy\",\n      \"effect\": \"Cycle aborts immediately to VENT with FAIL result latched\"\n    },\n    {\n      \"cause\": \"Over-pressure trip (PT-2001 > 20.00 kPa)\",\n      \"effect\": \"Fill valve closes immediately, vent valve held open, cycle fails\"\n    },\n    {\n      \"cause\": \"PT-2001 wire break / reading below -5.00 kPa\",\n      \"effect\": \"Cycle start is inhibited and clamp release is held\"\n    },\n    {\n      \"cause\": \"Supply air pressure switch PS-2009 lost while busy\",\n      \"effect\": \"Cycle aborts to VENT with FAIL result latched\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Fill timeout\",\n      \"condition\": \"PT-2001 does not reach 14.50 kPa within 8.0 s during FILL step (T21 done)\",\n      \"action\": \"Latches M290, lights fault beacon HL-2011, aborts cycle to VENT, and sets FAIL result\"\n    },\n    {\n      \"name\": \"Over-pressure\",\n      \"condition\": \"PT-2001 reading exceeds 20.00 kPa (D100 > D123 / K2000)\",\n      \"action\": \"Latches M291, lights fault beacon HL-2011, forces fill valve closed, holds vent valve open, and sets FAIL result\"\n    },\n    {\n      \"name\": \"PT-2001 signal fault\",\n      \"condition\": \"PT-2001 reading falls below -5.00 kPa (D100 < K-500, indicating wire break)\",\n      \"action\": \"Sets M292, lights fault beacon HL-2011, inhibits cycle start, and holds unclamp in VENT\"\n    },\n    {\n      \"name\": \"Supply air low\",\n      \"condition\": \"PS-2009 lost (X22 OFF) while station is busy (M200 ON)\",\n      \"action\": \"Latches M293, lights fault beacon HL-2011, aborts cycle to VENT, and sets FAIL result\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"stabilise_time\",\n      \"narrative_says\": \"3 s (Section 4.4)\",\n      \"parameter_sheet_says\": \"5.0 s (T22, changed from 3.0 s by MOC-2021-044)\",\n      \"program_says\": \"5.0 s (R13 executes OUT T22 K50 with 100 ms timer base = 5.0 s)\",\n      \"authoritative\": \"parameter sheet\"\n    },\n    {\n      \"item\": \"vent_time\",\n      \"narrative_says\": \"0.5 s (Section 4.7)\",\n      \"parameter_sheet_says\": \"0.5 s (T24)\",\n      \"program_says\": \"5.0 s (R21 executes OUT T200 K50; on FX5U standard timers are 100 ms, so K50 yields 5.0 s instead of FX3U 10 ms 0.5 s, and uses T200 instead of T24)\",\n      \"authoritative\": \"parameter sheet\"\n    },\n    {\n      \"item\": \"test_pressure\",\n      \"narrative_says\": \"15.2 kPa (Section 4.3)\",\n      \"parameter_sheet_says\": \"15.00 kPa(g) (note specifies supply regulator set to 15.2 kPa)\",\n      \"program_says\": \"Not configured in PLC registers (mechanical regulator PR-2012)\",\n      \"authoritative\": \"parameter sheet\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 6034,
+  "output": 2335,
+  "thinking": 3311
+ }
+}

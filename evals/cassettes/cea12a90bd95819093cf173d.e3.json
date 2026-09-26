@@ -1,0 +1,24 @@
+{
+ "data": {
+  "change_summary": "Added jam detection: monitored PE-1002 (X11) while conveyor (Y10) runs using 5.0s timer (T10). If T10 completes, it sets the jam alarm (M190), stopping the conveyor.",
+  "changed_rungs": [
+   8,
+   9
+  ],
+  "program_il": "; ST10_CONVEYOR (FX5U) - converted from FX3U project CV_ST1_V2, 2019\n\nLDI    X13\nOUT    M191             ; ST10 motor overload alarm\n\nLD     X1\nRST    M190\n\nLD     M190\nOR     M191             ; ST10 motor overload alarm\nORI    X0               ; ES-0001 E-stop chain healthy\nOUT    M199\n\nLD     X2               ; SS-0003 auto mode\nANI    M199\nOUT    Y10\n\nLD     X10\nOUT    M100             ; ST10 pallet in position\n\nLDP    X14              ; RQ-1005 release request\nSET    Y11              ; XY-1004 stopper release\n\nLD     Y11              ; XY-1004 stopper release\nOUT    T11 K20\n\nLD     T11\nRST    Y11              ; XY-1004 stopper release\n\nLD     X11              ; PE-1002 entry photo-eye\nAND    Y10              ; Conveyor motor running\nOUT    T10 K50          ; 5.0s jam timer\n\nLD     T10\nSET    M190             ; Set jam alarm\n\nEND"
+ },
+ "effort": "high",
+ "key": "cea12a90bd95819093cf173d.e3",
+ "latency_s": 35.253,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T3",
+ "text": "{\n  \"program_il\": \"; ST10_CONVEYOR (FX5U) - converted from FX3U project CV_ST1_V2, 2019\\n\\nLDI    X13\\nOUT    M191             ; ST10 motor overload alarm\\n\\nLD     X1\\nRST    M190\\n\\nLD     M190\\nOR     M191             ; ST10 motor overload alarm\\nORI    X0               ; ES-0001 E-stop chain healthy\\nOUT    M199\\n\\nLD     X2               ; SS-0003 auto mode\\nANI    M199\\nOUT    Y10\\n\\nLD     X10\\nOUT    M100             ; ST10 pallet in position\\n\\nLDP    X14              ; RQ-1005 release request\\nSET    Y11              ; XY-1004 stopper release\\n\\nLD     Y11              ; XY-1004 stopper release\\nOUT    T11 K20\\n\\nLD     T11\\nRST    Y11              ; XY-1004 stopper release\\n\\nLD     X11              ; PE-1002 entry photo-eye\\nAND    Y10              ; Conveyor motor running\\nOUT    T10 K50          ; 5.0s jam timer\\n\\nLD     T10\\nSET    M190             ; Set jam alarm\\n\\nEND\",\n  \"change_summary\": \"Added jam detection: monitored PE-1002 (X11) while conveyor (Y10) runs using 5.0s timer (T10). If T10 completes, it sets the jam alarm (M190), stopping the conveyor.\",\n  \"changed_rungs\": [\n    8,\n    9\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4523,
+  "output": 455,
+  "thinking": 4127
+ }
+}

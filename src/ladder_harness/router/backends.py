@@ -26,7 +26,7 @@ def project_id() -> str:
 def _is_rate_limit(e: Exception) -> bool:
     text = f"{type(e).__name__} {e}"
     transient = ("429", "RESOURCE_EXHAUSTED", "RateLimit", "500 INTERNAL", "503", "UNAVAILABLE", "InternalServerError",
-                 "APIConnectionError", "ServiceUnavailable")
+                 "APIConnectionError", "ServiceUnavailable", "RemoteProtocolError", "peer closed connection")
     return any(t in text for t in transient) or "overloaded" in text.lower()
 
 

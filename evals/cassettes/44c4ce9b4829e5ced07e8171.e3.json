@@ -1,0 +1,40 @@
+{
+ "data": {
+  "findings": [
+   {
+    "category": "missing_interlock",
+    "confidence": "high",
+    "consequence": "If a pallet jams at the entry photo-eye, the conveyor will not stop and the jam alarm will not be raised, violating cause-and-effect CE-ST10-03. This could lead to pallet damage, disruption of flow, or motor burnout.",
+    "devices": [
+     "X11",
+     "T10",
+     "M190",
+     "Y10"
+    ],
+    "evidence": "Input X11 (Conveyor entry photo-eye PE-1002) is defined in the I/O list but is never used in the ST10 program. M190 is reset in R2 and read in the fault aggregation rung R3, but is never set. The parameter T10 (jam_time, 5.0 s) is also unused.",
+    "proposed_fix": "Add rungs to implement the jam detection before R2. For example: `LD X11`, `AND Y10`, `OUT T10 K50` to detect the blockage for 5.0 s while running, followed by `LD T10`, `SET M190` to latch the jam alarm.",
+    "rungs": [
+     2,
+     3
+    ],
+    "severity": "high",
+    "title": "Missing Conveyor Jam Detection Logic"
+   }
+  ],
+  "summary": "The ST10 program correctly implements the motor overload, E-stop interlocks, pallet position sensing, and stopper release. However, the conveyor jam detection logic (CE-ST10-03) has been completely omitted. The entry photo-eye (X11) and jam timer (T10) are missing from the code, and the jam alarm relay (M190) is evaluated but never set."
+ },
+ "effort": "high",
+ "key": "44c4ce9b4829e5ced07e8171.e3",
+ "latency_s": 66.649,
+ "model": "gemini-3.1-pro-preview",
+ "recorded_backend": "vertex",
+ "task_class": "T4",
+ "text": "{\n  \"findings\": [\n    {\n      \"title\": \"Missing Conveyor Jam Detection Logic\",\n      \"category\": \"missing_interlock\",\n      \"severity\": \"high\",\n      \"rungs\": [2, 3],\n      \"devices\": [\n        \"X11\",\n        \"T10\",\n        \"M190\",\n        \"Y10\"\n      ],\n      \"evidence\": \"Input X11 (Conveyor entry photo-eye PE-1002) is defined in the I/O list but is never used in the ST10 program. M190 is reset in R2 and read in the fault aggregation rung R3, but is never set. The parameter T10 (jam_time, 5.0 s) is also unused.\",\n      \"consequence\": \"If a pallet jams at the entry photo-eye, the conveyor will not stop and the jam alarm will not be raised, violating cause-and-effect CE-ST10-03. This could lead to pallet damage, disruption of flow, or motor burnout.\",\n      \"proposed_fix\": \"Add rungs to implement the jam detection before R2. For example: `LD X11`, `AND Y10`, `OUT T10 K50` to detect the blockage for 5.0 s while running, followed by `LD T10`, `SET M190` to latch the jam alarm.\",\n      \"confidence\": \"high\"\n    }\n  ],\n  \"summary\": \"The ST10 program correctly implements the motor overload, E-stop interlocks, pallet position sensing, and stopper release. However, the conveyor jam detection logic (CE-ST10-03) has been completely omitted. The entry photo-eye (X11) and jam timer (T10) are missing from the code, and the jam alarm relay (M190) is evaluated but never set.\"\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 5566,
+  "output": 429,
+  "thinking": 8224
+ }
+}

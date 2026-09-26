@@ -1,0 +1,215 @@
+{
+ "classes": {
+  "RT/flash-medium": {
+   "config": "flash-medium",
+   "effort": "medium",
+   "errors": 0,
+   "group": "RT",
+   "mean_cost_list_usd": 0.0396,
+   "mean_cost_usd": 0.0198,
+   "median_wall_s": 66.6,
+   "model": "gemini-3.8-flash",
+   "model_compliance_rate": 0,
+   "n": 25,
+   "pass_rate": 1.0,
+   "passed": 25,
+   "tool_bypasses": 0
+  },
+  "T2/flash-low": {
+   "config": "flash-low",
+   "effort": "low",
+   "errors": 0,
+   "group": "T2",
+   "mean_cost_list_usd": 0.01615,
+   "mean_cost_usd": 0.00808,
+   "median_wall_s": 9.3,
+   "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T2/flash-medium": {
+   "config": "flash-medium",
+   "effort": "medium",
+   "errors": 0,
+   "group": "T2",
+   "mean_cost_list_usd": 0.04214,
+   "mean_cost_usd": 0.02107,
+   "median_wall_s": 37.9,
+   "model": "gemini-3.8-flash",
+   "n": 15,
+   "pass_rate": 1.0,
+   "passed": 15
+  },
+  "T3/flash-high": {
+   "config": "flash-high",
+   "cost_per_verified_change": 0.152,
+   "effort": "high",
+   "errors": 0,
+   "group": "T3",
+   "mean_cost_list_usd": 0.30393,
+   "mean_cost_usd": 0.15196,
+   "median_wall_s": 297.0,
+   "model": "gemini-3.8-flash",
+   "n": 50,
+   "pass@1": 1.0,
+   "pass@3": 1.0,
+   "pass_rate": 1.0,
+   "passed": 50
+  },
+  "T3/flash-medium": {
+   "config": "flash-medium",
+   "cost_per_verified_change": 0.0711,
+   "effort": "medium",
+   "errors": 0,
+   "group": "T3",
+   "mean_cost_list_usd": 0.14214,
+   "mean_cost_usd": 0.07107,
+   "median_wall_s": 136.5,
+   "model": "gemini-3.8-flash",
+   "n": 50,
+   "pass@1": 1.0,
+   "pass@3": 1.0,
+   "pass_rate": 1.0,
+   "passed": 50
+  },
+  "T3/pro-high": {
+   "config": "pro-high",
+   "cost_per_verified_change": 0.1104,
+   "effort": "high",
+   "errors": 0,
+   "group": "T3",
+   "mean_cost_list_usd": 0.11041,
+   "mean_cost_usd": 0.11041,
+   "median_wall_s": 95.7,
+   "model": "gemini-3.1-pro-preview",
+   "n": 50,
+   "pass@1": 1.0,
+   "pass@3": 1.0,
+   "pass_rate": 1.0,
+   "passed": 50
+  },
+  "T4/flash-high": {
+   "config": "flash-high",
+   "effort": "high",
+   "errors": 0,
+   "false_positives_per_review": 0.05,
+   "group": "T4",
+   "injection_flag_rate": 0.85,
+   "mean_cost_list_usd": 0.37068,
+   "mean_cost_usd": 0.18534,
+   "mean_recall": 1.0,
+   "median_wall_s": 364.7,
+   "model": "gemini-3.8-flash",
+   "n": 40,
+   "pass_rate": 0.95,
+   "passed": 38
+  },
+  "T4/flash-medium": {
+   "config": "flash-medium",
+   "effort": "medium",
+   "errors": 0,
+   "false_positives_per_review": 0.05,
+   "group": "T4",
+   "injection_flag_rate": 0.875,
+   "mean_cost_list_usd": 0.22419,
+   "mean_cost_usd": 0.1121,
+   "mean_recall": 1.0,
+   "median_wall_s": 242.5,
+   "model": "gemini-3.8-flash",
+   "n": 40,
+   "pass_rate": 0.95,
+   "passed": 38
+  },
+  "T4/pro-high": {
+   "config": "pro-high",
+   "effort": "high",
+   "errors": 0,
+   "false_positives_per_review": 0.07,
+   "group": "T4",
+   "injection_flag_rate": 0.875,
+   "mean_cost_list_usd": 0.21907,
+   "mean_cost_usd": 0.21907,
+   "mean_recall": 1.0,
+   "median_wall_s": 127.8,
+   "model": "gemini-3.1-pro-preview",
+   "n": 40,
+   "pass_rate": 0.925,
+   "passed": 37
+  }
+ },
+ "errors": 0,
+ "lanes": {
+  "T2": {
+   "best": "flash-low",
+   "config": "flash-low",
+   "evidence": {
+    "flash-low": {
+     "mean_cost_usd": 0.00808,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "flash-medium": {
+     "mean_cost_usd": 0.02107,
+     "n": 15,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    }
+   },
+   "rule": "cheapest config not significantly below the best (one-sided Fisher, alpha=0.05)"
+  },
+  "T3": {
+   "best": "flash-medium",
+   "config": "flash-medium",
+   "evidence": {
+    "flash-high": {
+     "mean_cost_usd": 0.15196,
+     "n": 50,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "flash-medium": {
+     "mean_cost_usd": 0.07107,
+     "n": 50,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    },
+    "pro-high": {
+     "mean_cost_usd": 0.11041,
+     "n": 50,
+     "p_vs_best": 1.0,
+     "pass_rate": 1.0
+    }
+   },
+   "rule": "cheapest config not significantly below the best (one-sided Fisher, alpha=0.05)"
+  },
+  "T4": {
+   "config": "flash-medium",
+   "evidence": {
+    "flash-high": {
+     "mean_cost_usd": 0.18534,
+     "mean_recall": 1.0,
+     "n": 40,
+     "pass_rate": 0.95
+    },
+    "flash-medium": {
+     "mean_cost_usd": 0.1121,
+     "mean_recall": 1.0,
+     "n": 40,
+     "pass_rate": 0.95
+    },
+    "pro-high": {
+     "mean_cost_usd": 0.21907,
+     "mean_recall": 1.0,
+     "n": 40,
+     "pass_rate": 0.925
+    }
+   },
+   "rule": "best mean recall (review gate; cost aside)"
+  }
+ },
+ "profiles": {},
+ "records": 355,
+ "usable": 325
+}

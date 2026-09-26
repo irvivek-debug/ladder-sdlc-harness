@@ -1,0 +1,83 @@
+{
+ "data": {
+  "alarms": [
+   {
+    "action": "Stops conveyor motor M-1001 and latches alarm M190 until fault reset (PB-0002, X1)",
+    "condition": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs",
+    "name": "Jam Alarm"
+   },
+   {
+    "action": "Stops conveyor motor M-1001 immediately and sets alarm M191",
+    "condition": "Motor overload contact MOL-1001 (X13) trips",
+    "name": "Motor Overload Alarm"
+   }
+  ],
+  "conflicts": [
+   {
+    "authoritative": "Parameter sheet (5.0 s, T10)",
+    "item": "jam_time",
+    "narrative_says": "5.0 s",
+    "parameter_sheet_says": "5.0 s (T10)",
+    "program_says": "Missing / unprogrammed (timer T10 and photo-eye PE-1002 logic absent from program)"
+   }
+  ],
+  "interlocks": [
+   {
+    "cause": "E-stop chain lost (ES-0001, X0 open)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately"
+   },
+   {
+    "cause": "Motor overload tripped (MOL-1001, X13 open)",
+    "effect": "Conveyor motor M-1001 (Y10) stops immediately and motor overload alarm (M191) is raised"
+   },
+   {
+    "cause": "Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor is running",
+    "effect": "Conveyor motor M-1001 (Y10) stops and jam alarm (M190) is raised until reset"
+   },
+   {
+    "cause": "ST10 fault active (M199 ON)",
+    "effect": "Conveyor motor M-1001 (Y10) is inhibited from running in auto mode"
+   }
+  ],
+  "parameters": [
+   {
+    "name": "jam_time",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "5.0"
+   },
+   {
+    "name": "release_pulse",
+    "narrative_section": "3",
+    "units": "s",
+    "value": "2.0"
+   }
+  ],
+  "steps": [
+   {
+    "entry": "Cell in auto mode (SS-0003, X2) with no ST10 fault active and E-stop chain healthy (ES-0001, X0)",
+    "exit": "Fault condition occurs, auto mode deselected, E-stop tripped, or pallet reaches test position",
+    "name": "Conveyor Running"
+   },
+   {
+    "entry": "Line controller requests release (RQ-1005, X14 rising edge)",
+    "exit": "Release timer T11 reaches preset (2.0 s elapsed)",
+    "name": "Stopper Release"
+   }
+  ]
+ },
+ "effort": "medium",
+ "key": "f3905beff811f0781e7b26eb.e5",
+ "latency_s": 19.847,
+ "model": "gemini-3.8-flash",
+ "recorded_backend": "vertex",
+ "task_class": "T2",
+ "text": "{\n  \"parameters\": [\n    {\n      \"name\": \"jam_time\",\n      \"value\": \"5.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    },\n    {\n      \"name\": \"release_pulse\",\n      \"value\": \"2.0\",\n      \"units\": \"s\",\n      \"narrative_section\": \"3\"\n    }\n  ],\n  \"steps\": [\n    {\n      \"name\": \"Conveyor Running\",\n      \"entry\": \"Cell in auto mode (SS-0003, X2) with no ST10 fault active and E-stop chain healthy (ES-0001, X0)\",\n      \"exit\": \"Fault condition occurs, auto mode deselected, E-stop tripped, or pallet reaches test position\"\n    },\n    {\n      \"name\": \"Stopper Release\",\n      \"entry\": \"Line controller requests release (RQ-1005, X14 rising edge)\",\n      \"exit\": \"Release timer T11 reaches preset (2.0 s elapsed)\"\n    }\n  ],\n  \"interlocks\": [\n    {\n      \"cause\": \"E-stop chain lost (ES-0001, X0 open)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops immediately\"\n    },\n    {\n      \"cause\": \"Motor overload tripped (MOL-1001, X13 open)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops immediately and motor overload alarm (M191) is raised\"\n    },\n    {\n      \"cause\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor is running\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) stops and jam alarm (M190) is raised until reset\"\n    },\n    {\n      \"cause\": \"ST10 fault active (M199 ON)\",\n      \"effect\": \"Conveyor motor M-1001 (Y10) is inhibited from running in auto mode\"\n    }\n  ],\n  \"alarms\": [\n    {\n      \"name\": \"Jam Alarm\",\n      \"condition\": \"Entry photo-eye PE-1002 stays blocked for more than 5.0 s while conveyor runs\",\n      \"action\": \"Stops conveyor motor M-1001 and latches alarm M190 until fault reset (PB-0002, X1)\"\n    },\n    {\n      \"name\": \"Motor Overload Alarm\",\n      \"condition\": \"Motor overload contact MOL-1001 (X13) trips\",\n      \"action\": \"Stops conveyor motor M-1001 immediately and sets alarm M191\"\n    }\n  ],\n  \"conflicts\": [\n    {\n      \"item\": \"jam_time\",\n      \"narrative_says\": \"5.0 s\",\n      \"parameter_sheet_says\": \"5.0 s (T10)\",\n      \"program_says\": \"Missing / unprogrammed (timer T10 and photo-eye PE-1002 logic absent from program)\",\n      \"authoritative\": \"Parameter sheet (5.0 s, T10)\"\n    }\n  ]\n}",
+ "usage": {
+  "cache_write": 0,
+  "cached": 0,
+  "input": 4404,
+  "output": 775,
+  "thinking": 2628
+ }
+}
