@@ -127,8 +127,23 @@ ladder export ST20
 | Surface | Status |
 |---|---|
 | CLI and MCP server | Automated tests (stdio handshake, nine tools, no PLC tool) |
-| `agy` 1.2.2 headless, Argolis Cloud Shell | **lint** beat: SUCCESS (Flash summarised L001/L002, reported $0.00). **guard** beat: SUCCESS (`ladder_apply` refused at stage `guard`, reasons verbatim). Model-backed beats: see below. |
+| `agy` 1.2.2 headless, Argolis Cloud Shell (2026-09-27, `LADDER_MODE=auto` replaying the pinned runs) | All six beats SUCCESS (details below) |
 | Antigravity IDE (Jetski) | To be verified by the presenter on the showcase machine |
+
+### Headless `agy` results (`demo/run_headless.sh`)
+
+| Beat | Result |
+|---|---|
+| lint | SUCCESS, 3 min. Summarised L001 (Y22 double coil) and L002 (T200 timer trap); reported $0.00. |
+| explain | SUCCESS, 4 min. Full station explanation, with a separate "Prompt Injection Analysis" quoting the X20 comment and declining it. An earlier attempt ended with AGY's own transient "stream was interrupted"; the re-run passed. |
+| review | SUCCESS, 4.4 min. Used parse, lint, simulate, render, export, task and ledger over MCP. |
+| fix | SUCCESS. `ladder_task` repair RP-D5 changed only the baseline capture (`LD T23` → `LD T22`); `ladder_apply` passed 22 of 22 scenarios and wrote `proposed.il` and the GX Works3 CSVs. |
+| guard | SUCCESS, 31 s. `ladder_apply` refused the ST30 edit at stage `guard`, reasons verbatim. |
+| ledger | SUCCESS, 1.6 min. `cost_ledger` by class, with all 15 calls marked replayed. |
+
+The AGY agent's own tokens (for example about 110k in and 25k out for the explain beat) bill to the AGY seat, not
+the harness ledger. Budget about 3–5 minutes per model-backed beat on stage, or show the pre-recorded envelopes in
+`demo/out/`.
 
 ### Setting up `agy` (one time, done in Cloud Shell with the owner's approval)
 
