@@ -14,6 +14,16 @@ The sample plant is an EV battery-pack end-of-line cell with three stations:
 
 The cell comes with a legacy program that passes leaking packs.
 
+## Alpha: the showcase app (10-minute CEO/CTO walk-through)
+
+```bash
+python demo/app/server.py        # http://127.0.0.1:8765, live simulator; model tasks replay the pinned runs
+```
+
+Five screens: The Line, The Morning (8 beats, → to advance), Economics, Architecture, Workbench. Opened without
+the server (`demo/app/index.html`), it answers from `demo/app/data/snapshot.js`, recorded from the same harness by
+`python scripts/build_app_snapshot.py`, and is labelled "Recorded run".
+
 ## 60-second quickstart (no credentials)
 
 ```bash

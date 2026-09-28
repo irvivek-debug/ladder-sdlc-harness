@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ladder SDLC · EV pack end-of-line</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="app-header">
+  <div class="brand">
+    <div class="brand-mark" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 16 16"><path d="M3 1v14M13 1v14M3 5h10M3 11h10" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="8" cy="5" r="1.6" fill="#81C995"/></svg>
+    </div>
+    <span class="brand-name">Ladder SDLC</span>
+    <span class="brand-sub">EV pack end-of-line cell · MELSEC iQ-F</span>
+  </div>
+  <nav class="nav" role="tablist" aria-label="Screens">
+    <button class="tab" role="tab" id="tab-line" aria-controls="pane-line" data-screen="line">The Line <kbd>1</kbd></button>
+    <button class="tab" role="tab" id="tab-morning" aria-controls="pane-morning" data-screen="morning">The Morning <kbd>2</kbd></button>
+    <button class="tab" role="tab" id="tab-economics" aria-controls="pane-economics" data-screen="economics">Economics <kbd>3</kbd></button>
+    <button class="tab" role="tab" id="tab-architecture" aria-controls="pane-architecture" data-screen="architecture">Architecture <kbd>4</kbd></button>
+    <button class="tab" role="tab" id="tab-workbench" aria-controls="pane-workbench" data-screen="workbench">Workbench <kbd>5</kbd></button>
+  </nav>
+  <div class="hdr-right">
+    <span class="mode-pill" id="mode-pill" title=""><i></i><span>Connecting</span></span>
+    <button class="spend" id="spend" title="Model spend this session. Open the activity log.">Model spend <b id="spend-v">$0.000</b></button>
+    <button class="icon-btn" id="reset-btn" title="Reset the demo (removes proposals and outputs)" aria-label="Reset the demo">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M2.5 8a5.5 5.5 0 1 0 1.7-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><path d="M2 1.8v3.4h3.4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <!-- 1 · THE LINE ------------------------------------------------------------------------------------------------>
+  <section class="screen-pane" id="pane-line" role="tabpanel" aria-labelledby="tab-line">
+    <div class="pane-head">
+      <div>
+        <p class="eyebrow" id="line-eyebrow">Simulated shift · FX5 controller and plant twin</p>
+        <h1 class="hero-title" id="line-title">Every pack passed this morning.</h1>
+        <p class="hero-desc" id="line-desc">Three stations on one controller. The dashboard is green. Watch the leak test at ST20.</p>
+      </div>
+      <div class="btn-row" style="display:flex;gap:8px">
+        <button class="btn btn-primary" id="line-cta" data-goto="morning">Why did pack 4 pass? <span class="kbd">2</span></button>
+      </div>
+    </div>
+    <div class="kpis" id="line-kpis"></div>
+    <div class="card schematic">
+      <div class="card-label"><span>End-of-line cell · click a station</span><span id="line-program-label" class="badge badge-stable"><i></i>2019 program</span></div>
+      <div class="cell-row" id="cell-row"></div>
+      <div class="conveyor" id="conveyor" aria-label="Packs moving through the cell"></div>
+      <div class="line-tools">
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+          <span class="faint" style="font-size:12px;font-weight:600">Simulate with</span>
+          <div class="seg" role="group" aria-label="Program to simulate">
+            <button id="prog-running" aria-pressed="true">Running program (2019)</button>
+            <button id="prog-signed" aria-pressed="false" disabled title="Available once an engineer signs a proven change">Signed proposal</button>
+          </div>
+        </div>
+        <label class="switch"><input type="checkbox" id="xray"> What the plant knows</label>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card tight">
+        <div class="card-label"><span>ST20 results, this shift</span><span class="faint mono" style="text-transform:none;letter-spacing:0">computed by the program on the controller</span></div>
+        <table class="tbl" id="pack-table"><thead><tr><th>Pack</th><th>Decay computed</th><th>Limit</th><th>Result</th><th>Station time</th><th class="xcol hidden">True leak</th></tr></thead><tbody></tbody></table>
+      </div>
+      <div class="card tight" id="line-insight"></div>
+    </div>
+  </section>
+
+  <!-- 2 · THE MORNING --------------------------------------------------------------------------------------------->
+  <section class="screen-pane" id="pane-morning" role="tabpanel" aria-labelledby="tab-morning">
+    <div class="morning">
+      <div class="stage" id="stage"></div>
+      <aside class="beats" aria-label="Beats">
+        <div class="seat"><div class="avatar">CE</div><div><b>From the controls engineer's seat</b><span>Measured on escapes and station time</span></div></div>
+        <ol class="beat-list" id="beat-list"></ol>
+        <div class="beat-nav">
+          <button class="btn" id="beat-prev" aria-label="Previous beat">←</button>
+          <button class="btn btn-primary" id="beat-next" style="flex:1">Next <span class="kbd">→</span></button>
+        </div>
+        <p class="faint" style="font-size:11.5px;margin-top:10px">Space or → advances. Each beat calls the harness: the simulator runs live; model answers replay the pinned recorded runs and say so.</p>
+      </aside>
+    </div>
+  </section>
+
+  <!-- 3 · ECONOMICS ----------------------------------------------------------------------------------------------->
+  <section class="screen-pane" id="pane-economics" role="tabpanel" aria-labelledby="tab-economics">
+    <div class="pane-head">
+      <div>
+        <p class="eyebrow">Horses for courses · measured, not estimated</p>
+        <h1 class="hero-title">Right model, right task.</h1>
+        <p class="hero-desc">The same workload staffed four ways: onboard the leak test, read its narrative, review it, and make four fixes that must pass the plant tests. Median cost per proven change, with the range across repeated runs.</p>
+      </div>
+      <div class="seg" role="group" aria-label="Price basis">
+        <button id="price-now" aria-pressed="true">List price today</button>
+        <button id="price-2027" aria-pressed="false">From 1 Jan 2027</button>
+      </div>
+    </div>
+    <div class="grid" style="grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)">
+      <div class="card">
+        <div class="card-label"><span>Cost per change proven on the simulator</span><span class="faint mono" style="text-transform:none;letter-spacing:0">all four: 4 of 4 fixes · 5 of 5 defects</span></div>
+        <div class="ranges" id="ranges"></div>
+        <div class="scale-ticks" id="range-ticks"></div>
+        <div class="callout info" style="margin-top:16px" id="econ-verdict"></div>
+      </div>
+      <div class="card">
+        <div class="card-label"><span>Where each task runs</span><span class="faint mono" style="text-transform:none;letter-spacing:0">chosen by the evidence</span></div>
+        <div class="lanemap" id="lanemap"></div>
+      </div>
+    </div>
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card">
+        <div class="card-label"><span>At your scale</span><span class="faint mono" style="text-transform:none;letter-spacing:0">measured range × your volume</span></div>
+        <label for="vol" style="font-size:13px;font-weight:600">Proven program changes per year: <span class="mono" id="vol-v"></span></label>
+        <input type="range" id="vol" min="100" max="20000" step="100" value="2000" style="margin:10px 0 16px">
+        <div class="grid g2" id="scale-out"></div>
+        <p class="src">Model spend only. The engineer's review time, the IDE seats and the cloud project are outside this number.</p>
+      </div>
+      <div class="card">
+        <div class="card-label"><span>What is not in these numbers</span></div>
+        <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--m3-text-secondary);line-height:1.7" id="econ-caveats"></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4 · ARCHITECTURE -------------------------------------------------------------------------------------------->
+  <section class="screen-pane" id="pane-architecture" role="tabpanel" aria-labelledby="tab-architecture">
+    <div class="pane-head">
+      <div>
+        <p class="eyebrow">How it is built · for the CTO</p>
+        <h1 class="hero-title">Three roles, never mixed.</h1>
+        <p class="hero-desc">A model may propose. Only the simulator decides whether a change works, only a rule decides whether a safety rung may change, and only an engineer releases it. Click a layer for the detail.</p>
+      </div>
+    </div>
+    <div class="motto">
+      <div><div class="who" style="color:var(--m3-primary)">AI proposes</div><div class="what">Routed models</div><p>Documentation, reading the narrative, review and repair, each on the cheapest lane that measured as good.</p></div>
+      <div><div class="who" style="color:var(--m3-success)">The simulator proves</div><div class="what">Scan-accurate FX5 + plant twin</div><p>Every change runs the station's factory and cause-and-effect tests. Targets must pass; nothing may regress.</p></div>
+      <div><div class="who">The engineer signs</div><div class="what">A file, not a download</div><p>The output is a proposal and a GX Works3 export. Nothing in the system talks to a PLC.</p></div>
+    </div>
+    <div class="grid" style="grid-template-columns:minmax(0,1.6fr) minmax(0,1fr)">
+      <div class="stack" id="stack"></div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card"><div class="card-label"><span>The apply gate</span><span class="faint mono" style="text-transform:none;letter-spacing:0">in order, every time</span></div><div id="arch-gate"></div></div>
+        <div class="card"><div class="card-label"><span>Evidence</span></div><div id="arch-evidence"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5 · WORKBENCH ----------------------------------------------------------------------------------------------->
+  <section class="screen-pane" id="pane-workbench" role="tabpanel" aria-labelledby="tab-workbench">
+    <div class="pane-head">
+      <div>
+        <p class="eyebrow">Workbench · the engineer's view</p>
+        <h1 class="hero-title">Run the harness yourself.</h1>
+        <p class="hero-desc">The nine tools the IDE agents use, one click each. Deterministic tools cost nothing. Model tasks run on their routed lane and every call lands in the activity log.</p>
+      </div>
+    </div>
+    <div class="wb">
+      <div class="wb-st" id="wb-stations"></div>
+      <div>
+        <div class="wb-actions" id="wb-actions"></div>
+        <div class="card wb-out" id="wb-out"><div class="empty">Pick a tool. Lint and Simulate cost nothing.</div></div>
+      </div>
+      <div class="card tight">
+        <div class="card-label"><span>Activity log</span><span class="faint mono" style="text-transform:none;letter-spacing:0" id="log-count">0 calls</span></div>
+        <div class="log" id="log"><div class="empty">Calls from every screen appear here.</div></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" aria-hidden="true" role="dialog" aria-labelledby="drawer-title">
+  <div class="drawer-head">
+    <div><p class="eyebrow" id="drawer-eyebrow"></p><h3 id="drawer-title"></h3></div>
+    <button class="icon-btn" id="drawer-close" aria-label="Close">
+      <svg width="14" height="14" viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+</aside>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data/snapshot.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
